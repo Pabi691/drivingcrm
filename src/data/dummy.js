@@ -61,6 +61,23 @@ export const kanbanGrid = [
     keyField: 'Close',
     allowToggle: true },
 ];
+
+const gridInstructorProfile = (props) => (
+  <div className="flex items-center gap-2">
+    <img
+      className="rounded-full w-10 h-10"
+      src={props.ProfileImage}
+      alt="instructor"
+    />
+    <p>{props.Name}</p>
+  </div>
+);
+const gridInstructorCountry = (props) => (
+  <div className="flex items-center justify-center gap-2">
+    <GrLocation />
+    <span>{props.Country}</span>
+  </div>
+);
 const gridEmployeeProfile = (props) => (
   <div className="flex items-center gap-2">
     <img
@@ -120,6 +137,7 @@ export const EditorData = () => (
     </h3>
   </div>
 );
+
 const customerGridImage = (props) => (
   <div className="image flex gap-4">
     <img
@@ -433,6 +451,74 @@ export const customersGrid = [
 
 ];
 
+export const instructorsGrid = [
+  { type: 'checkbox', width: '50' },
+  {
+    headerText: "Instructor",
+    width: "150",
+    template: gridInstructorProfile,
+    textAlign: "Center",
+  },
+
+  { field: "Name", headerText: "Full Name", width: "150", textAlign: "Center" },
+
+  { field: "Email", headerText: "Email", width: "200", textAlign: "Center" },
+
+  { field: "Phone", headerText: "Phone", width: "150", textAlign: "Center" },
+
+  { field: "Designation", headerText: "ADI / PDI", width: "120", textAlign: "Center" },
+
+  { field: "Zone", headerText: "Zone (1–4)", width: "120", textAlign: "Center" },
+
+  { field: "Postcode", headerText: "Postcode", width: "120", textAlign: "Center" },
+
+  {
+    headerText: "Country",
+    width: "120",
+    textAlign: "Center",
+    template: gridInstructorCountry,
+  },
+
+  { field: "JoinDate", headerText: "Join Date", width: "135", format: "yMd", textAlign: "Center" },
+
+  { field: "Availability", headerText: "Working Hours", width: "150", textAlign: "Center" },
+
+  { field: "DaysOff", headerText: "Days Off", width: "120", textAlign: "Center" },
+
+  { field: "OnLeave", headerText: "Holiday/Sick Leave", width: "150", textAlign: "Center" },
+
+  { field: "PupilCount", headerText: "Learners", width: "100", textAlign: "Center" },
+
+  { field: "PassRate", headerText: "Pass Rate (%)", width: "120", textAlign: "Center" },
+
+  { field: "LessonsCompleted", headerText: "Lessons (This Month)", width: "170", textAlign: "Center" },
+
+  { field: "ConversionRate", headerText: "Enquiry Conversion (%)", width: "170", textAlign: "Center" },
+
+  { field: "IncomeMonth", headerText: "Income (This Month)", width: "150", textAlign: "Center" },
+
+  { field: "ExpensesMonth", headerText: "Expenses (This Month)", width: "150", textAlign: "Center" },
+
+  { field: "FranchiseFee", headerText: "Franchise Fee", width: "150", textAlign: "Center" },
+
+  { field: "ADIExpiry", headerText: "ADI Badge Expiry", width: "150", textAlign: "Center" },
+
+  { field: "PDIExpiry", headerText: "PDI License Expiry", width: "150", textAlign: "Center" },
+
+  { field: "InsuranceExpiry", headerText: "Insurance Expiry", width: "150", textAlign: "Center" },
+
+  { field: "MOTExpiry", headerText: "MOT Expiry", width: "150", textAlign: "Center" },
+
+  {
+    field: "InstructorID",
+    headerText: "Instructor ID",
+    width: "125",
+    textAlign: "Center",
+    isPrimaryKey: true,
+  },
+];
+
+
 export const employeesGrid = [
   { headerText: 'Employee',
     width: '150',
@@ -489,6 +575,10 @@ export const links = [
       },
       {
         name: 'employees',
+        icon: <IoMdContacts />,
+      },
+      {
+        name: 'instructors',
         icon: <IoMdContacts />,
       },
       {
@@ -1480,6 +1570,105 @@ export const customersData = [
   },
 
 ];
+
+export const instructorsData = [
+  {
+    InstructorID: 101,
+    Name: "John Smith",
+    Email: "john.smith@example.com",
+    Phone: "+44 7700 900111",
+    Designation: "ADI",
+    Zone: "2",
+    Postcode: "SW11",
+    Country: "UK",
+    JoinDate: "2021-05-10",
+    Availability: "09:00 AM – 06:00 PM",
+    DaysOff: "Sunday",
+    OnLeave: "No",
+
+    PupilCount: 22,
+    PassRate: 78,
+    LessonsCompleted: 145,
+    ConversionRate: 64,
+
+    IncomeMonth: "£2,450",
+    ExpensesMonth: "£310",
+    FranchiseFee: "£120",
+
+    ADIExpiry: "2026-02-14",
+    PDIExpiry: "-",
+    InsuranceExpiry: "2025-09-01",
+    MOTExpiry: "2025-04-12",
+
+    ProfileImage: avatar, // used in template
+    Flag: "uk.png", // used in country template
+  },
+
+  {
+    InstructorID: 102,
+    Name: "Sarah Johnson",
+    Email: "sarah.johnson@example.com",
+    Phone: "+44 7700 800222",
+    Designation: "PDI",
+    Zone: "1",
+    Postcode: "E15",
+    Country: "UK",
+    JoinDate: "2022-01-18",
+    Availability: "10:00 AM – 05:00 PM",
+    DaysOff: "Saturday",
+    OnLeave: "No",
+
+    PupilCount: 14,
+    PassRate: 62,
+    LessonsCompleted: 98,
+    ConversionRate: 52,
+
+    IncomeMonth: "£1,780",
+    ExpensesMonth: "£220",
+    FranchiseFee: "£110",
+
+    ADIExpiry: "-",
+    PDIExpiry: "2025-11-10",
+    InsuranceExpiry: "2026-02-01",
+    MOTExpiry: "2025-08-20",
+
+    ProfileImage: avatar2,
+    Flag: "uk.png",
+  },
+
+  {
+    InstructorID: 103,
+    Name: "Michael Brown",
+    Email: "michael.brown@example.com",
+    Phone: "+44 7700 700333",
+    Designation: "ADI",
+    Zone: "3",
+    Postcode: "CR0",
+    Country: "UK",
+    JoinDate: "2020-06-05",
+    Availability: "08:00 AM – 04:00 PM",
+    DaysOff: "Monday",
+    OnLeave: "Holiday",
+
+    PupilCount: 30,
+    PassRate: 85,
+    LessonsCompleted: 172,
+    ConversionRate: 70,
+
+    IncomeMonth: "£2,980",
+    ExpensesMonth: "£350",
+    FranchiseFee: "£130",
+
+    ADIExpiry: "2025-12-22",
+    PDIExpiry: "-",
+    InsuranceExpiry: "2025-11-05",
+    MOTExpiry: "2026-01-17",
+
+    ProfileImage: avatar3,
+    Flag: "uk.png",
+  },
+];
+
 
 export const employeesData = [
   {
