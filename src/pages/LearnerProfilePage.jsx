@@ -38,6 +38,7 @@ const LearnerProfilePage = () => {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
 
       <button
+        type="button"
         onClick={() => window.history.back()}
         className="text-sm text-gray-600 hover:underline"
       >

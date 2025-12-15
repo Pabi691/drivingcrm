@@ -1,18 +1,17 @@
 import React from 'react';
 import { MdOutlineCancel } from 'react-icons/md';
-
+import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import { userProfileData } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
 import avatar from '../data/avatar.jpg';
-import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
   const { currentColor, setIsClicked, initialState } = useStateContext();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    console.log('Logging out...');
+    // console.log('Logging out...');
     // 🔐 Clear auth data
     localStorage.removeItem('authKey');
     localStorage.removeItem('role');

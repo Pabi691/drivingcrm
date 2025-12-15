@@ -13,7 +13,7 @@ import Learners from './pages/Learners';
 import UserProfilePage from './pages/UserProfilePage';
 import InstructorProfilePage from './pages/InstructorProfilePage';
 import LearnerProfilePage from './pages/LearnerProfilePage';
-import ProtectedRoute from './components/ProtectedRoute';
+// import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   const isLoggedIn = !!localStorage.getItem('authKey');
@@ -30,57 +30,62 @@ const App = () => {
       setCurrentColor(currentThemeColor);
       setCurrentMode(currentThemeMode);
     }
-  }, []);
+  }, [setCurrentColor, setCurrentMode]);
+
+  let className = '';
+
+  switch (true) {
+    case isAuthPage:
+      className = 'w-full min-h-screen bg-gray-100';
+      break;
+    case activeMenu:
+      className = 'dark:bg-main-dark-bg bg-main-bg min-h-screen md:ml-72 w-full';
+      break;
+    default:
+      className = 'bg-main-bg dark:bg-main-dark-bg w-full min-h-screen flex-2';
+  }
 
   return (
     <div className={currentMode === 'Dark' ? 'dark' : ''}>
-        <div className="flex relative dark:bg-main-dark-bg">
-          {!isAuthPage && (
-            <div className="fixed right-4 bottom-4" style={{ zIndex: '1000' }}>
-              <TooltipComponent
-                content="Settings"
-                position="Top"
+      <div className="flex relative dark:bg-main-dark-bg">
+        {!isAuthPage && (
+          <div className="fixed right-4 bottom-4" style={{ zIndex: '1000' }}>
+            <TooltipComponent
+              content="Settings"
+              position="Top"
+            >
+              <button
+                type="button"
+                onClick={() => setThemeSettings(true)}
+                style={{ background: currentColor, borderRadius: '50%' }}
+                className="text-3xl text-white p-3 hover:drop-shadow-xl hover:bg-light-gray"
               >
-                <button
-                  type="button"
-                  onClick={() => setThemeSettings(true)}
-                  style={{ background: currentColor, borderRadius: '50%' }}
-                  className="text-3xl text-white p-3 hover:drop-shadow-xl hover:bg-light-gray"
-                >
-                  <FiSettings />
-                </button>
+                <FiSettings />
+              </button>
 
-              </TooltipComponent>
-            </div>
-          )}
-          {!isAuthPage && activeMenu && (
-            <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white ">
-              <Sidebar />
-            </div>
-          )}
-          <div
-            className={
-              isAuthPage
-                ? 'w-full min-h-screen bg-gray-100'
-                : activeMenu
-                  ? 'dark:bg-main-dark-bg bg-main-bg min-h-screen md:ml-72 w-full'
-                  : 'bg-main-bg dark:bg-main-dark-bg w-full min-h-screen flex-2'
-            }
-          >
-            {!isAuthPage && (
+            </TooltipComponent>
+          </div>
+        )}
+        {!isAuthPage && activeMenu && (
+          <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white ">
+            <Sidebar />
+          </div>
+        )}
+        <div className={className}>
+          {!isAuthPage && (
             <div className="fixed md:static bg-main-bg dark:bg-main-dark-bg navbar w-full ">
               <Navbar />
             </div>
-            )}
-            <div>
-              {!isAuthPage && themeSettings && <ThemeSettings />}
+          )}
+          <div>
+            {!isAuthPage && themeSettings && <ThemeSettings />}
 
-              {!isLoggedIn ? (
-                <Routes>
-                  <Route path="/login" element={<Login />} />
-                  <Route path="*" element={<Navigate to="/login" replace />} />
-                </Routes>
-              ) : (
+            {!isLoggedIn ? (
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="*" element={<Navigate to="/login" replace />} />
+              </Routes>
+            ) : (
               <Routes>
                 {/* dashboard  */}
                 <Route path="/" element={(<Ecommerce />)} />
@@ -116,11 +121,11 @@ const App = () => {
                 <Route path="/stacked" element={<Stacked />} />
 
               </Routes>
-              )}
-            </div>
-            {!isAuthPage && <Footer />}
+            )}
           </div>
+          {!isAuthPage && <Footer />}
         </div>
+      </div>
     </div>
   );
 };

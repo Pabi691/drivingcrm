@@ -1,12 +1,11 @@
 import React from 'react';
 import avatar from '../data/avatar.jpg';
 
-const UserProfilePage = () => {
-  return (
+const UserProfilePage = () => (
     <div className="p-6 max-w-7xl mx-auto">
       
       {/* Back */}
-      <button className="text-sm text-gray-600 mb-4 hover:underline">
+      <button type="button" className="text-sm text-gray-600 mb-4 hover:underline">
         ← Back
       </button>
 
@@ -74,11 +73,11 @@ const UserProfilePage = () => {
             <h3 className="font-semibold mb-4">Hourly Price</h3>
             <p className="text-2xl font-bold mb-4">$60 / hr</p>
 
-            <button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black py-2 rounded-lg font-semibold">
+            <button type="button" className="w-full bg-yellow-400 hover:bg-yellow-500 text-black py-2 rounded-lg font-semibold">
               Book Now
             </button>
 
-            <button className="w-full mt-3 border py-2 rounded-lg text-sm">
+            <button type="button" className="w-full mt-3 border py-2 rounded-lg text-sm">
               Check Availability
             </button>
           </div>
@@ -113,6 +112,5 @@ const UserProfilePage = () => {
       </div>
     </div>
   );
-};
 
 export default UserProfilePage;

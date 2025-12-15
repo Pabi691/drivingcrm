@@ -7,11 +7,11 @@ const InstructorProfilePage = () => {
   const { id } = useParams();
 
   const instructor = instructorsData.find(
-    (i) => i.InstructorID === Number(id)
+    (i) => i.InstructorID === Number(id),
   );
 
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(
-    `${instructor.Postcode}, ${instructor.Country}`
+    `${instructor.Postcode}, ${instructor.Country}`,
   )}&output=embed`;
 
   if (!instructor) {
@@ -33,6 +33,7 @@ const InstructorProfilePage = () => {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
 
       <button
+        type="button"
         onClick={() => window.history.back()}
         className="text-sm text-gray-600 hover:underline"
       >
@@ -157,8 +158,9 @@ const InstructorProfilePage = () => {
             <h3 className="font-semibold mb-2">Status</h3>
             <span className={`px-3 py-1 rounded-full text-sm
               ${instructor.OnLeave === 'No'
-                ? 'bg-green-100 text-green-700'
-                : 'bg-yellow-100 text-yellow-700'}`}>
+              ? 'bg-green-100 text-green-700'
+              : 'bg-yellow-100 text-yellow-700'
+                }`}>
               {instructor.OnLeave === 'No' ? 'Active' : instructor.OnLeave}
             </span>
           </div>
