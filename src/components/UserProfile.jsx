@@ -5,9 +5,25 @@ import Button from './Button';
 import { userProfileData } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
 import avatar from '../data/avatar.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
-  const { currentColor } = useStateContext();
+  const { currentColor, setIsClicked, initialState } = useStateContext();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    console.log('Logging out...');
+    // 🔐 Clear auth data
+    localStorage.removeItem('authKey');
+    localStorage.removeItem('role');
+    localStorage.removeItem('userEmail');
+
+    // 🔄 Reset UI popups
+    setIsClicked(initialState);
+
+    // 🔀 Redirect to login
+    navigate('/login', { replace: true });
+  };
 
   return (
     <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96">
@@ -35,7 +51,12 @@ const UserProfile = () => {
       </div>
       <div>
         {userProfileData.map((item, index) => (
-          <div key={index} className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]">
+          <div key={index} 
+            onClick={() => {
+              setIsClicked(initialState);
+              navigate(item.route);
+            }}
+            className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]">
             <button
               type="button"
               style={{ color: item.iconColor, backgroundColor: item.iconBg }}
@@ -58,6 +79,7 @@ const UserProfile = () => {
           text="Logout"
           borderRadius="10px"
           width="full"
+          onClick={handleLogout}
         />
       </div>
     </div>

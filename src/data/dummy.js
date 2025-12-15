@@ -1,11 +1,11 @@
 import React from 'react';
-import { AiOutlineCalendar, AiOutlineShoppingCart, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock } from 'react-icons/ai';
-import { FiShoppingBag, FiEdit, FiPieChart, FiBarChart, FiCreditCard, FiStar, FiShoppingCart } from 'react-icons/fi';
+import { AiOutlineCalendar, AiOutlineShoppingCart, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock, AiOutlineEye } from 'react-icons/ai';
+import { FiEdit, FiPieChart, FiBarChart, FiCreditCard, FiStar, FiShoppingCart, FiBookOpen } from 'react-icons/fi';
 import { BsKanban, BsBarChart, BsBoxSeam, BsCurrencyDollar, BsShield, BsChatLeft } from 'react-icons/bs';
 import { BiColorFill } from 'react-icons/bi';
 import { IoMdContacts } from 'react-icons/io';
 import { RiContactsLine, RiStockLine } from 'react-icons/ri';
-import { MdOutlineSupervisorAccount } from 'react-icons/md';
+import { MdOutlineSupervisorAccount, MdOutlineEmail, MdOutlineSms } from 'react-icons/md';
 import { HiOutlineRefresh } from 'react-icons/hi';
 import { TiTick } from 'react-icons/ti';
 import { GiLouvrePyramid } from 'react-icons/gi';
@@ -21,6 +21,7 @@ import product4 from './product4.jpg';
 import product5 from './product5.jpg';
 import product6 from './product6.jpg';
 import product7 from './product7.jpg';
+import { Link } from 'react-router-dom';
 // import product8 from './product8.jpg';
 
 export const gridOrderImage = (props) => (
@@ -62,6 +63,46 @@ export const kanbanGrid = [
     allowToggle: true },
 ];
 
+const gridEnquiryCountry = (props) => (
+  <div className="flex items-center justify-center gap-2">
+    <GrLocation />
+    <span>{props.Country}</span>
+  </div>
+);
+
+const gridEnquiryStatus = (props) => (
+  <div className="flex items-center justify-center">
+    <span
+      className={`px-2 py-1 rounded text-xs font-semibold ${
+        props.Status === 'Active'
+          ? 'bg-green-200 text-green-800'
+          : props.Status === 'Trial Lesson'
+          ? 'bg-blue-200 text-blue-800'
+          : props.Status === 'Contacted'
+          ? 'bg-yellow-200 text-yellow-800'
+          : props.Status === 'New'
+          ? 'bg-red-200 text-red-800'
+          : 'bg-gray-200 text-gray-800' // For Converted/Lost/Other
+      }`}
+    >
+      {props.Status}
+    </span>
+  </div>
+);
+
+const gridContactActions = (props) => (
+  <div className="flex items-center justify-center gap-3">
+    <button title="Send Email Template">
+      <MdOutlineEmail className="text-xl text-blue-500 hover:text-blue-700" />
+    </button>
+    <button title="Send SMS Template">
+      <MdOutlineSms className="text-xl text-green-500 hover:text-green-700" />
+    </button>
+  </div>
+);
+
+// for InstructorCount
+
 const gridInstructorProfile = (props) => (
   <div className="flex items-center gap-2">
     <img
@@ -78,6 +119,59 @@ const gridInstructorCountry = (props) => (
     <span>{props.Country}</span>
   </div>
 );
+
+// for PupilCount
+
+const gridLearnerProfile = (props) => (
+  <div className="flex items-center gap-2">
+    <img
+      className="rounded-full w-10 h-10"
+      src={props.ProfileImage}
+      alt="learner"
+    />
+    <p>{props.Name}</p>
+  </div>
+);
+
+const gridLearnerCountry = (props) => (
+  <div className="flex items-center justify-center gap-2">
+    <GrLocation />
+    <span>{props.Country}</span>
+  </div>
+);
+
+const gridProgressBar = (props) => (
+  <div className="flex items-center gap-2">
+    <div className="w-full bg-gray-200 rounded-full h-2">
+      <div
+        className="bg-blue-600 h-2 rounded-full"
+        style={{ width: `${props.ProgressPercentage}%` }}
+      />
+    </div>
+    <span className="text-sm">{props.ProgressPercentage}%</span>
+  </div>
+);
+
+const gridPaymentStatus = (props) => {
+  let statusClass = '';
+
+  if (props.PaymentStatus === 'Paid') {
+    statusClass = 'bg-green-200 text-green-800';
+  } else if (props.PaymentStatus === 'Pending') {
+    statusClass = 'bg-yellow-200 text-yellow-800';
+  } else {
+    statusClass = 'bg-red-200 text-red-800';
+  }
+
+  return (
+    <div className="flex items-center justify-center">
+      <span className={`px-2 py-1 rounded text-xs font-semibold ${statusClass}`}>
+        {props.PaymentStatus}
+      </span>
+    </div>
+  );
+};
+
 const gridEmployeeProfile = (props) => (
   <div className="flex items-center gap-2">
     <img
@@ -453,11 +547,29 @@ export const customersGrid = [
 
 export const instructorsGrid = [
   { type: 'checkbox', width: '50' },
+
+  {
+    field: 'InstructorID',
+    headerText: 'ID',
+    width: '80',
+    textAlign: 'Center',
+  },
+
   {
     headerText: 'Instructor',
     width: '150',
     template: gridInstructorProfile,
     textAlign: 'Center',
+  },
+  {
+    headerText: 'View',
+    width: '80',
+    textAlign: 'Center',
+    template: (rowData) => (
+      <Link to={`/instructors/${rowData.InstructorID}`}>
+        <AiOutlineEye className="text-xl text-blue-600 hover:text-blue-800 cursor-pointer" />
+      </Link>
+    ),
   },
 
   { field: 'Name', headerText: 'Full Name', width: '150', textAlign: 'Center' },
@@ -518,6 +630,164 @@ export const instructorsGrid = [
   },
 ];
 
+export const learnersGrid = [ 
+
+  { type: 'checkbox', width: '50' },
+
+  {
+    field: 'LearnerID',
+    headerText: 'ID',
+    width: '90',
+    textAlign: 'Center',
+  },
+
+  {
+    headerText: 'Learner',
+    width: '150',
+    template: gridLearnerProfile,
+    textAlign: 'Center',
+  },
+  {
+    headerText: 'View',
+    width: '80',
+    textAlign: 'Center',
+    template: (rowData) => (
+      <Link to={`/learners/${rowData.LearnerID}`}>
+        <AiOutlineEye className="text-xl text-blue-600 hover:text-blue-800 cursor-pointer" />
+      </Link>
+    ),
+  },
+
+  { field: 'Name', headerText: 'Full Name', width: '150', textAlign: 'Center' },
+
+  { field: 'Email', headerText: 'Email', width: '200', textAlign: 'Center' },
+
+  { field: 'Phone', headerText: 'Phone', width: '150', textAlign: 'Center' },
+
+  { field: 'Instructor', headerText: 'Instructor', width: '150', textAlign: 'Center' },
+
+  { field: 'Zone', headerText: 'Zone (1–4)', width: '120', textAlign: 'Center' },
+
+  { field: 'Postcode', headerText: 'Postcode', width: '120', textAlign: 'Center' },
+
+  {
+    headerText: 'Country',
+    width: '120',
+    textAlign: 'Center',
+    template: gridLearnerCountry,
+  },
+
+  { field: 'JoinDate', headerText: 'Join Date', width: '135', format: 'yMd', textAlign: 'Center' },
+
+  { field: 'TestDate', headerText: 'Test Date', width: '135', format: 'yMd', textAlign: 'Center' },
+
+  { field: 'TestCountdown', headerText: 'Days Until Test', width: '130', textAlign: 'Center' },
+
+  { field: 'NextLessonDate', headerText: 'Next Lesson', width: '135', format: 'yMd', textAlign: 'Center' },
+
+  { field: 'PreferredDuration', headerText: 'Lesson Duration', width: '130', textAlign: 'Center' },
+
+  { field: 'LessonsBooked', headerText: 'Lessons Booked', width: '130', textAlign: 'Center' },
+
+  { field: 'LessonsCompleted', headerText: 'Lessons Completed', width: '150', textAlign: 'Center' },
+
+  { field: 'LessonsCancelled', headerText: 'Cancelled', width: '100', textAlign: 'Center' },
+
+  { field: 'LateCancellations', headerText: 'Late Cancellations', width: '140', textAlign: 'Center' },
+
+  { field: 'TotalHours', headerText: 'Total Hours', width: '110', textAlign: 'Center' },
+
+  {
+    headerText: 'Progress',
+    width: '180',
+    template: gridProgressBar,
+    textAlign: 'Center',
+  },
+
+  { field: 'ProgressPercentage', headerText: 'Progress %', width: '110', textAlign: 'Center' },
+
+  {
+    headerText: 'Payment Status',
+    width: '130',
+    template: gridPaymentStatus,
+    textAlign: 'Center',
+  },
+
+  { field: 'LastPaymentDate', headerText: 'Last Payment', width: '135', format: 'yMd', textAlign: 'Center' },
+
+  { field: 'LastPaymentAmount', headerText: 'Last Amount', width: '120', textAlign: 'Center' },
+
+  { field: 'TotalSpent', headerText: 'Total Spent', width: '120', textAlign: 'Center' },
+
+  { field: 'OutstandingBalance', headerText: 'Outstanding', width: '120', textAlign: 'Center' },
+
+  { field: 'BlockBookingRemaining', headerText: 'Block Lessons Remaining', width: '180', textAlign: 'Center' },
+
+  { field: 'AutoPay', headerText: 'Auto-Pay', width: '100', textAlign: 'Center' },
+
+  { field: 'PaymentMethod', headerText: 'Payment Method', width: '150', textAlign: 'Center' },
+
+  { field: 'LicenceUploaded', headerText: 'Licence Uploaded', width: '140', textAlign: 'Center' },
+
+  { field: 'IDUploaded', headerText: 'ID Uploaded', width: '120', textAlign: 'Center' },
+
+  { field: 'TheoryTestPassed', headerText: 'Theory Test', width: '110', textAlign: 'Center' },
+
+  { field: 'TheoryTestDate', headerText: 'Theory Test Date', width: '140', format: 'yMd', textAlign: 'Center' },
+
+  { field: 'ReflectiveLogsCount', headerText: 'Reflective Logs', width: '130', textAlign: 'Center' },
+
+  { field: 'LastActivityDate', headerText: 'Last Activity', width: '135', format: 'yMd', textAlign: 'Center' },
+
+  {
+    field: 'LearnerID',
+    headerText: 'Learner ID',
+    width: '125',
+    textAlign: 'Center',
+    isPrimaryKey: true,
+  },
+];
+
+export const enquiriesGrid = [
+  { type: 'checkbox', width: '50' },
+  {
+    field: 'EnquiryID',
+    headerText: 'Enquiry ID',
+    width: '120',
+    textAlign: 'Center',
+    isPrimaryKey: true,
+  },
+  { field: 'Name', headerText: 'Full Name', width: '150', textAlign: 'Center' },
+  { field: 'Email', headerText: 'Email', width: '200', textAlign: 'Center' },
+  { field: 'Phone', headerText: 'Phone', width: '150', textAlign: 'Center' },
+  { field: 'JoinDate', headerText: 'Enquiry Date', width: '135', format: 'yMd', textAlign: 'Center' },
+  {
+    field: 'Status',
+    headerText: 'Pipeline Status',
+    width: '150',
+    template: gridEnquiryStatus,
+    textAlign: 'Center',
+  },
+  { field: 'Instructor', headerText: 'Assigned Instructor', width: '150', textAlign: 'Center' },
+  { field: 'Zone', headerText: 'Zone (1–4)', width: '100', textAlign: 'Center' },
+  { field: 'Postcode', headerText: 'Postcode', width: '100', textAlign: 'Center' },
+  {
+    headerText: 'Country',
+    width: '100',
+    textAlign: 'Center',
+    template: gridEnquiryCountry,
+  },
+  { field: 'ConversionTracking', headerText: 'Conversion Stage', width: '140', textAlign: 'Center' },
+  {
+    headerText: 'Quick Contact',
+    width: '120',
+    template: gridContactActions,
+    textAlign: 'Center',
+  },
+  { field: 'Source', headerText: 'Source', width: '100', textAlign: 'Center' },
+  { field: 'Notes', headerText: 'Admin Notes', width: '250', textAlign: 'Left' },
+];
+
 export const employeesGrid = [
   { headerText: 'Employee',
     width: '150',
@@ -555,12 +825,21 @@ export const employeesGrid = [
 ];
 
 export const links = [
+  // {
+  //   title: 'Dashboard',
+  //   links: [
+  //     {
+  //       name: 'ecommerce',
+  //       icon: <FiShoppingBag />,
+  //     },
+  //   ],
+  // },
   {
-    title: 'Dashboard',
+    title: 'Diary',
     links: [
       {
-        name: 'ecommerce',
-        icon: <FiShoppingBag />,
+        name: 'diary',
+        icon: <FiBookOpen />,
       },
     ],
   },
@@ -568,22 +847,26 @@ export const links = [
   {
     title: 'Pages',
     links: [
-      {
-        name: 'orders',
-        icon: <AiOutlineShoppingCart />,
-      },
-      {
-        name: 'employees',
-        icon: <IoMdContacts />,
-      },
+      // {
+      //   name: 'orders',
+      //   icon: <AiOutlineShoppingCart />,
+      // },
+      // {
+      //   name: 'employees',
+      //   icon: <IoMdContacts />,
+      // },
       {
         name: 'instructors',
         icon: <IoMdContacts />,
       },
       {
-        name: 'customers',
+        name: 'learners',
         icon: <RiContactsLine />,
       },
+      // {
+      //   name: 'customers',
+      //   icon: <RiContactsLine />,
+      // },
     ],
   },
   {
@@ -935,29 +1218,49 @@ export const themeColors = [
   },
 ];
 
+// data/dummy.js
 export const userProfileData = [
   {
-    icon: <BsCurrencyDollar />,
     title: 'My Profile',
-    desc: 'Account Settings',
+    desc: 'View & edit profile',
+    icon: '👤',
+    route: '/profile',
     iconColor: '#03C9D7',
     iconBg: '#E5FAFB',
   },
   {
-    icon: <BsShield />,
-    title: 'My Inbox',
-    desc: 'Messages & Emails',
-    iconColor: 'rgb(0, 194, 146)',
-    iconBg: 'rgb(235, 250, 242)',
-  },
-  {
-    icon: <FiCreditCard />,
-    title: 'My Tasks',
-    desc: 'To-do and Daily Tasks',
-    iconColor: 'rgb(255, 244, 229)',
-    iconBg: 'rgb(254, 201, 15)',
+    title: 'Settings',
+    desc: 'Account settings',
+    icon: '⚙️',
+    route: '/settings',
+    iconColor: '#7352FF',
+    iconBg: '#ECE8FF',
   },
 ];
+
+// export const userProfileData = [
+//   {
+//     icon: <BsCurrencyDollar />,
+//     title: 'My Profile',
+//     desc: 'Account Settings',
+//     iconColor: '#03C9D7',
+//     iconBg: '#E5FAFB',
+//   },
+//   {
+//     icon: <BsShield />,
+//     title: 'My Inbox',
+//     desc: 'Messages & Emails',
+//     iconColor: 'rgb(0, 194, 146)',
+//     iconBg: 'rgb(235, 250, 242)',
+//   },
+//   {
+//     icon: <FiCreditCard />,
+//     title: 'My Tasks',
+//     desc: 'To-do and Daily Tasks',
+//     iconColor: 'rgb(255, 244, 229)',
+//     iconBg: 'rgb(254, 201, 15)',
+//   },
+// ];
 
 export const ordersGrid = [
   {
@@ -1589,6 +1892,7 @@ export const instructorsData = [
     PassRate: 78,
     LessonsCompleted: 145,
     ConversionRate: 64,
+    LessonsBooked: 180,
 
     IncomeMonth: '£2,450',
     ExpensesMonth: '£310',
@@ -1621,6 +1925,7 @@ export const instructorsData = [
     PassRate: 62,
     LessonsCompleted: 98,
     ConversionRate: 52,
+    LessonsBooked: 180,
 
     IncomeMonth: '£1,780',
     ExpensesMonth: '£220',
@@ -1653,6 +1958,7 @@ export const instructorsData = [
     PassRate: 85,
     LessonsCompleted: 172,
     ConversionRate: 70,
+    LessonsBooked: 200,
 
     IncomeMonth: '£2,980',
     ExpensesMonth: '£350',
@@ -1665,6 +1971,291 @@ export const instructorsData = [
 
     ProfileImage: avatar3,
     Flag: 'uk.png',
+  },
+];
+
+export const learnersData = [
+  {
+    LearnerID: 1001,
+    Name: 'Emily Watson',
+    Email: 'emily.watson@example.com',
+    Phone: '+44 7700 100111',
+    Instructor: 'John Smith',
+    Zone: '2',
+    Postcode: 'SW11',
+    Country: 'UK',
+    JoinDate: '2024-09-15',
+    TestDate: '2025-02-20',
+    TestCountdown: 70,
+    NextLessonDate: '2024-12-15',
+    PreferredDuration: '1.5h',
+    LessonsBooked: 25,
+    LessonsCompleted: 18,
+    LessonsCancelled: 2,
+    LateCancellations: 0,
+    TotalHours: 27,
+    ProgressPercentage: 72,
+    PaymentStatus: 'Paid',
+    LastPaymentDate: '2024-12-05',
+    LastPaymentAmount: '£120',
+    TotalSpent: '£810',
+    OutstandingBalance: '£0',
+    BlockBookingRemaining: 7,
+    AutoPay: 'Yes',
+    PaymentMethod: 'Card (Auto)',
+    LicenceUploaded: 'Yes',
+    IDUploaded: 'Yes',
+    TheoryTestPassed: 'Yes',
+    TheoryTestDate: '2024-10-12',
+    ReflectiveLogsCount: 18,
+    LastActivityDate: '2024-12-10',
+    ProfileImage: avatar,
+    Flag: 'uk.png',
+  },
+
+  {
+    LearnerID: 1002,
+    Name: 'James Anderson',
+    Email: 'james.anderson@example.com',
+    Phone: '+44 7700 200222',
+    Instructor: 'Sarah Johnson',
+    Zone: '1',
+    Postcode: 'E15',
+    Country: 'UK',
+    JoinDate: '2024-10-20',
+    TestDate: '2025-03-15',
+    TestCountdown: 93,
+    NextLessonDate: '2024-12-14',
+    PreferredDuration: '2h',
+    LessonsBooked: 15,
+    LessonsCompleted: 10,
+    LessonsCancelled: 1,
+    LateCancellations: 1,
+    TotalHours: 20,
+    ProgressPercentage: 45,
+    PaymentStatus: 'Pending',
+    LastPaymentDate: '2024-11-28',
+    LastPaymentAmount: '£180',
+    TotalSpent: '£540',
+    OutstandingBalance: '£90',
+    BlockBookingRemaining: 5,
+    AutoPay: 'No',
+    PaymentMethod: 'Bank Transfer',
+    LicenceUploaded: 'Yes',
+    IDUploaded: 'No',
+    TheoryTestPassed: 'No',
+    TheoryTestDate: '-',
+    ReflectiveLogsCount: 10,
+    LastActivityDate: '2024-12-08',
+    ProfileImage: avatar2,
+    Flag: 'uk.png',
+  },
+
+  {
+    LearnerID: 1003,
+    Name: 'Sophie Taylor',
+    Email: 'sophie.taylor@example.com',
+    Phone: '+44 7700 300333',
+    Instructor: 'Michael Brown',
+    Zone: '3',
+    Postcode: 'CR0',
+    Country: 'UK',
+    JoinDate: '2024-08-10',
+    TestDate: '2025-01-25',
+    TestCountdown: 44,
+    NextLessonDate: '2024-12-16',
+    PreferredDuration: '1h',
+    LessonsBooked: 35,
+    LessonsCompleted: 32,
+    LessonsCancelled: 3,
+    LateCancellations: 0,
+    TotalHours: 48,
+    ProgressPercentage: 92,
+    PaymentStatus: 'Paid',
+    LastPaymentDate: '2024-12-01',
+    LastPaymentAmount: '£150',
+    TotalSpent: '£1,440',
+    OutstandingBalance: '£0',
+    BlockBookingRemaining: 3,
+    AutoPay: 'Yes',
+    PaymentMethod: 'Apple Pay',
+    LicenceUploaded: 'Yes',
+    IDUploaded: 'Yes',
+    TheoryTestPassed: 'Yes',
+    TheoryTestDate: '2024-09-05',
+    ReflectiveLogsCount: 32,
+    LastActivityDate: '2024-12-11',
+    ProfileImage: avatar3,
+    Flag: 'uk.png',
+  },
+
+  {
+    LearnerID: 1004,
+    Name: 'Oliver Harris',
+    Email: 'oliver.harris@example.com',
+    Phone: '+44 7700 400444',
+    Instructor: 'John Smith',
+    Zone: '2',
+    Postcode: 'SW12',
+    Country: 'UK',
+    JoinDate: '2024-11-05',
+    TestDate: '2025-04-10',
+    TestCountdown: 119,
+    NextLessonDate: '2024-12-17',
+    PreferredDuration: '1.5h',
+    LessonsBooked: 12,
+    LessonsCompleted: 6,
+    LessonsCancelled: 0,
+    LateCancellations: 0,
+    TotalHours: 9,
+    ProgressPercentage: 28,
+    PaymentStatus: 'Paid',
+    LastPaymentDate: '2024-12-10',
+    LastPaymentAmount: '£270',
+    TotalSpent: '£270',
+    OutstandingBalance: '£0',
+    BlockBookingRemaining: 6,
+    AutoPay: 'Yes',
+    PaymentMethod: 'Google Pay',
+    LicenceUploaded: 'Yes',
+    IDUploaded: 'Yes',
+    TheoryTestPassed: 'No',
+    TheoryTestDate: '-',
+    ReflectiveLogsCount: 6,
+    LastActivityDate: '2024-12-11',
+    ProfileImage: avatar,
+    Flag: 'uk.png',
+  },
+
+  {
+    LearnerID: 1005,
+    Name: 'Amelia Robinson',
+    Email: 'amelia.robinson@example.com',
+    Phone: '+44 7700 500555',
+    Instructor: 'Sarah Johnson',
+    Zone: '1',
+    Postcode: 'E16',
+    Country: 'UK',
+    JoinDate: '2024-07-22',
+    TestDate: '2025-01-18',
+    TestCountdown: 37,
+    NextLessonDate: '2024-12-13',
+    PreferredDuration: '2h',
+    LessonsBooked: 40,
+    LessonsCompleted: 38,
+    LessonsCancelled: 2,
+    LateCancellations: 2,
+    TotalHours: 76,
+    ProgressPercentage: 95,
+    PaymentStatus: 'Overdue',
+    LastPaymentDate: '2024-11-20',
+    LastPaymentAmount: '£180',
+    TotalSpent: '£1,980',
+    OutstandingBalance: '£180',
+    BlockBookingRemaining: 2,
+    AutoPay: 'No',
+    PaymentMethod: 'Cash',
+    LicenceUploaded: 'Yes',
+    IDUploaded: 'Yes',
+    TheoryTestPassed: 'Yes',
+    TheoryTestDate: '2024-08-15',
+    ReflectiveLogsCount: 38,
+    LastActivityDate: '2024-12-09',
+    ProfileImage: avatar2,
+    Flag: 'uk.png',
+  },
+];
+
+export const enquiriesData = [
+  {
+    EnquiryID: 2001,
+    Name: 'Liam Miller',
+    Email: 'liam.miller@enquiry.com',
+    Phone: '+44 7700 600666',
+    JoinDate: '2025-12-12', // Today
+    Status: 'New', // Pipeline: New
+    Instructor: 'Unassigned',
+    Zone: '2',
+    Postcode: 'SW11',
+    Country: 'UK',
+    ConversionTracking: 'Initial Contact',
+    Source: 'Website Form',
+    Notes: 'Prefers evening lessons. Mentioned availability on Mon/Wed evenings.',
+  },
+  {
+    EnquiryID: 2002,
+    Name: 'Chloe White',
+    Email: 'chloe.white@enquiry.com',
+    Phone: '+44 7700 700777',
+    JoinDate: '2025-12-10',
+    Status: 'Contacted', // Pipeline: Contacted
+    Instructor: 'Sarah Johnson',
+    Zone: '1',
+    Postcode: 'E15',
+    Country: 'UK',
+    ConversionTracking: 'Follow-up Sent',
+    Source: 'Referral (Emily Watson)',
+    Notes: 'Assigned to Sarah based on E15 postcode. Sent Trial Lesson offer via email.',
+  },
+  {
+    EnquiryID: 2003,
+    Name: 'Noah Bell',
+    Email: 'noah.bell@enquiry.com',
+    Phone: '+44 7700 800888',
+    JoinDate: '2025-12-05',
+    Status: 'Trial Lesson', // Pipeline: Trial Lesson
+    Instructor: 'Michael Brown',
+    Zone: '3',
+    Postcode: 'CR0',
+    Country: 'UK',
+    ConversionTracking: 'Trial Booked',
+    Source: 'Google Ad',
+    Notes: 'Trial lesson scheduled for 2025-12-18. Waiting for confirmation.',
+  },
+  {
+    EnquiryID: 2004,
+    Name: 'Ella King',
+    Email: 'ella.king@enquiry.com',
+    Phone: '+44 7700 900999',
+    JoinDate: '2025-11-28',
+    Status: 'Converted', // Not in pipeline, but a necessary end-stage
+    Instructor: 'John Smith',
+    Zone: '2',
+    Postcode: 'SW12',
+    Country: 'UK',
+    ConversionTracking: 'Converted (LearnerID 1004)',
+    Source: 'Website Form',
+    Notes: 'Successfully converted. Check Learner ID 1004 profile for details.',
+  },
+  {
+    EnquiryID: 2005,
+    Name: 'Ben Carter',
+    Email: 'ben.carter@enquiry.com',
+    Phone: '+44 7701 000000',
+    JoinDate: '2025-12-11',
+    Status: 'New', // Pipeline: New
+    Instructor: 'Unassigned',
+    Zone: '4',
+    Postcode: 'KT1',
+    Country: 'UK',
+    ConversionTracking: 'Initial Contact',
+    Source: 'Social Media',
+    Notes: 'Zone 4 enquiry. Instructor availability check required.',
+  },
+  {
+    EnquiryID: 2006,
+    Name: 'Mia Hall',
+    Email: 'mia.hall@enquiry.com',
+    Phone: '+44 7701 100111',
+    JoinDate: '2025-11-15',
+    Status: 'Lost', // Not in pipeline, but a necessary end-stage
+    Instructor: 'N/A',
+    Zone: '1',
+    Postcode: 'E16',
+    Country: 'UK',
+    ConversionTracking: 'Did Not Respond',
+    Source: 'Referral',
+    Notes: '3 follow-up attempts made. Marked as lost on 2025-12-01.',
   },
 ];
 
