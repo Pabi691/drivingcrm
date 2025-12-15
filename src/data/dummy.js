@@ -88,7 +88,7 @@ const gridEnquiryStatus = (props) => (
         if (props.Status === 'New') return 'bg-red-200 text-red-800';
         return 'bg-gray-200 text-gray-800';
       })()
-      }`}
+        }`}
     >
       {props.Status}
     </span>
@@ -1921,9 +1921,53 @@ export const instructorsData = [
     Postcode: 'SW11',
     Country: 'UK',
     JoinDate: '2021-05-10',
-    Availability: '09:00 AM – 06:00 PM',
-    DaysOff: 'Sunday',
-    OnLeave: 'No',
+
+    OnLeave: 'Holiday',
+
+    Availability: {
+      Monday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Tuesday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Wednesday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Thursday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Friday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Saturday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '12:30 PM', end: '01:00 PM' },
+        available: true,
+      },
+      Sunday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: null,
+        available: true,
+      },
+    },
 
     PupilCount: 22,
     PassRate: 78,
@@ -1942,6 +1986,8 @@ export const instructorsData = [
 
     ProfileImage: avatar, // used in template
     Flag: 'uk.png', // used in country template
+
+    Bio: 'John Smith has over 10 years of experience as a driving instructor. He is known for his patient teaching style and high pass rates among his pupils.',
   },
 
   {
@@ -1954,9 +2000,53 @@ export const instructorsData = [
     Postcode: 'E15',
     Country: 'UK',
     JoinDate: '2022-01-18',
-    Availability: '10:00 AM – 05:00 PM',
-    DaysOff: 'Saturday',
-    OnLeave: 'No',
+
+    OnLeave: 'Holiday',
+
+    Availability: {
+      Monday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Tuesday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Wednesday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Thursday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Friday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Saturday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '12:30 PM', end: '01:00 PM' },
+        available: true,
+      },
+      Sunday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: null,
+        available: true,
+      },
+    },
 
     PupilCount: 14,
     PassRate: 62,
@@ -1975,6 +2065,8 @@ export const instructorsData = [
 
     ProfileImage: avatar2,
     Flag: 'uk.png',
+
+    Bio: 'Sarah Johnson is a passionate PDI with a focus on modern teaching techniques. She has helped numerous learners achieve their driving goals with confidence.',
   },
 
   {
@@ -1987,9 +2079,53 @@ export const instructorsData = [
     Postcode: 'CR0',
     Country: 'UK',
     JoinDate: '2020-06-05',
-    Availability: '08:00 AM – 04:00 PM',
-    DaysOff: 'Monday',
+
     OnLeave: 'Holiday',
+
+    Availability: {
+      Monday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Tuesday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Wednesday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Thursday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Friday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '01:00 PM', end: '01:30 PM' },
+        available: true,
+      },
+      Saturday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: { start: '12:30 PM', end: '01:00 PM' },
+        available: true,
+      },
+      Sunday: {
+        start: '10:00 AM',
+        end: '04:00 PM',
+        break: null,
+        available: true,
+      },
+    },
 
     PupilCount: 30,
     PassRate: 85,
@@ -2008,6 +2144,8 @@ export const instructorsData = [
 
     ProfileImage: avatar3,
     Flag: 'uk.png',
+
+    Bio: 'Michael Brown brings a wealth of experience as an ADI. His comprehensive approach to driver education ensures that his pupils are well-prepared for the road ahead.',
   },
 ];
 

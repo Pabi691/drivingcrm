@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
+import { MdAccessTime } from 'react-icons/md';
 import { instructorsData } from '../data/dummy';
 import Doughnut from '../components/Charts/Pie';
 
@@ -41,17 +42,32 @@ const InstructorProfilePage = () => {
       </button>
 
       {/* HEADER */}
-      <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow flex items-center gap-4">
-        <img
-          src={instructor.ProfileImage}
-          alt={instructor.Name}
-          className="w-20 h-20 rounded-full object-cover"
-        />
-        <div>
-          <h1 className="text-2xl font-bold">{instructor.Name}</h1>
-          <p className="text-gray-500 text-sm">{instructor.Designation} Instructor</p>
-          <p className="text-sm text-gray-600">Zone {instructor.Zone} · {instructor.Postcode}</p>
-          <p className="text-sm text-gray-600">{instructor.Email}</p>
+      <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow flex-col items-center gap-4">
+        <div className='flex items-center justify-between gap-4'>
+          <div className="flex gap-6 items-center">
+            <img
+              src={instructor.ProfileImage}
+              alt={instructor.Name}
+              className="w-20 h-20 rounded-full object-cover"
+            />
+            <div>
+              <h1 className="text-2xl font-bold">{instructor.Name}</h1>
+              <p className="text-gray-500 text-sm">{instructor.Designation} Instructor</p>
+              <p className="text-sm text-gray-600">{instructor.Email}</p>
+              <p className="text-sm text-gray-600">{instructor.Phone}</p>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-2xl font-bold">Location</h3>
+            <p className="text-sm text-gray-600">Zone {instructor.Zone}</p>
+            <p className="text-sm text-gray-600">{instructor.Postcode}</p>
+            <p className="text-sm text-gray-600">{instructor.Country}</p>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <h3 className="font-semibold mb-2">Instructor Bio</h3>
+          <p className="text-gray-600 text-sm leading-relaxed">{instructor.Bio}</p>
         </div>
       </div>
 
@@ -61,16 +77,45 @@ const InstructorProfilePage = () => {
         <div className="lg:col-span-2 space-y-6">
 
           {/* INFO */}
-          <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
-            <h3 className="font-semibold mb-4">Instructor Information</h3>
+          <div className="bg-white dark:bg-secondary-dark-bg rounded-2xl p-6 shadow">
+            <h3 className="text-lg font-semibold mb-5">Weekly Availability</h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <Info label="Phone" value={instructor.Phone} />
-              <Info label="Availability" value={instructor.Availability} />
-              <Info label="Days Off" value={instructor.DaysOff} />
-              <Info label="Zone" value={instructor.Zone} />
-              <Info label="Postcode" value={instructor.Postcode} />
-              <Info label="Country" value={instructor.Country} />
+            <div className="space-y-3">
+              {Object.entries(instructor.Availability).map(([day, info]) => (
+                <div
+                  key={day}
+                  className={`flex items-center justify-between rounded-xl p-4 border
+          ${info.available
+                      ? 'bg-gray-50 dark:bg-main-dark-bg border-gray-200 dark:border-gray-700'
+                      : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
+                    }`}
+                >
+                  {/* DAY */}
+                  <div>
+                    <p className="font-medium">{day}</p>
+                    {!info.available && (
+                      <p className="text-xs text-red-500 mt-1">Day Off</p>
+                    )}
+                  </div>
+
+                  {/* TIME */}
+                  {info.available && (
+                    <div className="text-right text-sm">
+                      <p className="font-semibold flex items-center justify-end gap-1">
+                        <MdAccessTime />
+                        {info.start} – {info.end}
+                      </p>
+
+                      {info.break && (
+                        <span className="inline-block mt-1 px-3 py-0.5 rounded-full text-xs
+                bg-yellow-100 text-yellow-700 dark:bg-yellow-800/30 dark:text-yellow-300">
+                          Break {info.break.start} – {info.break.end}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -158,9 +203,9 @@ const InstructorProfilePage = () => {
             <h3 className="font-semibold mb-2">Status</h3>
             <span className={`px-3 py-1 rounded-full text-sm
               ${instructor.OnLeave === 'No'
-              ? 'bg-green-100 text-green-700'
-              : 'bg-yellow-100 text-yellow-700'
-                }`}>
+                ? 'bg-green-100 text-green-700'
+                : 'bg-yellow-100 text-yellow-700'
+              }`}>
               {instructor.OnLeave === 'No' ? 'Active' : instructor.OnLeave}
             </span>
           </div>
@@ -173,12 +218,12 @@ const InstructorProfilePage = () => {
 
 /* ================= HELPERS ================= */
 
-const Info = ({ label, value }) => (
-  <div>
-    <p className="text-gray-500 text-xs">{label}</p>
-    <p className="font-medium">{value}</p>
-  </div>
-);
+// const Info = ({ label, value }) => (
+//   <div>
+//     <p className="text-gray-500 text-xs">{label}</p>
+//     <p className="font-medium">{value}</p>
+//   </div>
+// );
 
 const Stat = ({ label, value }) => (
   <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow text-center">

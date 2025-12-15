@@ -1,52 +1,52 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const TEST_USERS = {
   admin: {
-    email: "admin@drivingschool.com",
-    password: "admin123",
+    email: 'admin@drivingschool.com',
+    password: 'admin123',
   },
   instructor: {
-    email: "instructor@drivingschool.com",
-    password: "instructor123",
+    email: 'instructor@drivingschool.com',
+    password: 'instructor123',
   },
   learner: {
-    email: "learner@drivingschool.com",
-    password: "learner123",
+    email: 'learner@drivingschool.com',
+    password: 'learner123',
   },
 };
 
 export default function Login() {
-  const [role, setRole] = useState("admin");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [role, setRole] = useState('admin');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError('');
 
     const user = TEST_USERS[role];
 
     setTimeout(() => {
       if (email === user.email && password === user.password) {
         // ✅ Fake auth token
-        const authKey = "TEST_AUTH_KEY_123456";
+        const authKey = 'TEST_AUTH_KEY_123456';
 
-        localStorage.setItem("authKey", authKey);
-        localStorage.setItem("role", role);
-        localStorage.setItem("userEmail", email);
+        localStorage.setItem('authKey', authKey);
+        localStorage.setItem('role', role);
+        localStorage.setItem('userEmail', email);
 
         // 🔀 Redirect based on role
-        if (role === "admin") navigate("/");
-        if (role === "instructor") navigate("/diary");
-        if (role === "learner") navigate("/calendar");
+        if (role === 'admin') navigate('/');
+        if (role === 'instructor') navigate('/diary');
+        if (role === 'learner') navigate('/calendar');
       } else {
-        setError("Invalid email or password");
+        setError('Invalid email or password');
       }
 
       setLoading(false);
