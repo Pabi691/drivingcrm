@@ -4,7 +4,7 @@ import { FiSettings } from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 
 import { Navbar, Footer, Sidebar, ThemeSettings } from './components';
-import { Ecommerce, Orders, Calendar, Employees, Instructors, Stacked, Pyramid, Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker, ColorMapping, Editor, Diary } from './pages';
+import { Orders, Calendar, Employees, Instructors, Stacked, Pyramid, Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker, ColorMapping, Editor, Diary } from './pages';
 import Login from './pages/Auth/Login';
 import './App.css';
 
@@ -13,6 +13,8 @@ import Learners from './pages/Learners';
 import UserProfilePage from './pages/UserProfilePage';
 import InstructorProfilePage from './pages/InstructorProfilePage';
 import LearnerProfilePage from './pages/LearnerProfilePage';
+import LessonProfilePage from './pages/LessonProfilePage';
+import Lessons from './pages/Lessons';
 // import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
@@ -88,18 +90,20 @@ const App = () => {
             ) : (
               <Routes>
                 {/* dashboard  */}
-                <Route path="/" element={(<Ecommerce />)} />
-                <Route path="/ecommerce" element={(<Ecommerce />)} />
+                <Route path="/" element={(<Diary />)} />
+                {/* <Route path="/ecommerce" element={(<Ecommerce />)} /> */}
                 <Route path="/diary" element={(<Diary />)} />
 
                 {/* Profile */}
                 <Route path="/profile" element={<UserProfilePage />} />
                 <Route path="/instructors/:id" element={<InstructorProfilePage />} />
                 <Route path="/learners/:id" element={<LearnerProfilePage />} />
+                <Route path="/lessons/:id" element={<LessonProfilePage />} />
 
                 {/* pages  */}
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/employees" element={<Employees />} />
+                <Route path="/lessons" element={<Lessons />} />
                 <Route path="/instructors" element={<Instructors />} />
                 <Route path="/learners" element={<Learners />} />
                 <Route path="/customers" element={<Customers />} />

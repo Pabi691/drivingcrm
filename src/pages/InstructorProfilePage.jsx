@@ -3,6 +3,7 @@ import { useParams, Navigate } from 'react-router-dom';
 import { MdAccessTime } from 'react-icons/md';
 import { instructorsData } from '../data/dummy';
 import Doughnut from '../components/Charts/Pie';
+import Scheduler from './Calendar';
 
 const InstructorProfilePage = () => {
   const { id } = useParams();
@@ -76,6 +77,38 @@ const InstructorProfilePage = () => {
         {/* LEFT */}
         <div className="lg:col-span-2 space-y-6">
 
+          {/* SCHEDULER */}
+          <div className="bg-white dark:bg-secondary-dark-bg rounded-2xl p-6 shadow">
+            <h3 className="text-lg font-semibold mb-5">Scheduler</h3>
+            <Scheduler instructorId={instructor.InstructorID} />
+          </div>         
+
+          {/* STATS */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Stat label="Pupils" value={instructor.PupilCount} />
+            <Stat label="Pass Rate" value={`${instructor.PassRate}%`} />
+            <Stat label="Lessons Completed" value={instructor.LessonsCompleted} />
+            <Stat label="Conversion Rate" value={`${instructor.ConversionRate}%`} />
+          </div>
+
+          {/* LESSON PROGRESS */}
+          <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
+            <h3 className="font-semibold mb-3">Lessons Progress</h3>
+            <div className="w-full bg-gray-200 rounded-full h-3">
+              <div
+                className="bg-blue-500 h-3 rounded-full"
+                style={{ width: `${(instructor.LessonsCompleted / instructor.LessonsBooked) * 100}%` }}
+              />
+            </div>
+            <p className="text-sm text-gray-600 mt-2">
+              {((instructor.LessonsCompleted / instructor.LessonsBooked) * 100).toFixed(0)}% completed
+            </p>
+          </div>
+
+        </div>
+
+        {/* RIGHT */}
+        <div className="space-y-6">
           {/* INFO */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-2xl p-6 shadow">
             <h3 className="text-lg font-semibold mb-5">Weekly Availability</h3>
@@ -118,33 +151,6 @@ const InstructorProfilePage = () => {
               ))}
             </div>
           </div>
-
-          {/* STATS */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Stat label="Pupils" value={instructor.PupilCount} />
-            <Stat label="Pass Rate" value={`${instructor.PassRate}%`} />
-            <Stat label="Lessons Completed" value={instructor.LessonsCompleted} />
-            <Stat label="Conversion Rate" value={`${instructor.ConversionRate}%`} />
-          </div>
-
-          {/* LESSON PROGRESS */}
-          <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
-            <h3 className="font-semibold mb-3">Lessons Progress</h3>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div
-                className="bg-blue-500 h-3 rounded-full"
-                style={{ width: `${(instructor.LessonsCompleted / instructor.LessonsBooked) * 100}%` }}
-              />
-            </div>
-            <p className="text-sm text-gray-600 mt-2">
-              {((instructor.LessonsCompleted / instructor.LessonsBooked) * 100).toFixed(0)}% completed
-            </p>
-          </div>
-
-        </div>
-
-        {/* RIGHT */}
-        <div className="space-y-6">
 
           {/* LESSON CHART */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">

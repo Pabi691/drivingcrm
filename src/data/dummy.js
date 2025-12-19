@@ -107,6 +107,51 @@ const gridContactActions = () => (
   </div>
 );
 
+// for lessons
+/* Instructor */
+const gridLessonInstructor = (props) => (
+  <div className="flex items-center gap-2 justify-center">
+    <img
+      className="rounded-full w-9 h-9"
+      src={props.InstructorImage}
+      alt="instructor"
+    />
+    <span className="text-sm">{props.InstructorName}</span>
+  </div>
+);
+
+/* Learner */
+const gridLessonLearner = (props) => (
+  <div className="flex items-center gap-2 justify-center">
+    <img
+      className="rounded-full w-9 h-9"
+      src={props.LearnerImage}
+      alt="learner"
+    />
+    <span className="text-sm">{props.LearnerName}</span>
+  </div>
+);
+
+/* Status Badge */
+const gridLessonStatus = (props) => {
+  const colors = {
+    Completed: 'bg-green-100 text-green-700',
+    Scheduled: 'bg-blue-100 text-blue-700',
+    Cancelled: 'bg-red-100 text-red-700',
+    'No Show': 'bg-gray-200 text-gray-700',
+  };
+
+  return (
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+        colors[props.Status]
+      }`}
+    >
+      {props.Status}
+    </span>
+  );
+};
+
 // for InstructorCount
 
 const gridInstructorProfile = (props) => (
@@ -574,24 +619,25 @@ export const instructorsGrid = [
 
   {
     field: 'InstructorID',
-    headerText: 'ID',
-    width: '80',
-    textAlign: 'Center',
+    headerText: 'Instructor ID',
+    width: '125',
+    textAlign: 'start',
+    isPrimaryKey: true,
   },
 
-  {
-    headerText: 'Instructor',
-    width: '150',
-    template: gridInstructorProfile,
-    textAlign: 'Center',
-  },
+  // {
+  //   headerText: 'Instructor',
+  //   width: '150',
+  //   template: gridInstructorProfile,
+  //   textAlign: 'Center',
+  // },
   {
     headerText: 'View',
     width: '80',
     textAlign: 'Center',
     template: (rowData) => (
       <Link to={`/instructors/${rowData.InstructorID}`}>
-        <AiOutlineEye className="text-xl text-blue-600 hover:text-blue-800 cursor-pointer" />
+        <AiOutlineEye className="text-xl text-red-600 hover:text-blue-800 cursor-pointer" />
       </Link>
     ),
   },
@@ -602,56 +648,49 @@ export const instructorsGrid = [
 
   { field: 'Phone', headerText: 'Phone', width: '150', textAlign: 'Center' },
 
-  { field: 'Designation', headerText: 'ADI / PDI', width: '120', textAlign: 'Center' },
+  // { field: 'Designation', headerText: 'ADI / PDI', width: '120', textAlign: 'Center' },
 
-  { field: 'Zone', headerText: 'Zone (1–4)', width: '120', textAlign: 'Center' },
+  // { field: 'Zone', headerText: 'Zone (1–4)', width: '120', textAlign: 'Center' },
 
-  { field: 'Postcode', headerText: 'Postcode', width: '120', textAlign: 'Center' },
+  // { field: 'Postcode', headerText: 'Postcode', width: '120', textAlign: 'Center' },
 
-  {
-    headerText: 'Country',
-    width: '120',
-    textAlign: 'Center',
-    template: gridInstructorCountry,
-  },
+  // {
+  //   headerText: 'Country',
+  //   width: '120',
+  //   textAlign: 'Center',
+  //   template: gridInstructorCountry,
+  // },
 
-  { field: 'JoinDate', headerText: 'Join Date', width: '135', format: 'yMd', textAlign: 'Center' },
+  // { field: 'JoinDate', headerText: 'Join Date', width: '135', format: 'yMd', textAlign: 'Center' },
 
-  { field: 'Availability', headerText: 'Working Hours', width: '150', textAlign: 'Center' },
+  // { field: 'Availability', headerText: 'Working Hours', width: '150', textAlign: 'Center' },
 
-  { field: 'DaysOff', headerText: 'Days Off', width: '120', textAlign: 'Center' },
+  // { field: 'DaysOff', headerText: 'Days Off', width: '120', textAlign: 'Center' },
 
   { field: 'OnLeave', headerText: 'Holiday/Sick Leave', width: '150', textAlign: 'Center' },
 
-  { field: 'PupilCount', headerText: 'Learners', width: '100', textAlign: 'Center' },
+  // { field: 'PupilCount', headerText: 'Learners', width: '100', textAlign: 'Center' },
 
-  { field: 'PassRate', headerText: 'Pass Rate (%)', width: '120', textAlign: 'Center' },
+  // { field: 'PassRate', headerText: 'Pass Rate (%)', width: '120', textAlign: 'Center' },
 
-  { field: 'LessonsCompleted', headerText: 'Lessons (This Month)', width: '170', textAlign: 'Center' },
+  // { field: 'LessonsCompleted', headerText: 'Lessons (This Month)', width: '170', textAlign: 'Center' },
 
-  { field: 'ConversionRate', headerText: 'Enquiry Conversion (%)', width: '170', textAlign: 'Center' },
+  // { field: 'ConversionRate', headerText: 'Enquiry Conversion (%)', width: '170', textAlign: 'Center' },
 
-  { field: 'IncomeMonth', headerText: 'Income (This Month)', width: '150', textAlign: 'Center' },
+  // { field: 'IncomeMonth', headerText: 'Income (This Month)', width: '150', textAlign: 'Center' },
 
-  { field: 'ExpensesMonth', headerText: 'Expenses (This Month)', width: '150', textAlign: 'Center' },
+  // { field: 'ExpensesMonth', headerText: 'Expenses (This Month)', width: '150', textAlign: 'Center' },
 
-  { field: 'FranchiseFee', headerText: 'Franchise Fee', width: '150', textAlign: 'Center' },
+  // { field: 'FranchiseFee', headerText: 'Franchise Fee', width: '150', textAlign: 'Center' },
 
-  { field: 'ADIExpiry', headerText: 'ADI Badge Expiry', width: '150', textAlign: 'Center' },
+  // { field: 'ADIExpiry', headerText: 'ADI Badge Expiry', width: '150', textAlign: 'Center' },
 
-  { field: 'PDIExpiry', headerText: 'PDI License Expiry', width: '150', textAlign: 'Center' },
+  // { field: 'PDIExpiry', headerText: 'PDI License Expiry', width: '150', textAlign: 'Center' },
 
-  { field: 'InsuranceExpiry', headerText: 'Insurance Expiry', width: '150', textAlign: 'Center' },
+  // { field: 'InsuranceExpiry', headerText: 'Insurance Expiry', width: '150', textAlign: 'Center' },
 
-  { field: 'MOTExpiry', headerText: 'MOT Expiry', width: '150', textAlign: 'Center' },
-
-  {
-    field: 'InstructorID',
-    headerText: 'Instructor ID',
-    width: '125',
-    textAlign: 'Center',
-    isPrimaryKey: true,
-  },
+  // { field: 'MOTExpiry', headerText: 'MOT Expiry', width: '150', textAlign: 'Center' },
+  
 ];
 
 export const learnersGrid = [
@@ -660,66 +699,67 @@ export const learnersGrid = [
 
   {
     field: 'LearnerID',
-    headerText: 'ID',
-    width: '90',
+    headerText: 'Learner ID',
+    width: '125',
     textAlign: 'Center',
+    isPrimaryKey: true,
   },
 
-  {
-    headerText: 'Learner',
-    width: '150',
-    template: gridLearnerProfile,
-    textAlign: 'Center',
-  },
+  // {
+  //   headerText: 'Learner',
+  //   width: '150',
+  //   template: gridLearnerProfile,
+  //   textAlign: 'Center',
+  // },
   {
     headerText: 'View',
     width: '80',
     textAlign: 'Center',
     template: (rowData) => (
       <Link to={`/learners/${rowData.LearnerID}`}>
-        <AiOutlineEye className="text-xl text-blue-600 hover:text-blue-800 cursor-pointer" />
+        <AiOutlineEye className="text-xl text-red-600 hover:text-blue-800 cursor-pointer" />
       </Link>
     ),
   },
 
   { field: 'Name', headerText: 'Full Name', width: '150', textAlign: 'Center' },
 
-  { field: 'Email', headerText: 'Email', width: '200', textAlign: 'Center' },
+  // { field: 'Email', headerText: 'Email', width: '200', textAlign: 'Center' },
 
   { field: 'Phone', headerText: 'Phone', width: '150', textAlign: 'Center' },
 
   { field: 'Instructor', headerText: 'Instructor', width: '150', textAlign: 'Center' },
 
-  { field: 'Zone', headerText: 'Zone (1–4)', width: '120', textAlign: 'Center' },
+  // { field: 'Zone', headerText: 'Zone (1–4)', width: '120', textAlign: 'Center' },
 
-  { field: 'Postcode', headerText: 'Postcode', width: '120', textAlign: 'Center' },
+  // { field: 'Postcode', headerText: 'Postcode', width: '120', textAlign: 'Center' },
 
-  {
-    headerText: 'Country',
-    width: '120',
-    textAlign: 'Center',
-    template: gridLearnerCountry,
-  },
+  // {
+  //   headerText: 'Country',
+  //   width: '120',
+  //   textAlign: 'Center',
+  //   template: gridLearnerCountry,
+  // },
 
-  { field: 'JoinDate', headerText: 'Join Date', width: '135', format: 'yMd', textAlign: 'Center' },
+  // { field: 'JoinDate', headerText: 'Join Date', width: '135', format: 'yMd', textAlign: 'Center' },
 
-  { field: 'TestDate', headerText: 'Test Date', width: '135', format: 'yMd', textAlign: 'Center' },
+  // { field: 'TestDate', headerText: 'Test Date', width: '135', format: 'yMd', textAlign: 'Center' },
 
-  { field: 'TestCountdown', headerText: 'Days Until Test', width: '130', textAlign: 'Center' },
+  // { field: 'TestCountdown', headerText: 'Days Until Test', width: '130', textAlign: 'Center' },
 
-  { field: 'NextLessonDate', headerText: 'Next Lesson', width: '135', format: 'yMd', textAlign: 'Center' },
+  // { field: 'NextLessonDate', headerText: 'Next Lesson', width: '135', format: 'yMd', textAlign: 'Center' },
 
-  { field: 'PreferredDuration', headerText: 'Lesson Duration', width: '130', textAlign: 'Center' },
+  // { field: 'PreferredDuration', headerText: 'Lesson Duration', width: '130', textAlign: 'Center' },
 
-  { field: 'LessonsBooked', headerText: 'Lessons Booked', width: '130', textAlign: 'Center' },
+  // { field: 'LessonsBooked', headerText: 'Lessons Booked', width: '130', textAlign: 'Center' },
 
-  { field: 'LessonsCompleted', headerText: 'Lessons Completed', width: '150', textAlign: 'Center' },
+  // { field: 'LessonsCompleted', headerText: 'Lessons Completed', width: '150', textAlign: 'Center' },
 
-  { field: 'LessonsCancelled', headerText: 'Cancelled', width: '100', textAlign: 'Center' },
+  // { field: 'LessonsCancelled', headerText: 'Cancelled', width: '100', textAlign: 'Center' },
 
-  { field: 'LateCancellations', headerText: 'Late Cancellations', width: '140', textAlign: 'Center' },
+  // { field: 'LateCancellations', headerText: 'Late Cancellations', width: '140', textAlign: 'Center' },
 
-  { field: 'TotalHours', headerText: 'Total Hours', width: '110', textAlign: 'Center' },
+  // { field: 'TotalHours', headerText: 'Total Hours', width: '110', textAlign: 'Center' },
 
   {
     headerText: 'Progress',
@@ -728,7 +768,7 @@ export const learnersGrid = [
     textAlign: 'Center',
   },
 
-  { field: 'ProgressPercentage', headerText: 'Progress %', width: '110', textAlign: 'Center' },
+  // { field: 'ProgressPercentage', headerText: 'Progress %', width: '110', textAlign: 'Center' },
 
   {
     headerText: 'Payment Status',
@@ -737,39 +777,120 @@ export const learnersGrid = [
     textAlign: 'Center',
   },
 
-  { field: 'LastPaymentDate', headerText: 'Last Payment', width: '135', format: 'yMd', textAlign: 'Center' },
+  // { field: 'LastPaymentDate', headerText: 'Last Payment', width: '135', format: 'yMd', textAlign: 'Center' },
 
-  { field: 'LastPaymentAmount', headerText: 'Last Amount', width: '120', textAlign: 'Center' },
+  // { field: 'LastPaymentAmount', headerText: 'Last Amount', width: '120', textAlign: 'Center' },
 
-  { field: 'TotalSpent', headerText: 'Total Spent', width: '120', textAlign: 'Center' },
+  // { field: 'TotalSpent', headerText: 'Total Spent', width: '120', textAlign: 'Center' },
 
-  { field: 'OutstandingBalance', headerText: 'Outstanding', width: '120', textAlign: 'Center' },
+  // { field: 'OutstandingBalance', headerText: 'Outstanding', width: '120', textAlign: 'Center' },
 
-  { field: 'BlockBookingRemaining', headerText: 'Block Lessons Remaining', width: '180', textAlign: 'Center' },
+  // { field: 'BlockBookingRemaining', headerText: 'Block Lessons Remaining', width: '180', textAlign: 'Center' },
 
-  { field: 'AutoPay', headerText: 'Auto-Pay', width: '100', textAlign: 'Center' },
+  // { field: 'AutoPay', headerText: 'Auto-Pay', width: '100', textAlign: 'Center' },
 
-  { field: 'PaymentMethod', headerText: 'Payment Method', width: '150', textAlign: 'Center' },
+  // { field: 'PaymentMethod', headerText: 'Payment Method', width: '150', textAlign: 'Center' },
 
-  { field: 'LicenceUploaded', headerText: 'Licence Uploaded', width: '140', textAlign: 'Center' },
+  // { field: 'LicenceUploaded', headerText: 'Licence Uploaded', width: '140', textAlign: 'Center' },
 
-  { field: 'IDUploaded', headerText: 'ID Uploaded', width: '120', textAlign: 'Center' },
+  // { field: 'IDUploaded', headerText: 'ID Uploaded', width: '120', textAlign: 'Center' },
 
-  { field: 'TheoryTestPassed', headerText: 'Theory Test', width: '110', textAlign: 'Center' },
+  // { field: 'TheoryTestPassed', headerText: 'Theory Test', width: '110', textAlign: 'Center' },
 
-  { field: 'TheoryTestDate', headerText: 'Theory Test Date', width: '140', format: 'yMd', textAlign: 'Center' },
+  // { field: 'TheoryTestDate', headerText: 'Theory Test Date', width: '140', format: 'yMd', textAlign: 'Center' },
 
-  { field: 'ReflectiveLogsCount', headerText: 'Reflective Logs', width: '130', textAlign: 'Center' },
+  // { field: 'ReflectiveLogsCount', headerText: 'Reflective Logs', width: '130', textAlign: 'Center' },
 
-  { field: 'LastActivityDate', headerText: 'Last Activity', width: '135', format: 'yMd', textAlign: 'Center' },
+  // { field: 'LastActivityDate', headerText: 'Last Activity', width: '135', format: 'yMd', textAlign: 'Center' },
+
+  
+];
+
+export const lessonsGrid = [
+  { type: 'checkbox', width: '50' },
 
   {
-    field: 'LearnerID',
-    headerText: 'Learner ID',
-    width: '125',
+    field: 'LessonID',
+    headerText: 'Lesson ID',
+    width: '110',
     textAlign: 'Center',
     isPrimaryKey: true,
   },
+
+  {
+    headerText: 'View',
+    width: '80',
+    textAlign: 'Center',
+    template: (rowData) => (
+      <Link to={`/lessons/${rowData.LessonID}`}>
+        <AiOutlineEye className="text-xl text-blue-600 hover:text-blue-800 cursor-pointer" />
+      </Link>
+    ),
+  },
+
+  {
+    headerText: 'Instructor',
+    width: '160',
+    template: gridLessonInstructor,
+    textAlign: 'Center',
+  },
+
+  {
+    headerText: 'Learner',
+    width: '160',
+    template: gridLessonLearner,
+    textAlign: 'Center',
+  },
+
+  // {
+  //   field: 'LessonDate',
+  //   headerText: 'Date',
+  //   width: '120',
+  //   format: 'yMd',
+  //   textAlign: 'Center',
+  // },
+
+  // {
+  //   headerText: 'Time',
+  //   width: '150',
+  //   textAlign: 'Center',
+  //   template: (props) => (
+  //     <span className="text-sm">
+  //       {props.StartTime} – {props.EndTime}
+  //     </span>
+  //   ),
+  // },
+
+  // { field: 'Duration', headerText: 'Duration', width: '110', textAlign: 'Center' },
+
+  // { field: 'LessonType', headerText: 'Type', width: '130', textAlign: 'Center' },
+
+  // { field: 'CarUsed', headerText: 'Car', width: '110', textAlign: 'Center' },
+
+  // { field: 'Zone', headerText: 'Zone', width: '90', textAlign: 'Center' },
+
+  // {
+  //   headerText: 'Location',
+  //   width: '150',
+  //   textAlign: 'Center',
+  //   template: (props) => (
+  //     <div className="flex items-center justify-center gap-2">
+  //       <GrLocation />
+  //       <span>{props.Postcode}</span>
+  //     </div>
+  //   ),
+  // },
+
+  {
+    headerText: 'Status',
+    width: '130',
+    template: gridLessonStatus,
+    textAlign: 'Center',
+  },
+
+  { field: 'PaymentStatus', headerText: 'Payment', width: '130', textAlign: 'Center' },
+
+  { field: 'Notes', headerText: 'Instructor Notes', width: '220' },
 ];
 
 export const enquiriesGrid = [
@@ -899,71 +1020,75 @@ export const links = [
         name: 'learners',
         icon: <RiContactsLine />,
       },
+      {
+        name: 'lessons',
+        icon: <FiBookOpen />,
+      },
       // {
       //   name: 'customers',
       //   icon: <RiContactsLine />,
       // },
     ],
   },
-  {
-    title: 'Apps',
-    links: [
-      {
-        name: 'calendar',
-        icon: <AiOutlineCalendar />,
-      },
-      {
-        name: 'kanban',
-        icon: <BsKanban />,
-      },
-      {
-        name: 'editor',
-        icon: <FiEdit />,
-      },
-      {
-        name: 'color-picker',
-        icon: <BiColorFill />,
-      },
-    ],
-  },
-  {
-    title: 'Charts',
-    links: [
-      {
-        name: 'line',
-        icon: <AiOutlineStock />,
-      },
-      {
-        name: 'area',
-        icon: <AiOutlineAreaChart />,
-      },
+  // {
+  //   title: 'Apps',
+  //   links: [
+  //     {
+  //       name: 'calendar',
+  //       icon: <AiOutlineCalendar />,
+  //     },
+  //     {
+  //       name: 'kanban',
+  //       icon: <BsKanban />,
+  //     },
+  //     {
+  //       name: 'editor',
+  //       icon: <FiEdit />,
+  //     },
+  //     {
+  //       name: 'color-picker',
+  //       icon: <BiColorFill />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'Charts',
+  //   links: [
+  //     {
+  //       name: 'line',
+  //       icon: <AiOutlineStock />,
+  //     },
+  //     {
+  //       name: 'area',
+  //       icon: <AiOutlineAreaChart />,
+  //     },
 
-      {
-        name: 'bar',
-        icon: <AiOutlineBarChart />,
-      },
-      {
-        name: 'pie',
-        icon: <FiPieChart />,
-      },
-      {
-        name: 'financial',
-        icon: <RiStockLine />,
-      },
-      {
-        name: 'color-mapping',
-        icon: <BsBarChart />,
-      },
-      {
-        name: 'pyramid',
-        icon: <GiLouvrePyramid />,
-      },
-      {
-        name: 'stacked',
-        icon: <AiOutlineBarChart />,
-      },
-    ],
-  },
+  //     {
+  //       name: 'bar',
+  //       icon: <AiOutlineBarChart />,
+  //     },
+  //     {
+  //       name: 'pie',
+  //       icon: <FiPieChart />,
+  //     },
+  //     {
+  //       name: 'financial',
+  //       icon: <RiStockLine />,
+  //     },
+  //     {
+  //       name: 'color-mapping',
+  //       icon: <BsBarChart />,
+  //     },
+  //     {
+  //       name: 'pyramid',
+  //       icon: <GiLouvrePyramid />,
+  //     },
+  //     {
+  //       name: 'stacked',
+  //       icon: <AiOutlineBarChart />,
+  //     },
+  //   ],
+  // },
 ];
 
 export const cartData = [
@@ -2338,6 +2463,101 @@ export const learnersData = [
     LastActivityDate: '2024-12-09',
     ProfileImage: avatar2,
     Flag: 'uk.png',
+  },
+];
+
+export const lessonsData = [
+  {
+    LessonID: 5001,
+    LessonDate: '2024-12-15',
+    StartTime: '10:00 AM',
+    EndTime: '11:30 AM',
+    Duration: '1.5h',
+
+    InstructorID: 101,
+    InstructorName: 'John Smith',
+    InstructorImage: avatar,
+
+    LearnerID: 1001,
+    LearnerName: 'Emily Watson',
+    LearnerImage: avatar,
+
+    Zone: '2',
+    Postcode: 'SW11',
+    Country: 'UK',
+
+    LessonType: 'Practical',
+    CarUsed: 'Manual',
+    PickupLocation: 'Home',
+    DropoffLocation: 'Test Route Area',
+
+    Status: 'Completed', // Scheduled | Completed | Cancelled | No Show
+    PaymentStatus: 'Paid',
+
+    Notes: 'Great progress on clutch control and junctions.',
+    CreatedAt: '2024-12-01',
+  },
+
+  {
+    LessonID: 5002,
+    LessonDate: '2024-12-16',
+    StartTime: '02:00 PM',
+    EndTime: '04:00 PM',
+    Duration: '2h',
+
+    InstructorID: 103,
+    InstructorName: 'Michael Brown',
+    InstructorImage: avatar3,
+
+    LearnerID: 1003,
+    LearnerName: 'Sophie Taylor',
+    LearnerImage: avatar3,
+
+    Zone: '3',
+    Postcode: 'CR0',
+    Country: 'UK',
+
+    LessonType: 'Mock Test',
+    CarUsed: 'Automatic',
+    PickupLocation: 'Driving School',
+    DropoffLocation: 'Driving School',
+
+    Status: 'Scheduled',
+    PaymentStatus: 'Paid',
+
+    Notes: 'Mock test planned before real exam.',
+    CreatedAt: '2024-12-05',
+  },
+
+  {
+    LessonID: 5003,
+    LessonDate: '2024-12-14',
+    StartTime: '11:00 AM',
+    EndTime: '12:00 PM',
+    Duration: '1h',
+
+    InstructorID: 102,
+    InstructorName: 'Sarah Johnson',
+    InstructorImage: avatar2,
+
+    LearnerID: 1002,
+    LearnerName: 'James Anderson',
+    LearnerImage: avatar2,
+
+    Zone: '1',
+    Postcode: 'E15',
+    Country: 'UK',
+
+    LessonType: 'Practical',
+    CarUsed: 'Manual',
+    PickupLocation: 'Home',
+    DropoffLocation: 'Home',
+
+    Status: 'Cancelled',
+    PaymentStatus: 'Refunded',
+
+    Notes: 'Cancelled due to learner illness.',
+    CreatedAt: '2024-12-02',
   },
 ];
 

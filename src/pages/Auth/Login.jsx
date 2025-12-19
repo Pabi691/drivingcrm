@@ -56,9 +56,10 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-center mb-2">
+        {/* <h1 className="text-2xl font-bold text-center mb-2">
           Driving School Login
-        </h1>
+        </h1> */}
+        <img src="drive4passlogo.webp" alt="Drive4Pass Logo" className="w-20 h-20 mx-auto mb-4"/>
         <p className="text-sm text-gray-500 text-center mb-6">
           Admin • Instructor • Learner
         </p>
