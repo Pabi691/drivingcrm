@@ -12,6 +12,10 @@ const InstructorProfilePage = () => {
     (i) => i.InstructorID === Number(id),
   );
 
+  if (!instructor) {
+    return <Navigate to="/instructors" replace />;
+  }
+
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(
     `${instructor.Postcode}, ${instructor.Country}`,
   )}&output=embed`;

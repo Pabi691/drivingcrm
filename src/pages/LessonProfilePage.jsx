@@ -2,13 +2,34 @@ import React from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { lessonsData } from '../data/dummy';
 
+const SummaryCard = ({ label, value }) => (
+    <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow text-center">
+      <p className="text-xs text-gray-500">{label}</p>
+      <p className="font-semibold text-sm mt-1">{value}</p>
+    </div>
+  );
+
+  const PaymentBadge = ({ status }) => {
+  const styles = {
+    Paid: 'bg-green-100 text-green-700',
+    Refunded: 'bg-yellow-100 text-yellow-700',
+    Pending: 'bg-gray-100 text-gray-600',
+  };
+
+  return (
+    <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
+      {status}
+    </span>
+  );
+};
+
 const LessonProfilePage = () => {
   const { id } = useParams();
 
   const lesson = lessonsData.find(
     (l) => l.LessonID === Number(id)
   );
-
+  // 🔒 Safety check FIRST
   if (!lesson) {
     return <Navigate to="/lessons" replace />;
   }
@@ -28,12 +49,19 @@ const LessonProfilePage = () => {
       <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold">Lesson #{lesson.LessonID}</h1>
-          <p className="text-gray-500 text-sm">
-            {lesson.LessonDate} · {lesson.StartTime} – {lesson.EndTime}
-          </p>
         </div>
 
         <StatusBadge status={lesson.Status} />
+
+        <PaymentBadge status={lesson.PaymentStatus} />
+
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <SummaryCard label="Status" value={lesson.Status} />
+        <SummaryCard label="Duration" value={lesson.Duration} />
+        <SummaryCard label="Vehicle" value={lesson.CarUsed} />
+        <SummaryCard label="Payment" value={lesson.PaymentStatus} />
       </div>
 
       {/* MAIN GRID */}
@@ -44,10 +72,13 @@ const LessonProfilePage = () => {
 
           {/* LESSON DETAILS */}
           <Card title="Lesson Details">
+            <Info label="Date" value={lesson.LessonDate} />
+            <Info label="Time" value={`${lesson.StartTime} – ${lesson.EndTime}`} />
             <Info label="Duration" value={lesson.Duration} />
-            <Info label="Type" value={lesson.Type} />
-            <Info label="Location" value={lesson.Location} />
-            <Info label="Vehicle" value={lesson.Vehicle} />
+            <Info label="Type" value={lesson.LessonType} />
+            <Info label="Vehicle" value={lesson.CarUsed} />
+            <Info label="Pickup" value={lesson.PickupLocation} />
+            <Info label="Drop-off" value={lesson.DropoffLocation} />
           </Card>
 
           {/* NOTES */}
@@ -73,10 +104,25 @@ const LessonProfilePage = () => {
           {/* INSTRUCTOR */}
           <ProfileMini
             title="Instructor"
-            name={lesson.Instructor}
+            name={lesson.InstructorName}
             image={lesson.InstructorImage}
             link={`/instructors/${lesson.InstructorID}`}
           />
+
+          <Card title="Lesson Meta">
+            <Info label="Created" value={lesson.CreatedAt} />
+            <Info label="Lesson ID" value={`#${lesson.LessonID}`} />
+          </Card>
+
+          <Card title="Location">
+            <div className="text-sm space-y-1">
+              <p><span className="text-gray-500">Pickup:</span> {lesson.PickupLocation}</p>
+              <p><span className="text-gray-500">Drop-off:</span> {lesson.DropoffLocation}</p>
+              <p className="text-xs text-gray-400">
+                Zone {lesson.Zone} · {lesson.Postcode}, {lesson.Country}
+              </p>
+            </div>
+          </Card>
 
         </div>
       </div>

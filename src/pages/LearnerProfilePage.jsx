@@ -76,6 +76,9 @@ const LearnerProfilePage = () => {
               <Info label="Zone" value={learner.Zone} />
               <Info label="Postcode" value={learner.Postcode} />
               <Info label="Country" value={learner.Country} />
+              <Info label="Auto Pay" value={learner.AutoPay} />
+              <Info label="Payment Method" value={learner.PaymentMethod} />
+              <Info label="Theory Test" value={learner.TheoryTestPassed} />
             </div>
           </div>
 

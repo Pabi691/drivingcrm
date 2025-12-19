@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 // import { AiOutlineCalendar, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock, AiOutlineEye } from 'react-icons/ai';
 import { AiOutlineEye } from 'react-icons/ai';
-import { FiBarChart, FiCreditCard, FiStar, FiShoppingCart, FiBookOpen } from 'react-icons/fi';
+import { FiBarChart, FiCreditCard, FiStar, FiShoppingCart, FiBookOpen, FiPackage } from 'react-icons/fi';
 import { BsBoxSeam, BsCurrencyDollar, BsShield, BsChatLeft } from 'react-icons/bs';
 // import { BiColorFill } from 'react-icons/bi';
 import { IoMdContacts } from 'react-icons/io';
@@ -823,7 +823,7 @@ export const lessonsGrid = [
     textAlign: 'Center',
     template: (rowData) => (
       <Link to={`/lessons/${rowData.LessonID}`}>
-        <AiOutlineEye className="text-xl text-blue-600 hover:text-blue-800 cursor-pointer" />
+        <AiOutlineEye className="text-xl text-red-600 hover:text-blue-800 cursor-pointer" />
       </Link>
     ),
   },
@@ -890,7 +890,82 @@ export const lessonsGrid = [
 
   { field: 'PaymentStatus', headerText: 'Payment', width: '130', textAlign: 'Center' },
 
-  { field: 'Notes', headerText: 'Instructor Notes', width: '220' },
+  // { field: 'Notes', headerText: 'Instructor Notes', width: '220' },
+];
+
+export const packagesGrid = [
+  { type: 'checkbox', width: '50' },
+
+  {
+    field: 'PackageID',
+    headerText: 'Package ID',
+    width: '150',
+    textAlign: 'Center',
+    isPrimaryKey: true,
+  },
+
+  {
+    headerText: 'View',
+    width: '80',
+    textAlign: 'Center',
+    template: (rowData) => (
+      <Link to={`/packages/${rowData.PackageID}`}>
+        <AiOutlineEye className="text-xl text-red-600 hover:text-blue-800 cursor-pointer" />
+      </Link>
+    ),
+  },
+
+  {
+    field: 'Title',
+    headerText: 'Title',
+    width: '200',
+    textAlign: 'Center',
+  },
+
+  {
+    field: 'AreaName',
+    headerText: 'Area',
+    width: '140',
+    textAlign: 'Center',
+  },
+
+  {
+    field: 'Duration',
+    headerText: 'Duration',
+    width: '110',
+    textAlign: 'Center',
+  },
+
+  {
+    field: 'Type',
+    headerText: 'Type',
+    width: '130',
+    textAlign: 'Center',
+  },
+
+  {
+    field: 'DisplayPrice',
+    headerText: 'Price',
+    width: '120',
+    textAlign: 'Center',
+  },
+
+  {
+    headerText: 'Status',
+    width: '120',
+    textAlign: 'Center',
+    template: (rowData) => (
+      <span
+        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+          rowData.Active
+            ? 'bg-green-100 text-green-700'
+            : 'bg-red-100 text-red-700'
+        }`}
+      >
+        {rowData.Active ? 'Active' : 'Inactive'}
+      </span>
+    ),
+  },
 ];
 
 export const enquiriesGrid = [
@@ -1023,6 +1098,10 @@ export const links = [
       {
         name: 'lessons',
         icon: <FiBookOpen />,
+      },
+      {
+        name: 'packages',
+        icon: <FiPackage />,
       },
       // {
       //   name: 'customers',
@@ -2463,6 +2542,213 @@ export const learnersData = [
     LastActivityDate: '2024-12-09',
     ProfileImage: avatar2,
     Flag: 'uk.png',
+  },
+];
+
+export const packagesData = [
+  {
+    AreaID: 'AREA_1',
+    AreaName: 'Area 1',
+    Slug: 'area-1',
+
+    Coverage: [
+      'Ainsworth',
+      'Alkrington',
+      'Atherton',
+      'Bamford',
+      'Bolton',
+      'Bury',
+      'Castleton',
+      'Chadderton',
+      'Cheetham Hill',
+      'Chorlton',
+      'Crumpsall',
+      'Didsbury',
+      'Elton',
+      'Failsworth',
+      'Fallowfield',
+      'Farnworth',
+      'Glodwick',
+      'Harpurhey',
+      'Heaton Park',
+      'Heywood',
+      'Hollinwood',
+      'Horwich',
+      'Hulme',
+      'Kearsley',
+      'Lees',
+      'Leigh',
+      'Levenshulme',
+      'Little Hulton',
+      'Little Lever',
+      'Littleborough',
+      'Manchester City Centre',
+      'Middleton',
+      'Miles Platting',
+      'Milnrow',
+      'Moorside',
+      'Moss Side',
+      'Moston',
+      'Newton Heath',
+      'Norden',
+      'Oldham',
+      'Prestwich',
+      'Radcliffe',
+      'Ramsbottom',
+      'Rochdale',
+      'Royton',
+      'Rusholme',
+      'Shaw',
+      'Smithy Bridge',
+      'Tottington',
+      'Tyldesley',
+      'Unsworth',
+      'Walkden',
+      'Walshaw',
+      'Wardle',
+      'Westhoughton',
+      'Whalley Range',
+      'Whitefield',
+      'Whitworth',
+      'Withington',
+      'Worsley',
+    ],
+
+    Packages: [
+      {
+        PackageID: 'A1_L2H',
+        Title: '2-Hours Lesson',
+        Duration: '2h',
+        Price: 65,
+        Currency: 'GBP',
+        DisplayPrice: '£65',
+        Type: 'Single',
+        Active: true,
+      },
+      {
+        PackageID: 'A1_B10H',
+        Title: '10-Hours Block Booking',
+        Duration: '10h',
+        Price: 300,
+        Currency: 'GBP',
+        DisplayPrice: '£300',
+        Type: 'Block',
+        Active: true,
+      },
+      {
+        PackageID: 'A1_DISC',
+        Title: 'Blue Light & Student Discount',
+        Duration: '2h',
+        Price: 60,
+        Currency: 'GBP',
+        DisplayPrice: '£60',
+        Type: 'Discount',
+        Eligibility: ['Student', 'Blue Light'],
+        Active: true,
+      },
+      {
+        PackageID: 'A1_TEST',
+        Title: 'Test Day',
+        Duration: 'Test Day',
+        Price: 90,
+        Currency: 'GBP',
+        DisplayPrice: '£90',
+        Type: 'Test',
+        Active: true,
+      },
+    ],
+  },
+
+  {
+    AreaID: 'AREA_1B',
+    AreaName: 'Area 1B',
+    Slug: 'area-1b',
+
+    Coverage: [
+      'Central London',
+      'Canary Wharf',
+      'Stratford',
+      'Greenwich',
+    ],
+
+    Packages: [
+      {
+        PackageID: 'A1B_L2H',
+        Title: '2-Hours Lesson',
+        Duration: '2h',
+        Price: 70,
+        Currency: 'GBP',
+        DisplayPrice: '£70',
+        Type: 'Single',
+        Active: true,
+      },
+      {
+        PackageID: 'A1B_B10H',
+        Title: '10-Hours Block Booking',
+        Duration: '10h',
+        Price: 330,
+        Currency: 'GBP',
+        DisplayPrice: '£330',
+        Type: 'Block',
+        Active: true,
+      },
+      {
+        PackageID: 'A1B_TEST',
+        Title: 'Test Day',
+        Duration: 'Test Day',
+        Price: 100,
+        Currency: 'GBP',
+        DisplayPrice: '£100',
+        Type: 'Test',
+        Active: true,
+      },
+    ],
+  },
+
+  {
+    AreaID: 'AREA_2',
+    AreaName: 'Area 2',
+    Slug: 'area-2',
+
+    Coverage: [
+      'Watford',
+      'Slough',
+      'Uxbridge',
+      'Harrow',
+    ],
+
+    Packages: [
+      {
+        PackageID: 'A2_L2H',
+        Title: '2-Hours Lesson',
+        Duration: '2h',
+        Price: 75,
+        Currency: 'GBP',
+        DisplayPrice: '£75',
+        Type: 'Single',
+        Active: true,
+      },
+      {
+        PackageID: 'A2_B10H',
+        Title: '10-Hours Block Booking',
+        Duration: '10h',
+        Price: 350,
+        Currency: 'GBP',
+        DisplayPrice: '£350',
+        Type: 'Block',
+        Active: true,
+      },
+      {
+        PackageID: 'A2_TEST',
+        Title: 'Test Day',
+        Duration: 'Test Day',
+        Price: 110,
+        Currency: 'GBP',
+        DisplayPrice: '£110',
+        Type: 'Test',
+        Active: true,
+      },
+    ],
   },
 ];
 
@@ -7052,3 +7338,14 @@ export const PyramidData = [
   { x: 'Fruits', y: 520, text: '520 cal' },
   { x: 'Bread, Rice, Pasta', y: 930, text: '930 cal' },
 ];
+
+export const packagesList = packagesData.flatMap((area) =>
+  area.Packages.map((pkg) => ({
+    ...pkg,
+    AreaID: area.AreaID,
+    AreaName: area.AreaName,
+    AreaSlug: area.Slug,
+    Coverage: area.Coverage,
+  }))
+);
+
