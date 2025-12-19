@@ -1,15 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AiOutlineCalendar, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock, AiOutlineEye } from 'react-icons/ai';
-import { FiEdit, FiPieChart, FiBarChart, FiCreditCard, FiStar, FiShoppingCart, FiBookOpen } from 'react-icons/fi';
-import { BsKanban, BsBarChart, BsBoxSeam, BsCurrencyDollar, BsShield, BsChatLeft } from 'react-icons/bs';
-import { BiColorFill } from 'react-icons/bi';
+// import { AiOutlineCalendar, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock, AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineEye } from 'react-icons/ai';
+import { FiBarChart, FiCreditCard, FiStar, FiShoppingCart, FiBookOpen } from 'react-icons/fi';
+import { BsBoxSeam, BsCurrencyDollar, BsShield, BsChatLeft } from 'react-icons/bs';
+// import { BiColorFill } from 'react-icons/bi';
 import { IoMdContacts } from 'react-icons/io';
-import { RiContactsLine, RiStockLine } from 'react-icons/ri';
+import { RiContactsLine } from 'react-icons/ri';
 import { MdOutlineSupervisorAccount, MdOutlineEmail, MdOutlineSms } from 'react-icons/md';
 import { HiOutlineRefresh } from 'react-icons/hi';
 import { TiTick } from 'react-icons/ti';
-import { GiLouvrePyramid } from 'react-icons/gi';
+// import { GiLouvrePyramid } from 'react-icons/gi';
 import { GrLocation } from 'react-icons/gr';
 import avatar from './avatar.jpg';
 import avatar2 from './avatar2.jpg';
@@ -154,42 +155,42 @@ const gridLessonStatus = (props) => {
 
 // for InstructorCount
 
-const gridInstructorProfile = (props) => (
-  <div className="flex items-center gap-2">
-    <img
-      className="rounded-full w-10 h-10"
-      src={props.ProfileImage}
-      alt="instructor"
-    />
-    <p>{props.Name}</p>
-  </div>
-);
-const gridInstructorCountry = (props) => (
-  <div className="flex items-center justify-center gap-2">
-    <GrLocation />
-    <span>{props.Country}</span>
-  </div>
-);
+// const gridInstructorProfile = (props) => (
+//   <div className="flex items-center gap-2">
+//     <img
+//       className="rounded-full w-10 h-10"
+//       src={props.ProfileImage}
+//       alt="instructor"
+//     />
+//     <p>{props.Name}</p>
+//   </div>
+// );
+// const gridInstructorCountry = (props) => (
+//   <div className="flex items-center justify-center gap-2">
+//     <GrLocation />
+//     <span>{props.Country}</span>
+//   </div>
+// );
 
 // for PupilCount
 
-const gridLearnerProfile = (props) => (
-  <div className="flex items-center gap-2">
-    <img
-      className="rounded-full w-10 h-10"
-      src={props.ProfileImage}
-      alt="learner"
-    />
-    <p>{props.Name}</p>
-  </div>
-);
+// const gridLearnerProfile = (props) => (
+//   <div className="flex items-center gap-2">
+//     <img
+//       className="rounded-full w-10 h-10"
+//       src={props.ProfileImage}
+//       alt="learner"
+//     />
+//     <p>{props.Name}</p>
+//   </div>
+// );
 
-const gridLearnerCountry = (props) => (
-  <div className="flex items-center justify-center gap-2">
-    <GrLocation />
-    <span>{props.Country}</span>
-  </div>
-);
+// const gridLearnerCountry = (props) => (
+//   <div className="flex items-center justify-center gap-2">
+//     <GrLocation />
+//     <span>{props.Country}</span>
+//   </div>
+// );
 
 const gridProgressBar = (props) => (
   <div className="flex items-center gap-2">
@@ -803,7 +804,6 @@ export const learnersGrid = [
 
   // { field: 'LastActivityDate', headerText: 'Last Activity', width: '135', format: 'yMd', textAlign: 'Center' },
 
-  
 ];
 
 export const lessonsGrid = [
