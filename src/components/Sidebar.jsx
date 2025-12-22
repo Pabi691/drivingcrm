@@ -7,7 +7,7 @@ import { links } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
 
 const Sidebar = () => {
-  const { currentColor, activeMenu, setActiveMenu, screenSize } = useStateContext();
+  const { currentColor, activeMenu, setActiveMenu, screenSize, unreadEnquiriesCount } = useStateContext();
 
   const handleCloseSideBar = () => {
     if (activeMenu !== undefined && screenSize <= 900) {
@@ -24,7 +24,7 @@ const Sidebar = () => {
         <>
           <div className="flex justify-between items-center">
             <Link to="/" onClick={handleCloseSideBar} className="items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight dark:text-white text-slate-900">
-              <img src="drive4passlogo.webp" alt="logo" className="h-8"/>
+              <img src="drive4passlogo.webp" alt="logo" className="h-8" />
               {/* <SiShopware /> <span>Driving School</span> */}
             </Link>
             <TooltipComponent content="Menu" position="BottomCenter">
@@ -54,10 +54,20 @@ const Sidebar = () => {
                     })}
                     className={({ isActive }) => (isActive ? activeLink : normalLink)}
                   >
-                    {link.icon}
-                    <span className="capitalize ">{link.name}</span>
+                    <div className="relative flex items-center gap-3">
+                      {link.icon}
+                      <span className="capitalize">{link.name}</span>
+
+                      {/* 🔔 Enquiry badge */}
+                      {link.name === 'enquiries' && unreadEnquiriesCount > 0 && (
+                        <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs rounded-full px-2">
+                          {unreadEnquiriesCount}
+                        </span>
+                      )}
+                    </div>
                   </NavLink>
                 ))}
+
               </div>
             ))}
           </div>

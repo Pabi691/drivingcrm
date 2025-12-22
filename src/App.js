@@ -15,8 +15,10 @@ import InstructorProfilePage from './pages/InstructorProfilePage';
 import LearnerProfilePage from './pages/LearnerProfilePage';
 import LessonProfilePage from './pages/LessonProfilePage';
 import Lessons from './pages/Lessons';
+import Enquiries from './pages/Enquiries';
 import PackageProfilePage from './pages/PackagePofilePage';
 import Packages from './pages/Packages';
+import EnquiryProfilePage from './pages/EnquiryProfilePage';
 // import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
@@ -102,6 +104,7 @@ const App = () => {
                 <Route path="/learners/:id" element={<LearnerProfilePage />} />
                 <Route path="/lessons/:id" element={<LessonProfilePage />} />
                 <Route path="/packages/:id" element={<PackageProfilePage />} />
+                <Route path="/enquiries/:id" element={<EnquiryProfilePage />} />
 
                 {/* pages  */}
                 <Route path="/orders" element={<Orders />} />
@@ -109,6 +112,7 @@ const App = () => {
                 <Route path="/lessons" element={<Lessons />} />
                 <Route path="/instructors" element={<Instructors />} />
                 <Route path="/learners" element={<Learners />} />
+                <Route path="/enquiries" element={<Enquiries />} />
                 <Route path="/packages" element={<Packages />} />
                 <Route path="/customers" element={<Customers />} />
 

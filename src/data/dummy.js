@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 // import { AiOutlineCalendar, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock, AiOutlineEye } from 'react-icons/ai';
-import { AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineEye, AiOutlineQuestionCircle } from 'react-icons/ai';
 import { FiBarChart, FiCreditCard, FiStar, FiShoppingCart, FiBookOpen, FiPackage } from 'react-icons/fi';
 import { BsBoxSeam, BsCurrencyDollar, BsShield, BsChatLeft } from 'react-icons/bs';
 // import { BiColorFill } from 'react-icons/bi';
 import { IoMdContacts } from 'react-icons/io';
 import { RiContactsLine } from 'react-icons/ri';
-import { MdOutlineSupervisorAccount, MdOutlineEmail, MdOutlineSms } from 'react-icons/md';
+import { MdOutlineSupervisorAccount } from 'react-icons/md';
 import { HiOutlineRefresh } from 'react-icons/hi';
 import { TiTick } from 'react-icons/ti';
 // import { GiLouvrePyramid } from 'react-icons/gi';
@@ -72,41 +72,41 @@ export const kanbanGrid = [
   },
 ];
 
-const gridEnquiryCountry = (props) => (
-  <div className="flex items-center justify-center gap-2">
-    <GrLocation />
-    <span>{props.Country}</span>
-  </div>
-);
+// const gridEnquiryCountry = (props) => (
+//   <div className="flex items-center justify-center gap-2">
+//     <GrLocation />
+//     <span>{props.Country}</span>
+//   </div>
+// );
 
-const gridEnquiryStatus = (props) => (
-  <div className="flex items-center justify-center">
-    <span
-      className={`px-2 py-1 rounded text-xs font-semibold ${(() => {
-        if (props.Status === 'Active') return 'bg-green-200 text-green-800';
-        if (props.Status === 'Trial Lesson') return 'bg-blue-200 text-blue-800';
-        if (props.Status === 'Contacted') return 'bg-yellow-200 text-yellow-800';
-        if (props.Status === 'New') return 'bg-red-200 text-red-800';
-        return 'bg-gray-200 text-gray-800';
-      })()
-        }`}
-    >
-      {props.Status}
-    </span>
-  </div>
+// const gridEnquiryStatus = (props) => (
+//   <div className="flex items-center justify-center">
+//     <span
+//       className={`px-2 py-1 rounded text-xs font-semibold ${(() => {
+//         if (props.Status === 'Active') return 'bg-green-200 text-green-800';
+//         if (props.Status === 'Trial Lesson') return 'bg-blue-200 text-blue-800';
+//         if (props.Status === 'Contacted') return 'bg-yellow-200 text-yellow-800';
+//         if (props.Status === 'New') return 'bg-red-200 text-red-800';
+//         return 'bg-gray-200 text-gray-800';
+//       })()
+//         }`}
+//     >
+//       {props.Status}
+//     </span>
+//   </div>
 
-);
+// );
 
-const gridContactActions = () => (
-  <div className="flex items-center justify-center gap-3">
-    <button type="button" title="Send Email Template">
-      <MdOutlineEmail className="text-xl text-blue-500 hover:text-blue-700" />
-    </button>
-    <button type="button" title="Send SMS Template">
-      <MdOutlineSms className="text-xl text-green-500 hover:text-green-700" />
-    </button>
-  </div>
-);
+// const gridContactActions = () => (
+//   <div className="flex items-center justify-center gap-3">
+//     <button type="button" title="Send Email Template">
+//       <MdOutlineEmail className="text-xl text-blue-500 hover:text-blue-700" />
+//     </button>
+//     <button type="button" title="Send SMS Template">
+//       <MdOutlineSms className="text-xl text-green-500 hover:text-green-700" />
+//     </button>
+//   </div>
+// );
 
 // for lessons
 /* Instructor */
@@ -968,8 +968,13 @@ export const packagesGrid = [
   },
 ];
 
+/* ===============================
+   Enquiries Grid Columns
+================================ */
+
 export const enquiriesGrid = [
   { type: 'checkbox', width: '50' },
+
   {
     field: 'EnquiryID',
     headerText: 'Enquiry ID',
@@ -977,35 +982,118 @@ export const enquiriesGrid = [
     textAlign: 'Center',
     isPrimaryKey: true,
   },
-  { field: 'Name', headerText: 'Full Name', width: '150', textAlign: 'Center' },
-  { field: 'Email', headerText: 'Email', width: '200', textAlign: 'Center' },
-  { field: 'Phone', headerText: 'Phone', width: '150', textAlign: 'Center' },
-  { field: 'JoinDate', headerText: 'Enquiry Date', width: '135', format: 'yMd', textAlign: 'Center' },
+
   {
-    field: 'Status',
-    headerText: 'Pipeline Status',
-    width: '150',
-    template: gridEnquiryStatus,
+    headerText: 'View',
+    width: '80',
+    textAlign: 'Center',
+    template: 'viewEnquiry',
+  },
+
+  {
+    field: 'FullName',
+    headerText: 'Name',
+    width: '160',
     textAlign: 'Center',
   },
-  { field: 'Instructor', headerText: 'Assigned Instructor', width: '150', textAlign: 'Center' },
-  { field: 'Zone', headerText: 'Zone (1–4)', width: '100', textAlign: 'Center' },
-  { field: 'Postcode', headerText: 'Postcode', width: '100', textAlign: 'Center' },
+
+  // {
+  //   field: 'Phone',
+  //   headerText: 'Phone',
+  //   width: '150',
+  //   textAlign: 'Center',
+  // },
+
   {
-    headerText: 'Country',
+    field: 'Area',
+    headerText: 'Area',
     width: '100',
     textAlign: 'Center',
-    template: gridEnquiryCountry,
   },
-  { field: 'ConversionTracking', headerText: 'Conversion Stage', width: '140', textAlign: 'Center' },
+
+  // {
+  //   field: 'LessonType',
+  //   headerText: 'Type',
+  //   width: '100',
+  //   textAlign: 'Center',
+  // },
+
   {
-    headerText: 'Quick Contact',
-    width: '120',
-    template: gridContactActions,
+    field: 'InterestedPackage',
+    headerText: 'Package',
+    width: '200',
     textAlign: 'Center',
   },
-  { field: 'Source', headerText: 'Source', width: '100', textAlign: 'Center' },
-  { field: 'Notes', headerText: 'Admin Notes', width: '250', textAlign: 'Left' },
+
+  // {
+  //   field: 'Source',
+  //   headerText: 'Source',
+  //   width: '130',
+  //   textAlign: 'Center',
+  // },
+
+  {
+    field: 'Priority',
+    headerText: 'Priority',
+    width: '100',
+    textAlign: 'Center',
+    template: (props) => {
+      const colors = {
+        High: 'bg-red-100 text-red-700',
+        Medium: 'bg-yellow-100 text-yellow-700',
+        Low: 'bg-green-100 text-green-700',
+      };
+
+      return (
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-medium ${colors[props.Priority]}`}
+        >
+          {props.Priority}
+        </span>
+      );
+    },
+  },
+
+  {
+    field: 'EnquiryStatus',
+    headerText: 'Status',
+    width: '100',
+    textAlign: 'Center',
+    template: (props) => {
+      const styles = {
+        New: 'bg-blue-100 text-blue-700',
+        Contacted: 'bg-indigo-100 text-indigo-700',
+        'Follow-up': 'bg-yellow-100 text-yellow-700',
+        Converted: 'bg-green-100 text-green-700',
+        Lost: 'bg-red-100 text-red-700',
+        'Not Interested': 'bg-gray-100 text-gray-600',
+      };
+
+      return (
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-medium ${styles[props.EnquiryStatus]}`}
+        >
+          {props.EnquiryStatus}
+        </span>
+      );
+    },
+  },
+
+  {
+    field: 'FollowUpDate',
+    headerText: 'Follow-up',
+    width: '100',
+    format: 'yMd',
+    textAlign: 'Center',
+  },
+
+  {
+    field: 'CreatedAt',
+    headerText: 'Created',
+    width: '100',
+    format: 'yMd',
+    textAlign: 'Center',
+  },
 ];
 
 export const employeesGrid = [
@@ -1102,6 +1190,10 @@ export const links = [
       {
         name: 'packages',
         icon: <FiPackage />,
+      },
+      {
+        name: 'enquiries',
+        icon: <AiOutlineQuestionCircle />,
       },
       // {
       //   name: 'customers',
@@ -2849,94 +2941,155 @@ export const lessonsData = [
 
 export const enquiriesData = [
   {
-    EnquiryID: 2001,
-    Name: 'Liam Miller',
-    Email: 'liam.miller@enquiry.com',
-    Phone: '+44 7700 600666',
-    JoinDate: '2025-12-12', // Today
-    Status: 'New', // Pipeline: New
-    Instructor: 'Unassigned',
+    EnquiryID: 9001,
+
+    /* ===========================
+       Lead / Person Details
+    ============================ */
+    FullName: 'Oliver Green',
+    Email: 'oliver.green@example.com',
+    Phone: '+44 7700 111222',
+    AlternatePhone: '',
+    Age: 18,
+
+    /* ===========================
+       Location Details
+    ============================ */
+    Area: 'Manchester',
     Zone: '2',
-    Postcode: 'SW11',
+    Postcode: 'M15',
+    City: 'Manchester',
     Country: 'UK',
-    ConversionTracking: 'Initial Contact',
-    Source: 'Website Form',
-    Notes: 'Prefers evening lessons. Mentioned availability on Mon/Wed evenings.',
+
+    /* ===========================
+       Enquiry Source
+    ============================ */
+    Source: 'Website', // Website | Phone | WhatsApp | Facebook | Google Ads | Referral
+    Campaign: 'Google Search – Driving Lessons Manchester',
+    Referrer: '',
+    UTM_Source: 'google',
+    UTM_Medium: 'cpc',
+    UTM_Campaign: 'driving_lessons_uk',
+
+    /* ===========================
+       Package Interest
+    ============================ */
+    InterestedPackage: '10-Hours Block Booking',
+    LessonType: 'Manual', // Manual | Automatic
+    PreferredLessonDuration: '2h',
+    BudgetRange: '£250 – £350',
+
+    /* ===========================
+       Availability
+    ============================ */
+    PreferredDays: ['Monday', 'Wednesday', 'Saturday'],
+    PreferredTime: 'Evening',
+    StartTimeline: 'Within 2 weeks',
+
+    /* ===========================
+       Instructor Preferences
+    ============================ */
+    PreferredInstructorGender: 'No Preference',
+    PreferredInstructorID: null,
+
+    /* ===========================
+       Status Tracking (VERY IMPORTANT)
+    ============================ */
+    EnquiryStatus: 'New', 
+    // New | Contacted | Follow-up | Converted | Lost | Not Interested
+
+    LeadScore: 65, // 0–100 (for CRM / KPI)
+    Priority: 'Medium', // Low | Medium | High
+
+    /* ===========================
+       Follow-up & Sales
+    ============================ */
+    AssignedTo: 'Admin',
+    FollowUpRequired: true,
+    FollowUpDate: '2024-12-18',
+    LastContactedDate: '2024-12-15',
+    ContactAttempts: 1,
+
+    /* ===========================
+       Conversion Details
+    ============================ */
+    Converted: false,
+    ConvertedLearnerID: null,
+    ConvertedPackageID: null,
+    ConversionDate: null,
+
+    /* ===========================
+       Notes & Communication
+    ============================ */
+    Notes: 'Interested in weekend lessons. Asked about discounts.',
+    LastMessage: 'Can you offer any student discount?',
+    CommunicationPreference: 'WhatsApp', // Call | Email | WhatsApp
+
+    /* ===========================
+       System / Metadata
+    ============================ */
+    ProfileImage: avatar,
+    CreatedAt: '2024-12-15',
+    UpdatedAt: '2024-12-15',
+    isViewed: false,
   },
+
   {
-    EnquiryID: 2002,
-    Name: 'Chloe White',
-    Email: 'chloe.white@enquiry.com',
-    Phone: '+44 7700 700777',
-    JoinDate: '2025-12-10',
-    Status: 'Contacted', // Pipeline: Contacted
-    Instructor: 'Sarah Johnson',
-    Zone: '1',
-    Postcode: 'E15',
-    Country: 'UK',
-    ConversionTracking: 'Follow-up Sent',
-    Source: 'Referral (Emily Watson)',
-    Notes: 'Assigned to Sarah based on E15 postcode. Sent Trial Lesson offer via email.',
-  },
-  {
-    EnquiryID: 2003,
-    Name: 'Noah Bell',
-    Email: 'noah.bell@enquiry.com',
-    Phone: '+44 7700 800888',
-    JoinDate: '2025-12-05',
-    Status: 'Trial Lesson', // Pipeline: Trial Lesson
-    Instructor: 'Michael Brown',
+    EnquiryID: 9002,
+    FullName: 'Sophia Williams',
+    Email: 'sophia.williams@example.com',
+    Phone: '+44 7700 333444',
+    AlternatePhone: '',
+    Age: 22,
+
+    Area: 'Bolton',
     Zone: '3',
-    Postcode: 'CR0',
+    Postcode: 'BL1',
+    City: 'Bolton',
     Country: 'UK',
-    ConversionTracking: 'Trial Booked',
-    Source: 'Google Ad',
-    Notes: 'Trial lesson scheduled for 2025-12-18. Waiting for confirmation.',
-  },
-  {
-    EnquiryID: 2004,
-    Name: 'Ella King',
-    Email: 'ella.king@enquiry.com',
-    Phone: '+44 7700 900999',
-    JoinDate: '2025-11-28',
-    Status: 'Converted', // Not in pipeline, but a necessary end-stage
-    Instructor: 'John Smith',
-    Zone: '2',
-    Postcode: 'SW12',
-    Country: 'UK',
-    ConversionTracking: 'Converted (LearnerID 1004)',
-    Source: 'Website Form',
-    Notes: 'Successfully converted. Check Learner ID 1004 profile for details.',
-  },
-  {
-    EnquiryID: 2005,
-    Name: 'Ben Carter',
-    Email: 'ben.carter@enquiry.com',
-    Phone: '+44 7701 000000',
-    JoinDate: '2025-12-11',
-    Status: 'New', // Pipeline: New
-    Instructor: 'Unassigned',
-    Zone: '4',
-    Postcode: 'KT1',
-    Country: 'UK',
-    ConversionTracking: 'Initial Contact',
-    Source: 'Social Media',
-    Notes: 'Zone 4 enquiry. Instructor availability check required.',
-  },
-  {
-    EnquiryID: 2006,
-    Name: 'Mia Hall',
-    Email: 'mia.hall@enquiry.com',
-    Phone: '+44 7701 100111',
-    JoinDate: '2025-11-15',
-    Status: 'Lost', // Not in pipeline, but a necessary end-stage
-    Instructor: 'N/A',
-    Zone: '1',
-    Postcode: 'E16',
-    Country: 'UK',
-    ConversionTracking: 'Did Not Respond',
-    Source: 'Referral',
-    Notes: '3 follow-up attempts made. Marked as lost on 2025-12-01.',
+
+    Source: 'Facebook',
+    Campaign: 'FB – Automatic Lessons',
+    Referrer: '',
+    UTM_Source: 'facebook',
+    UTM_Medium: 'paid_social',
+    UTM_Campaign: 'automatic_lessons',
+
+    InterestedPackage: '2-Hours Trial Lesson',
+    LessonType: 'Automatic',
+    PreferredLessonDuration: '2h',
+    BudgetRange: '£60 – £100',
+
+    PreferredDays: ['Tuesday', 'Thursday'],
+    PreferredTime: 'Morning',
+    StartTimeline: 'Immediately',
+
+    PreferredInstructorGender: 'Female',
+    PreferredInstructorID: null,
+
+    EnquiryStatus: 'Contacted',
+    LeadScore: 80,
+    Priority: 'High',
+
+    AssignedTo: 'Sales Team',
+    FollowUpRequired: true,
+    FollowUpDate: '2024-12-16',
+    LastContactedDate: '2024-12-15',
+    ContactAttempts: 2,
+
+    Converted: true,
+    ConvertedLearnerID: 1005,
+    ConvertedPackageID: 2,
+    ConversionDate: '2024-12-16',
+
+    Notes: 'Converted after WhatsApp call.',
+    LastMessage: 'Booked first lesson.',
+    CommunicationPreference: 'WhatsApp',
+
+    ProfileImage: avatar,
+    CreatedAt: '2024-12-14',
+    UpdatedAt: '2024-12-16',
+    isViewed: false,
   },
 ];
 

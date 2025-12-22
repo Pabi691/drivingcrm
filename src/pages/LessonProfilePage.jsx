@@ -7,7 +7,7 @@ const SummaryCard = ({ label, value }) => (
       <p className="text-xs text-gray-500">{label}</p>
       <p className="font-semibold text-sm mt-1">{value}</p>
     </div>
-  );
+);
 
   const PaymentBadge = ({ status }) => {
   const styles = {
