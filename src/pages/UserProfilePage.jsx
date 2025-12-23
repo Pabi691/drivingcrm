@@ -1,7 +1,15 @@
 import React from 'react';
 import avatar from '../data/avatar.jpg';
+import { getUser } from '../utils/auth';
 
-const UserProfilePage = () => (
+const UserProfilePage = () => {
+  const user = getUser();
+  const name = user?.name || 'User';
+  const email = user?.email || '—';
+  const role = user?.role || 'Guest';
+  const avatarUrl = user?.avatar || avatar;
+
+  return (
     <div className="p-6 max-w-7xl mx-auto">
       
       {/* Back */}
@@ -16,14 +24,14 @@ const UserProfilePage = () => (
         <div className="lg:col-span-2 bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
           <div className="flex gap-6 items-center">
             <img
-              src={avatar}
+              src={avatarUrl}
               alt="profile"
               className="h-28 w-28 rounded-full object-cover"
             />
             <div>
-              <h1 className="text-2xl font-bold">Ahmad</h1>
-              <p className="text-gray-500">Driving Instructor</p>
-              <p className="text-sm text-gray-400">Sydney, Australia</p>
+              <h1 className="text-2xl font-bold">{name}</h1>
+              <p className="text-gray-500">{role}</p>
+              <p className="text-sm text-gray-400">{email}</p>
             </div>
           </div>
 
@@ -70,15 +78,15 @@ const UserProfilePage = () => (
 
           {/* PRICE CARD */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
-            <h3 className="font-semibold mb-4">Hourly Price</h3>
-            <p className="text-2xl font-bold mb-4">$60 / hr</p>
+            {/* <h3 className="font-semibold mb-4"></h3> */}
+            {/* <p className="text-2xl font-bold mb-4">test</p> */}
 
-            <button type="button" className="w-full bg-yellow-400 hover:bg-yellow-500 text-black py-2 rounded-lg font-semibold">
-              Book Now
-            </button>
+            {/* <button type="button" className="w-full bg-yellow-400 hover:bg-yellow-500 text-black py-2 rounded-lg font-semibold">
+              ADD
+            </button> */}
 
             <button type="button" className="w-full mt-3 border py-2 rounded-lg text-sm">
-              Check Availability
+              Edit Profile
             </button>
           </div>
 
@@ -112,5 +120,6 @@ const UserProfilePage = () => (
       </div>
     </div>
   );
+};
 
 export default UserProfilePage;

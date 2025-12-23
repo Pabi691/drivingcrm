@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { FiSettings } from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups';
+import { Toaster } from 'react-hot-toast';
 
 import { Navbar, Footer, Sidebar, ThemeSettings } from './components';
 import { Orders, Calendar, Employees, Instructors, Stacked, Pyramid, Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker, ColorMapping, Editor, Diary } from './pages';
@@ -19,10 +20,11 @@ import Enquiries from './pages/Enquiries';
 import PackageProfilePage from './pages/PackagePofilePage';
 import Packages from './pages/Packages';
 import EnquiryProfilePage from './pages/EnquiryProfilePage';
+import ProtectedRoute from './routes/ProtectedRoute';
 // import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
-  const isLoggedIn = !!localStorage.getItem('authKey');
+  const isLoggedIn = !!localStorage.getItem('authToken');
 
   const { setCurrentColor, setCurrentMode, currentMode, activeMenu, currentColor, themeSettings, setThemeSettings } = useStateContext();
   const location = useLocation();
@@ -53,6 +55,7 @@ const App = () => {
 
   return (
     <div className={currentMode === 'Dark' ? 'dark' : ''}>
+      <Toaster position="top-right" />
       <div className="flex relative dark:bg-main-dark-bg">
         {!isAuthPage && (
           <div className="fixed right-4 bottom-4" style={{ zIndex: '1000' }}>
@@ -102,7 +105,11 @@ const App = () => {
                 <Route path="/profile" element={<UserProfilePage />} />
                 <Route path="/instructors/:id" element={<InstructorProfilePage />} />
                 <Route path="/learners/:id" element={<LearnerProfilePage />} />
-                <Route path="/lessons/:id" element={<LessonProfilePage />} />
+                <Route path="/lessons/:id" element={
+                  <ProtectedRoute roles={['admin', 'instructor']}>
+                      <LessonProfilePage />
+                  </ProtectedRoute>
+                } />
                 <Route path="/packages/:id" element={<PackageProfilePage />} />
                 <Route path="/enquiries/:id" element={<EnquiryProfilePage />} />
 

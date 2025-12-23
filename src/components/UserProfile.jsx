@@ -4,18 +4,24 @@ import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import { userProfileData } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
-import avatar from '../data/avatar.jpg';
+import avatarFallback from '../data/avatar.jpg';
+import { getUser } from '../utils/auth';
 
 const UserProfile = () => {
   const { currentColor, setIsClicked, initialState } = useStateContext();
   const navigate = useNavigate();
 
+  const user = getUser();
+
+  // console.log('User Profile:', user);
+
+  const name = user?.name || 'User';
+  const email = user?.email || '—';
+  const role = user?.role || 'Guest';
+  const avatar = user?.avatar || avatarFallback;
+
   const handleLogout = () => {
-    // console.log('Logging out...');
-    // 🔐 Clear auth data
-    localStorage.removeItem('authKey');
-    localStorage.removeItem('role');
-    localStorage.removeItem('userEmail');
+     localStorage.clear();
 
     // 🔄 Reset UI popups
     setIsClicked(initialState);
@@ -34,6 +40,7 @@ const UserProfile = () => {
           bgHoverColor="light-gray"
           size="2xl"
           borderRadius="50%"
+          onClick={() => setIsClicked(initialState)}
         />
       </div>
       <div className="flex gap-5 items-center mt-6 border-color border-b-1 pb-6">
@@ -43,9 +50,9 @@ const UserProfile = () => {
           alt="user-profile"
         />
         <div>
-          <p className="font-semibold text-xl dark:text-gray-200"> Michael Roberts </p>
-          <p className="text-gray-500 text-sm dark:text-gray-400">  Administrator   </p>
-          <p className="text-gray-500 text-sm font-semibold dark:text-gray-400"> info@shop.com </p>
+          <p className="font-semibold text-xl dark:text-gray-200"> {name} </p>
+          <p className="text-gray-500 text-sm dark:text-gray-400"> {role} </p>
+          <p className="text-gray-500 text-sm font-semibold dark:text-gray-400"> {email} </p>
         </div>
       </div>
       <div>

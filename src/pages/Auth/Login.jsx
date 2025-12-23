@@ -1,20 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthService } from '../../services/auth.service';
 
-const TEST_USERS = {
-  admin: {
-    email: 'admin@drivingschool.com',
-    password: 'admin123',
-  },
-  instructor: {
-    email: 'instructor@drivingschool.com',
-    password: 'instructor123',
-  },
-  learner: {
-    email: 'learner@drivingschool.com',
-    password: 'learner123',
-  },
-};
+// const TEST_USERS = {
+//   admin: {
+//     email: 'admin@drivingschool.com',
+//     password: 'admin123',
+//   },
+//   instructor: {
+//     email: 'instructor@drivingschool.com',
+//     password: 'instructor123',
+//   },
+//   learner: {
+//     email: 'learner@drivingschool.com',
+//     password: 'learner123',
+//   },
+// };
 
 export default function Login() {
   const [role, setRole] = useState('admin');
@@ -25,33 +26,66 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const isMounted = useRef(true);
+
+  useEffect(() => () => {
+    isMounted.current = false;
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
 
-    const user = TEST_USERS[role];
+    if (isMounted.current) {
+      setLoading(true);
+      setError('');
+    }
 
-    setTimeout(() => {
-      if (email === user.email && password === user.password) {
-        // ✅ Fake auth token
-        const authKey = 'TEST_AUTH_KEY_123456';
+    try {
+      const data = await AuthService.login({ email, password, role });
+      // console.log('Login successful:', data);
+      // return;
+      localStorage.setItem('authToken', data.access_token);
+      localStorage.setItem('role', data.user.role);
+      localStorage.setItem('userId', data.user.email);
+      localStorage.setItem('user', JSON.stringify(data.user));
 
-        localStorage.setItem('authKey', authKey);
-        localStorage.setItem('role', role);
-        localStorage.setItem('userEmail', email);
+      if (data.user.role === 'admin') navigate('/');
+      if (data.user.role === 'instructor') navigate('/diary');
+      if (data.user.role === 'learner') navigate('/calendar');
 
-        // 🔀 Redirect based on role
-        if (role === 'admin') navigate('/');
-        if (role === 'instructor') navigate('/diary');
-        if (role === 'learner') navigate('/calendar');
-      } else {
-        setError('Invalid email or password');
-      }
-
-      setLoading(false);
-    }, 800);
+    } catch (err) {
+      if (isMounted.current) setError(err.message || 'Login failed');
+    } finally {
+      if (isMounted.current) setLoading(false);
+    }
   };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setError('');
+
+  //   const user = TEST_USERS[role];
+
+  //   setTimeout(() => {
+  //     if (email === user.email && password === user.password) {
+  //       const authKey = 'TEST_AUTH_KEY_123456';
+
+  //       localStorage.setItem('authKey', authKey);
+  //       localStorage.setItem('role', role);
+  //       localStorage.setItem('userEmail', email);
+
+  //       // 🔀 Redirect based on role
+  //       if (role === 'admin') navigate('/');
+  //       if (role === 'instructor') navigate('/diary');
+  //       if (role === 'learner') navigate('/calendar');
+  //     } else {
+  //       setError('Invalid email or password');
+  //     }
+
+  //     setLoading(false);
+  //   }, 800);
+  // };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">

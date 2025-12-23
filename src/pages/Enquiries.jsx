@@ -7,7 +7,7 @@ import ViewEnquiryCell from '../components/grid/ViewEnquiryCell';
 
 const Enquiries = () => {
   const selectionsettings = { persistSelection: true };
-  const toolbarOptions = ['Search', 'Delete', 'Add', 'Edit', 'Update', 'Cancel'];
+  const toolbarOptions = ['Search', 'Delete', 'Cancel'];
   const editing = { allowDeleting: true, allowEditing: true, allowAdding: true, newRowPosition: 'Top' };
   const { enquiries, setEnquiries } = useStateContext();
 

@@ -6,7 +6,7 @@ import { Header } from '../components';
 const Lessons = () => {
   const selectionsettings = { persistSelection: true };
   const toolbarOptions = ['Search', 'Delete', 'Add', 'Edit', 'Update', 'Cancel'];
-  const editing = { allowDeleting: true, allowEditing: true, allowAdding: true, newRowPosition: 'Top' };
+  const editing = { allowDeleting: true, allowEditing: true, allowAdding: true, newRowPosition: 'Top', mode: 'Dialog' };
 
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
