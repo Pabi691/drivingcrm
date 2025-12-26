@@ -6,6 +6,8 @@ module.exports = {
   extends: [
     'plugin:react/recommended',
     'airbnb',
+    "react-app",
+    "prettier"
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -76,5 +78,6 @@ module.exports = {
         ],
       },
     ],
+    'react/react-in-jsx-scope': 'off', // turn off "React must be in scope"
   },
 };
