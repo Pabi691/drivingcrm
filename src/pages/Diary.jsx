@@ -13,11 +13,11 @@ const Diary = () => {
   const scheduled = lessonsData.filter(l => l.Status === 'Scheduled').length;
 
   return (
-    <div className="mt-24 m-2 md:m-10">
+    <div className="mt-10 m-2 md:m-6">
 
       {/* Scheduler */}
       <div className="bg-white rounded-2xl p-4 mb-6">
-        <Header category="Diary" title="Lesson Scheduler" />
+        <Header title="Lesson Scheduler" />
         <Scheduler />
       </div>
 
