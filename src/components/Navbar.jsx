@@ -14,6 +14,7 @@ import Notification from './Notification';
 import UserProfile from './UserProfile';
 
 import { useStateContext } from '../contexts/ContextProvider';
+import { getUser } from '../utils/auth';
 
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
   <TooltipComponent content={title} position="BottomCenter">
@@ -34,7 +35,11 @@ const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
 
 const Navbar = () => {
   const { currentColor, activeMenu, setActiveMenu, handleClick, isClicked, setScreenSize, screenSize } = useStateContext();
-
+  const user = getUser();
+  const name = user?.name || 'User';
+  // const email = user?.email || '—';
+  // const role = user?.role || 'Guest';
+  const avatarUrl = user?.avatar || avatar;
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
 
@@ -70,13 +75,13 @@ const Navbar = () => {
           >
             <img
               className="rounded-full w-8 h-8"
-              src={avatar}
+              src={avatarUrl}
               alt="user-profile"
             />
             <p>
               <span className="text-gray-400 text-14">Hi,</span>{' '}
               <span className="text-gray-400 font-bold ml-1 text-14">
-                Michael
+                {name}
               </span>
             </p>
             <MdKeyboardArrowDown className="text-gray-400 text-14" />

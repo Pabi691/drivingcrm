@@ -20,7 +20,9 @@ import Enquiries from './pages/Enquiries';
 import PackageProfilePage from './pages/PackagePofilePage';
 import Packages from './pages/Packages';
 import EnquiryProfilePage from './pages/EnquiryProfilePage';
+import Areas from './pages/Area';
 import ProtectedRoute from './routes/ProtectedRoute';
+import AreaView from './pages/AreaView';
 // import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
@@ -112,6 +114,7 @@ const App = () => {
                 } />
                 <Route path="/packages/:id" element={<PackageProfilePage />} />
                 <Route path="/enquiries/:id" element={<EnquiryProfilePage />} />
+                <Route path="/areas/:id" element={<AreaView />} />
 
                 {/* pages  */}
                 <Route path="/orders" element={<Orders />} />
@@ -122,6 +125,7 @@ const App = () => {
                 <Route path="/enquiries" element={<Enquiries />} />
                 <Route path="/packages" element={<Packages />} />
                 <Route path="/customers" element={<Customers />} />
+                <Route path="/areas" element={<Areas />} />
 
                 {/* apps  */}
                 <Route path="/kanban" element={<Kanban />} />

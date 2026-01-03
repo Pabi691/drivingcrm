@@ -5,12 +5,12 @@ import { Header } from '../components';
 
 const Instructors = () => {
   const selectionsettings = { persistSelection: true };
-  const toolbarOptions = ['Search', 'Delete', 'Add', 'Edit', 'Update', 'Cancel'];
-  const editing = { allowDeleting: true, allowEditing: true, allowAdding: true, newRowPosition: 'Top', mode: 'Dialog' };
+  const toolbarOptions = ['Search', 'Delete', 'Add', 'Edit'];
+  const editing = { allowDeleting: true, allowEditing: true, allowAdding: true, newRowPosition: 'Top', mode: 'Dialog', showDeleteConfirmDialog: true };
 
   return (
-    <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-      <Header category="Page" title="Instructors" />
+    <div className="m-2 md:m-6 mt-6 p-2 md:p-4 bg-white rounded-2xl">
+      <Header title="Instructors" />
       <GridComponent
         dataSource={instructorsData}
         enableHover={false}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 // import { AiOutlineCalendar, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock, AiOutlineEye } from 'react-icons/ai';
 import { AiOutlineEye, AiOutlineQuestionCircle } from 'react-icons/ai';
-import { FiBarChart, FiCreditCard, FiStar, FiShoppingCart, FiBookOpen, FiPackage } from 'react-icons/fi';
+import { FiBarChart, FiCreditCard, FiStar, FiShoppingCart, FiBookOpen, FiPackage, FiMapPin } from 'react-icons/fi';
 import { BsBoxSeam, BsCurrencyDollar, BsShield, BsChatLeft } from 'react-icons/bs';
 // import { BiColorFill } from 'react-icons/bi';
 import { IoMdContacts } from 'react-icons/io';
@@ -668,7 +668,7 @@ export const instructorsGrid = [
 
   // { field: 'DaysOff', headerText: 'Days Off', width: '120', textAlign: 'Center' },
 
-  { field: 'OnLeave', headerText: 'Holiday/Sick Leave', width: '150', textAlign: 'Center' },
+  // { field: 'OnLeave', headerText: 'Holiday/Sick Leave', width: '150', textAlign: 'Center' },
 
   // { field: 'PupilCount', headerText: 'Learners', width: '100', textAlign: 'Center' },
 
@@ -691,6 +691,22 @@ export const instructorsGrid = [
   // { field: 'InsuranceExpiry', headerText: 'Insurance Expiry', width: '150', textAlign: 'Center' },
 
   // { field: 'MOTExpiry', headerText: 'MOT Expiry', width: '150', textAlign: 'Center' },
+  {
+    headerText: 'Status',
+    width: '120',
+    textAlign: 'Center',
+    template: (rowData) => (
+      <span
+        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+          rowData.Active
+            ? 'bg-green-100 text-green-700'
+            : 'bg-red-100 text-red-700'
+        }`}
+      >
+        {rowData.Active ? 'Active' : 'Inactive'}
+      </span>
+    ),
+  },
   
 ];
 
@@ -1145,15 +1161,6 @@ export const employeesGrid = [
 ];
 
 export const links = [
-  // {
-  //   title: 'Dashboard',
-  //   links: [
-  //     {
-  //       name: 'ecommerce',
-  //       icon: <FiShoppingBag />,
-  //     },
-  //   ],
-  // },
   {
     title: 'Diary',
     links: [
@@ -1167,14 +1174,6 @@ export const links = [
   {
     title: 'Pages',
     links: [
-      // {
-      //   name: 'orders',
-      //   icon: <AiOutlineShoppingCart />,
-      // },
-      // {
-      //   name: 'employees',
-      //   icon: <IoMdContacts />,
-      // },
       {
         name: 'instructors',
         icon: <IoMdContacts />,
@@ -1188,78 +1187,25 @@ export const links = [
         icon: <FiBookOpen />,
       },
       {
-        name: 'packages',
-        icon: <FiPackage />,
-      },
-      {
         name: 'enquiries',
         icon: <AiOutlineQuestionCircle />,
       },
-      // {
-      //   name: 'customers',
-      //   icon: <RiContactsLine />,
-      // },
     ],
   },
-  // {
-  //   title: 'Apps',
-  //   links: [
-  //     {
-  //       name: 'calendar',
-  //       icon: <AiOutlineCalendar />,
-  //     },
-  //     {
-  //       name: 'kanban',
-  //       icon: <BsKanban />,
-  //     },
-  //     {
-  //       name: 'editor',
-  //       icon: <FiEdit />,
-  //     },
-  //     {
-  //       name: 'color-picker',
-  //       icon: <BiColorFill />,
-  //     },
-  //   ],
-  // },
-  // {
-  //   title: 'Charts',
-  //   links: [
-  //     {
-  //       name: 'line',
-  //       icon: <AiOutlineStock />,
-  //     },
-  //     {
-  //       name: 'area',
-  //       icon: <AiOutlineAreaChart />,
-  //     },
 
-  //     {
-  //       name: 'bar',
-  //       icon: <AiOutlineBarChart />,
-  //     },
-  //     {
-  //       name: 'pie',
-  //       icon: <FiPieChart />,
-  //     },
-  //     {
-  //       name: 'financial',
-  //       icon: <RiStockLine />,
-  //     },
-  //     {
-  //       name: 'color-mapping',
-  //       icon: <BsBarChart />,
-  //     },
-  //     {
-  //       name: 'pyramid',
-  //       icon: <GiLouvrePyramid />,
-  //     },
-  //     {
-  //       name: 'stacked',
-  //       icon: <AiOutlineBarChart />,
-  //     },
-  //   ],
-  // },
+  {
+    title: 'Settings',
+    links: [
+      {
+        name: 'areas',
+        icon: <FiMapPin />,
+      },
+      {
+        name: 'packages',
+        icon: <FiPackage />,
+      },
+    ],
+  },
 ];
 
 export const cartData = [
@@ -2282,7 +2228,7 @@ export const instructorsData = [
 
     ProfileImage: avatar, // used in template
     Flag: 'uk.png', // used in country template
-
+    Active: true,
     Bio: 'John Smith has over 10 years of experience as a driving instructor. He is known for his patient teaching style and high pass rates among his pupils.',
   },
 
@@ -2361,7 +2307,7 @@ export const instructorsData = [
 
     ProfileImage: avatar2,
     Flag: 'uk.png',
-
+    Active: true,
     Bio: 'Sarah Johnson is a passionate PDI with a focus on modern teaching techniques. She has helped numerous learners achieve their driving goals with confidence.',
   },
 
@@ -2440,7 +2386,7 @@ export const instructorsData = [
 
     ProfileImage: avatar3,
     Flag: 'uk.png',
-
+    Active: false,
     Bio: 'Michael Brown brings a wealth of experience as an ADI. His comprehensive approach to driver education ensures that his pupils are well-prepared for the road ahead.',
   },
 ];
