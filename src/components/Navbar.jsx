@@ -37,8 +37,8 @@ const Navbar = () => {
   const { currentColor, activeMenu, setActiveMenu, handleClick, isClicked, setScreenSize, screenSize } = useStateContext();
   const user = getUser();
   const name = user?.name || 'User';
-  const email = user?.email || '—';
-  const role = user?.role || 'Guest';
+  // const email = user?.email || '—';
+  // const role = user?.role || 'Guest';
   const avatarUrl = user?.avatar || avatar;
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);

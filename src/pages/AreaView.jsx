@@ -16,7 +16,7 @@ const AreaView = () => {
         const res = await axios.get(`/branchs/${id}`);
         setBranch(res.branch);
       } catch (error) {
-        setError('Failed to fetch branch');
+        setBranch(null);
       } finally {
         setLoading(false);
       }

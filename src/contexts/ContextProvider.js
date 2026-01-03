@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useMemo, useCallback } from 'react';
+import toast from 'react-hot-toast';
 import { enquiriesData as initialEnquiries } from '../data/dummy';
 import { BranchService } from '../services/branch.service';
 
@@ -38,54 +39,98 @@ export const ContextProvider = ({ children }) => {
 
   const markAsViewed = (id) => {
     setEnquiries(prev =>
-      prev.map(e =>
-        e.EnquiryID === id ? { ...e, isViewed: true } : e
-      )
+      prev.map(e => (e.EnquiryID === id ? { ...e, isViewed: true } : e))
     );
   };
 
-  const fetchBranches = async () => {
+  const fetchBranches = useCallback(async () => {
     setBranchLoading(true);
     try {
-      const res = await BranchService.getAllBranches();
-      console.log('Branches fetched:', res.branches);
-      if (res?.status) {
-        setBranches(res.branches);
-      }
-    } catch (error) {
-      console.error('Branch fetch failed', error);
-    } finally {
-      setBranchLoading(false);
+      const res = await BranchService.getAll();
+      setBranches(res.branches);
+    } catch (err) {
+      toast.error('Failed to load branches.');
     }
-  };
+    setBranchLoading(false);
+  }, []);
+
+  const addBranch = useCallback(async (data) => {
+    try {
+      await BranchService.create(data);
+      fetchBranches(); // Safe because fetchBranches is stable with useCallback
+      toast.success('Branch created successfully');
+    } catch (err) {
+      toast.error('Failed to add branch');
+    }
+  }, [fetchBranches]);
+
+  const updateBranch = useCallback(async (id, data) => {
+    try {
+      await BranchService.update(id, data);
+      fetchBranches(); // Safe
+      toast.success('Branch updated successfully');
+    } catch (err) {
+      toast.error('Failed to update branch');
+    }
+  }, [fetchBranches]);
+
+  const deleteBranch = useCallback(async (id) => {
+    try {
+      await BranchService.remove(id);
+      setBranches(prev => prev.filter(branch => branch._id !== id));
+      toast.success('Branch deleted successfully');
+    } catch (err) {
+      toast.error('Failed to delete branch');
+    }
+  }, []);
+
+  // ✅ Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({
+    currentColor,
+    currentMode,
+    activeMenu,
+    screenSize,
+    setScreenSize,
+    handleClick,
+    isClicked,
+    initialState,
+    setIsClicked,
+    setActiveMenu,
+    setCurrentColor,
+    setCurrentMode,
+    setMode,
+    setColor,
+    themeSettings,
+    setThemeSettings,
+    enquiries,
+    setEnquiries,
+    unreadEnquiriesCount,
+    markAsViewed,
+    branches,
+    fetchBranches,
+    addBranch,
+    updateBranch,
+    deleteBranch,
+    branchLoading,
+  }), [
+    currentColor,
+    currentMode,
+    activeMenu,
+    screenSize,
+    isClicked,
+    themeSettings,
+    enquiries,
+    branches,
+    branchLoading,
+    unreadEnquiriesCount,
+    fetchBranches,
+    addBranch,
+    updateBranch,
+    deleteBranch,
+  ]);
 
   return (
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
-    <StateContext.Provider 
-      value={{ 
-        currentColor, 
-        currentMode, 
-        activeMenu, 
-        screenSize, 
-        setScreenSize, 
-        handleClick, 
-        isClicked, 
-        initialState, 
-        setIsClicked, 
-        setActiveMenu, 
-        setCurrentColor, 
-        setCurrentMode, 
-        setMode, 
-        setColor, 
-        themeSettings, 
-        setThemeSettings, 
-        enquiries, 
-        setEnquiries, 
-        unreadEnquiriesCount, 
-        markAsViewed, 
-        branches, 
-        branchLoading, 
-        fetchBranches }}>
+    <StateContext.Provider value={contextValue}>
       {children}
     </StateContext.Provider>
   );

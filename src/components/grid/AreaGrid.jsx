@@ -6,7 +6,7 @@ const AreaGrid = () => {
 
   useEffect(() => {
     fetchBranches();
-  }, []);
+  }, [fetchBranches]);
 
   if (branchLoading) {
     return <div className="p-4">Loading branches...</div>;

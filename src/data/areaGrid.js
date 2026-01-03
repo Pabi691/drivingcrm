@@ -5,13 +5,14 @@ import { AiOutlineEye } from 'react-icons/ai';
 export const areaGrid = [
   { type: 'checkbox', width: '50' },
 
-  // {
-  //   field: '_id',
-  //   headerText: 'Branch ID',
-  //   width: '180',
-  //   textAlign: 'start',
-  //   isPrimaryKey: true,
-  // },
+  {
+    field: '_id',
+    headerText: 'Branch ID',
+    width: '180',
+    textAlign: 'start',
+    isPrimaryKey: true,
+    visible: false,
+  },
 
   {
     headerText: 'View',
@@ -31,12 +32,14 @@ export const areaGrid = [
     textAlign: 'Center',
   },
 
-  // {
-  //   field: 'code',
-  //   headerText: 'Branch Code',
-  //   width: '140',
-  //   textAlign: 'Center',
-  // },
+  {
+    field: 'code',
+    headerText: 'Branch Code',
+    width: '140',
+    textAlign: 'Center',
+    visible: false,
+    allowEditing: true,
+  },
 
   {
     headerText: 'School',
@@ -72,22 +75,24 @@ export const areaGrid = [
     textAlign: 'Center',
   },
 
-  // {
-  //   headerText: 'Currency',
-  //   width: '120',
-  //   textAlign: 'Center',
-  //   template: (rowData) => (
-  //     <span>
-  //       {rowData.currency_symbol} {rowData.branch_currency}
-  //     </span>
-  //   ),
-  // },
+  {
+    headerText: 'Currency',
+    width: '120',
+    textAlign: 'Center',
+    template: (rowData) => (
+      <span>
+        {rowData.currency_symbol} {rowData.branch_currency}
+      </span>
+    ),
+    visible: false,
+  },
 
   {
     headerText: 'Timezone',
     width: '180',
     textAlign: 'Center',
     field: 'branch_timezones',
+    visible: false,
   },
 
   {

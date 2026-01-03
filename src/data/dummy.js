@@ -1187,10 +1187,6 @@ export const links = [
         icon: <FiBookOpen />,
       },
       {
-        name: 'packages',
-        icon: <FiPackage />,
-      },
-      {
         name: 'enquiries',
         icon: <AiOutlineQuestionCircle />,
       },
@@ -1203,6 +1199,10 @@ export const links = [
       {
         name: 'areas',
         icon: <FiMapPin />,
+      },
+      {
+        name: 'packages',
+        icon: <FiPackage />,
       },
     ],
   },
