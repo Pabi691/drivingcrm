@@ -14,10 +14,10 @@ export const BranchService = {
   },
 
   update(id, data) {
-    return axios.put(`/branchs/${id}`, data);
+    return axios.post(`/branchs/${id}`, data);
   },
 
   remove(id) {
-    return axios.delete(`/branchs/delete/${id}`);
+    return axios.get(`/branchs/delete/${id}`);
   },
 };

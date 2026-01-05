@@ -15,7 +15,7 @@ const UserProfile = () => {
 
   // console.log('User Profile:', user);
 
-  const name = user?.name || 'User';
+  const name = user?.name || 'Unknown User';
   const email = user?.email || '—';
   const role = user?.role || 'Guest';
   const avatar = user?.avatar || avatarFallback;

@@ -11,6 +11,8 @@ const DialogLoading = () => (
 const EditBranchTemplate = ({ branchData }) => {
   const { branchLoading } = useStateContext();
 
+  console.log('EditBranchTemplate received branchData:', branchData);
+
   return (
     <div className="relative min-h-[300px]">
       {branchLoading && <DialogLoading />}

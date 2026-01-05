@@ -1,20 +1,9 @@
 import React from 'react';
 
-const BranchForm = ({
-  _id,
-  name,
-  code,
-  address,
-  contactEmail,
-  phone,
-  status,
-  branchCurrency,
-  currencySymbol,
-  branchTimezones,
-}) => (
+const BranchForm = ({branch}) => (
   <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
 
-    {_id && <input type="hidden" name="_id" value={_id} />}
+    {branch._id && <input type="hidden" name="_id" value={branch._id} />}
 
     <div>
       {/* <label htmlFor="name">Branch Name</label> */}
@@ -22,7 +11,7 @@ const BranchForm = ({
         id="name"
         name="name"
         className="e-input w-full"
-        defaultValue={name || ''}
+        defaultValue={branch.name || ''}
         placeholder='Branch Name'
         required
       />
@@ -35,7 +24,7 @@ const BranchForm = ({
         name="code"
         className="e-input w-full"
         placeholder='Branch Code'
-        defaultValue={code || ''}
+        defaultValue={branch.code || ''}
         required
       />
     </div>
@@ -47,7 +36,7 @@ const BranchForm = ({
         name="address"
         className="e-input w-full"
         placeholder='Address'
-        defaultValue={address || ''}
+        defaultValue={branch.address || ''}
         required
       />
     </div>
@@ -59,18 +48,18 @@ const BranchForm = ({
         name="contact_email"
         className="e-input w-full"
         placeholder='Email'
-        defaultValue={contactEmail || ''}
+        defaultValue={branch.contact_email || ''}
       />
     </div>
 
     <div>
-      {/* <label htmlFor="phone">Phone</label> */}
+      {/* <label htmlFor="phone">Phone</label */}
       <input
         id="phone"
         name="phone"
         className="e-input w-full"
         placeholder='Phone'
-        defaultValue={phone || ''}
+        defaultValue={branch.phone || ''}
       />
     </div>
 
@@ -80,7 +69,7 @@ const BranchForm = ({
         id="status"
         name="status"
         className="e-input w-full"
-        defaultValue={status || 'Active'}
+        defaultValue={branch.status || 'Active'}
       >
         <option value="Active">Active</option>
         <option value="Inactive">Inactive</option>
@@ -93,7 +82,7 @@ const BranchForm = ({
         id="branchCurrency"
         name="branch_currency"
         className="e-input w-full"
-        defaultValue={branchCurrency || 'USD'}
+        defaultValue={branch.branch_currency || 'USD'}
       />
     </div>
 
@@ -103,7 +92,7 @@ const BranchForm = ({
         id="currencySymbol"
         name="currency_symbol"
         className="e-input w-full"
-        defaultValue={currencySymbol || '$'}
+        defaultValue={branch.currency_symbol || '$'}
       />
     </div>
 
@@ -114,7 +103,7 @@ const BranchForm = ({
         name="branch_timezones"
         className="e-input w-full"
         placeholder='Timezone'
-        defaultValue={branchTimezones || ''}
+        defaultValue={branch.branch_timezones || ''}
       />
     </div>
 

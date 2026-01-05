@@ -22,7 +22,12 @@ import EditBranchTemplate from '../components/templates/EditBranchTemplate';
 const EditTemplateWrapper = memo(({ branchData }) => <EditBranchTemplate branchData={branchData} />);
 
 // Separate component to satisfy no-unstable-nested-components
-const GridEditTemplate = ({ data }) => <EditTemplateWrapper branchData={data} />;
+// const GridEditTemplate = ({ data }) => <EditTemplateWrapper branchData={data} />;
+const GridEditTemplate = (props) => {
+  console.log('GridEditTemplate props:', props);
+
+  return <EditTemplateWrapper branchData={props} />;
+};
 
 const Area = () => {
   const { branches, fetchBranches, addBranch, updateBranch, deleteBranch } = useStateContext();
@@ -41,7 +46,7 @@ const Area = () => {
       if (newArgs.action === 'add') {
         try {
           await addBranch(newArgs.data);
-          toast.success('Branch created successfully');
+          // toast.success('Branch created successfully');
         } catch {
           toast.error('Failed to create branch');
         }
@@ -49,7 +54,7 @@ const Area = () => {
       if (newArgs.action === 'edit') {
         try {
           await updateBranch(newArgs.data._id, newArgs.data);
-          toast.success('Branch updated successfully');
+          // toast.success('Branch updated successfully');
         } catch {
           toast.error('Failed to update branch');
         }
@@ -57,12 +62,13 @@ const Area = () => {
     }
 
     if (newArgs.requestType === 'delete') {
-      newArgs.cancel = true;
+      // newArgs.cancel = true;
       const deletedRow = newArgs.data?.[0] || newArgs.promise?.[0];
       if (!deletedRow?._id) return;
       try {
+        console.log('Deleting branch with ID:', deletedRow._id);
         await deleteBranch(deletedRow._id);
-        toast.success('Branch deleted successfully');
+        // toast.success('Branch deleted successfully');
       } catch {
         toast.error('Delete failed');
       }
