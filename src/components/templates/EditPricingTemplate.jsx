@@ -23,5 +23,4 @@ const EditPricingTemplate = ({ pricingData, branches, packages }) => {
   );
 };
 
-
 export default EditPricingTemplate;

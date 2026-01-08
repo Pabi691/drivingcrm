@@ -1,4 +1,4 @@
-import React, { useEffect, memo } from 'react';
+import React, { useEffect } from 'react';
 import {
   GridComponent,
   Inject,
@@ -20,7 +20,7 @@ import EditPricingTemplate from '../components/templates/EditPricingTemplate';
 
 // Memo wrapper
 // const EditTemplateWrapper = memo((props) => <EditPackageTemplate {...props} />);
-const EditTemplateWrapper = memo(({ pricingData }) => <EditPricingTemplate pricingData={pricingData} />);
+// const EditTemplateWrapper = memo(({ pricingData }) => <EditPricingTemplate pricingData={pricingData} />);
 const GridEditTemplate = (props) => {
   const { branches, packages } = useStateContext(); // get current data
   return (

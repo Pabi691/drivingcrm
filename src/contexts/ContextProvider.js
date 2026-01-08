@@ -120,7 +120,7 @@ export const ContextProvider = ({ children }) => {
     } catch (err) {
       toast.error('Failed to delete package');
     }
-  }, [fetchPackages]);
+  }, []);
 
     const fetchPricing = useCallback(async () => {
     setPricingLoading(true);
@@ -151,7 +151,7 @@ export const ContextProvider = ({ children }) => {
     } catch (err) {
       toast.error('Failed to delete pricing');
     }
-  }, [fetchPricing]);
+  }, []);
   // ✅ Memoize the context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({
     currentColor,
