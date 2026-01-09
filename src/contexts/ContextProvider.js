@@ -4,6 +4,7 @@ import { enquiriesData as initialEnquiries } from '../data/dummy';
 import { BranchService } from '../services/branch.service';
 import { PackageService } from '../services/package.service';
 import { PricingService } from '../services/pricing.service';
+import { InstructorService } from '../services/instructor.service';
 
 const StateContext = createContext();
 
@@ -28,6 +29,8 @@ export const ContextProvider = ({ children }) => {
   const [packageLoading, setPackageLoading] = useState(false);
   const [pricing, setPricing] = useState([]);
   const [pricingLoading, setPricingLoading] = useState(false);
+  const [instructors, setInstructors] = useState([]);
+  const [instructorLoading, setInstructorLoading] = useState(false);
 
   const setMode = (e) => {
     setCurrentMode(e.target.value);
@@ -152,6 +155,39 @@ export const ContextProvider = ({ children }) => {
       toast.error('Failed to delete pricing');
     }
   }, []);
+
+  const fetchInstructors = useCallback(async () => {
+    setInstructorLoading(true);
+    try {
+      const res = await InstructorService.getAll();
+      // console.log('Fetched instructors:', res.data);
+      setInstructors(res.data);
+    } catch (err) {
+      toast.error('Failed to load instructors.');
+    }
+    setInstructorLoading(false);
+  }, []);
+
+  const addInstructor = useCallback(async (data) => {
+    await InstructorService.create(data);
+    fetchInstructors();
+  }, [fetchInstructors]);
+
+  const updateInstructor = useCallback(async (id, data) => {
+    await InstructorService.update(id, data);
+    fetchInstructors();
+  }, [fetchInstructors]);
+
+  const deleteInstructor = useCallback(async (id) => {
+    try {
+      await InstructorService.remove(id);
+      setInstructors(prev => prev.filter(instructor => instructor._id !== id));
+      toast.success('Instructor deleted successfully');
+    } catch (err) {
+      toast.error('Failed to delete instructor');
+    }
+  }, []);
+
   // ✅ Memoize the context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({
     currentColor,
@@ -192,6 +228,12 @@ export const ContextProvider = ({ children }) => {
     updatePricing,
     deletePricing,
     pricingLoading,
+    instructors,
+    fetchInstructors,
+    addInstructor,
+    updateInstructor,
+    deleteInstructor,
+    instructorLoading,
   }), [
     currentColor,
     currentMode,
@@ -219,6 +261,12 @@ export const ContextProvider = ({ children }) => {
     addPricing,
     updatePricing,
     deletePricing,
+    instructors,
+    instructorLoading,
+    fetchInstructors,
+    addInstructor,
+    updateInstructor,
+    deleteInstructor,
   ]);
 
   return (

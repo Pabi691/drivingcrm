@@ -14,7 +14,7 @@ import {
 } from '@syncfusion/ej2-react-grids';
 import toast from 'react-hot-toast';
 import { useStateContext } from '../contexts/ContextProvider';
-import {pricingGrid} from '../data/pricingGrid';
+import { pricingGrid } from '../data/pricingGrid';
 import { Header } from '../components';
 import EditPricingTemplate from '../components/templates/EditPricingTemplate';
 
@@ -24,10 +24,10 @@ import EditPricingTemplate from '../components/templates/EditPricingTemplate';
 const GridEditTemplate = (props) => {
   const { branches, packages } = useStateContext(); // get current data
   return (
-    <EditPricingTemplate 
-      pricingData={props} 
-      branches={branches || []} 
-      packages={packages || []} 
+    <EditPricingTemplate
+      pricingData={props}
+      branches={branches || []}
+      packages={packages || []}
     />
   );
 };
@@ -58,9 +58,11 @@ const Pricing = () => {
     const newArgs = { ...args };
 
     if (newArgs.requestType === 'save') {
-        newArgs.data = {...newArgs.data,
-  branches: branches || [],
-  packages: packages || [],};
+      newArgs.data = {
+        ...newArgs.data,
+        branches: branches || [],
+        packages: packages || [],
+      };
       try {
         if (newArgs.action === 'add') {
           await addPricing(newArgs.data);
@@ -74,14 +76,14 @@ const Pricing = () => {
     }
 
     if (newArgs.requestType === 'delete') {
-  const row = newArgs.data?.[0];
-  if (!row?._id) return;
-  try {
-    await deletePricing(row._id);
-  } catch {
-    toast.error('Delete failed');
-  }
-}
+      const row = newArgs.data?.[0];
+      if (!row?._id) return;
+      try {
+        await deletePricing(row._id);
+      } catch {
+        toast.error('Delete failed');
+      }
+    }
   };
 
   return (
