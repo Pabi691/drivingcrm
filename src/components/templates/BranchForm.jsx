@@ -12,7 +12,7 @@ const BranchForm = ({branch}) => (
         name="name"
         className="e-input w-full"
         defaultValue={branch.name || ''}
-        placeholder='Branch Name'
+        placeholder='Area Name'
         required
       />
     </div>
@@ -23,7 +23,7 @@ const BranchForm = ({branch}) => (
         id="code"
         name="code"
         className="e-input w-full"
-        placeholder='Branch Code'
+        placeholder='Area Code'
         defaultValue={branch.code || ''}
         required
       />
@@ -34,7 +34,7 @@ const BranchForm = ({branch}) => (
       <input
         id="address"
         name="address"
-        className="e-input w-full"
+        className="e-input w-full hidden"
         placeholder='Address'
         defaultValue={branch.address || ''}
         required
@@ -46,7 +46,7 @@ const BranchForm = ({branch}) => (
       <input
         id="contactEmail"
         name="contact_email"
-        className="e-input w-full"
+        className="e-input w-full hidden"
         placeholder='Email'
         defaultValue={branch.contact_email || ''}
       />
@@ -57,7 +57,7 @@ const BranchForm = ({branch}) => (
       <input
         id="phone"
         name="phone"
-        className="e-input w-full"
+        className="e-input w-full hidden"
         placeholder='Phone'
         defaultValue={branch.phone || ''}
       />
@@ -81,7 +81,7 @@ const BranchForm = ({branch}) => (
       <input
         id="branchCurrency"
         name="branch_currency"
-        className="e-input w-full"
+        className="e-input w-full hidden"
         defaultValue={branch.branch_currency || 'USD'}
       />
     </div>
@@ -91,7 +91,7 @@ const BranchForm = ({branch}) => (
       <input
         id="currencySymbol"
         name="currency_symbol"
-        className="e-input w-full"
+        className="e-input w-full hidden"
         defaultValue={branch.currency_symbol || '$'}
       />
     </div>
@@ -101,7 +101,7 @@ const BranchForm = ({branch}) => (
       <input
         id="branchTimezones"
         name="branch_timezones"
-        className="e-input w-full"
+        className="e-input w-full hidden"
         placeholder='Timezone'
         defaultValue={branch.branch_timezones || ''}
       />

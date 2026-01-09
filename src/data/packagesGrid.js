@@ -15,22 +15,10 @@ export const packagesGrid = [
   },
 
   {
-    headerText: 'View',
-    width: '80',
-    textAlign: 'Center',
-    allowEditing: false,
-    template: (rowData) => (
-      <Link to={`/packages/${rowData._id}`}>
-        <AiOutlineEye className="text-xl text-red-600 hover:text-red-800 cursor-pointer" />
-      </Link>
-    ),
-  },
-
-  {
     field: 'package_name',
     headerText: 'Package Name',
     width: '220',
-    textAlign: 'Center',
+    // textAlign: 'Center',
   },
 
   {
@@ -45,7 +33,7 @@ export const packagesGrid = [
     field: 'duration',
     headerText: 'Hours Duration',
     width: '120',
-    textAlign: 'Center',
+    // textAlign: 'Center',
   },
 
   {
@@ -58,6 +46,7 @@ export const packagesGrid = [
         {rowData.school_id?.school_name || rowData.school_id}
       </span>
     ),
+    visible: false,
   },
 
   {
@@ -67,6 +56,7 @@ export const packagesGrid = [
     allowEditing: false,
     template: (rowData) =>
       new Date(rowData.createdAt).toLocaleDateString(),
+    visible: false,
   },
 
   {
@@ -76,5 +66,19 @@ export const packagesGrid = [
     allowEditing: false,
     template: (rowData) =>
       new Date(rowData.updatedAt).toLocaleDateString(),
+    visible: false,
+  },
+
+  {
+    headerText: 'View',
+    width: '80',
+    // textAlign: 'Center',
+    allowEditing: false,
+    template: (rowData) => (
+      <Link to={`/packages/${rowData._id}`}>
+        <AiOutlineEye className="text-xl text-red-600 hover:text-red-800 cursor-pointer" />
+      </Link>
+    ),
+    visible: false,
   },
 ];

@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { enquiriesData as initialEnquiries } from '../data/dummy';
 import { BranchService } from '../services/branch.service';
 import { PackageService } from '../services/package.service';
+import { PricingService } from '../services/pricing.service';
 
 const StateContext = createContext();
 
@@ -25,6 +26,8 @@ export const ContextProvider = ({ children }) => {
   const [branchLoading, setBranchLoading] = useState(false);
   const [packages, setPackages] = useState([]);
   const [packageLoading, setPackageLoading] = useState(false);
+  const [pricing, setPricing] = useState([]);
+  const [pricingLoading, setPricingLoading] = useState(false);
 
   const setMode = (e) => {
     setCurrentMode(e.target.value);
@@ -117,8 +120,38 @@ export const ContextProvider = ({ children }) => {
     } catch (err) {
       toast.error('Failed to delete package');
     }
-  }, [fetchPackages]);
+  }, []);
 
+    const fetchPricing = useCallback(async () => {
+    setPricingLoading(true);
+    try {
+      const res = await PricingService.getAll();
+      setPricing(res.data);
+    } catch (err) {
+      toast.error('Failed to load pricing.');
+    }
+    setPricingLoading(false);
+  }, []);
+
+  const addPricing = useCallback(async (data) => {
+    await PricingService.create(data);
+    fetchPricing();
+  }, [fetchPricing]);
+
+  const updatePricing = useCallback(async (id, data) => {
+    await PricingService.update(id, data);
+    fetchPricing();
+  }, [fetchPricing]);
+
+  const deletePricing = useCallback(async (id) => {
+    try {
+      await PricingService.remove(id);
+      setPricing(prev => prev.filter(pkg => pkg._id !== id));
+      toast.success('Pricing deleted successfully');
+    } catch (err) {
+      toast.error('Failed to delete pricing');
+    }
+  }, []);
   // ✅ Memoize the context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({
     currentColor,
@@ -153,6 +186,12 @@ export const ContextProvider = ({ children }) => {
     updatePackage,
     deletePackage,
     packageLoading,
+    pricing,
+    fetchPricing,
+    addPricing,
+    updatePricing,
+    deletePricing,
+    pricingLoading,
   }), [
     currentColor,
     currentMode,
@@ -174,6 +213,12 @@ export const ContextProvider = ({ children }) => {
     addPackage,
     updatePackage,
     deletePackage,
+    pricing,
+    pricingLoading,
+    fetchPricing,
+    addPricing,
+    updatePricing,
+    deletePricing,
   ]);
 
   return (

@@ -23,6 +23,7 @@ import EnquiryProfilePage from './pages/EnquiryProfilePage';
 import Areas from './pages/Area';
 import ProtectedRoute from './routes/ProtectedRoute';
 import AreaView from './pages/AreaView';
+import Pricing from './pages/Pricing';
 // import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
@@ -126,6 +127,7 @@ const App = () => {
                 <Route path="/packages" element={<Packages />} />
                 <Route path="/customers" element={<Customers />} />
                 <Route path="/areas" element={<Areas />} />
+                <Route path="/pricing" element={<Pricing />} />
 
                 {/* apps  */}
                 <Route path="/kanban" element={<Kanban />} />

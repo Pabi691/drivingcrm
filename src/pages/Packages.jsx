@@ -21,11 +21,8 @@ import EditPackageTemplate from '../components/templates/EditPackageTemplate';
 // Memo wrapper
 // const EditTemplateWrapper = memo((props) => <EditPackageTemplate {...props} />);
 const EditTemplateWrapper = memo(({ packageData }) => <EditPackageTemplate packageData={packageData} />);
-const GridEditTemplate = (props) => {
-  console.log('GridEditTemplate props:', props);
+const GridEditTemplate = (props) => <EditTemplateWrapper packageData={props} />;
 
-  return <EditTemplateWrapper packageData={props} />;
-};
 const Packages = () => {
   const {
     packages,
