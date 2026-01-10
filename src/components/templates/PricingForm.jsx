@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 
 const PricingForm = ({ pricingValues = {}, branches = [], packages = [] }) => {
   const [formValues, setFormValues] = useState({
+<<<<<<< HEAD
     branch_id: pricingValues.branch_id || '',
     package_id: pricingValues.package_id || '',
+=======
+    branch_id: pricingValues.branch_id?._id || '',
+    package_id: pricingValues.package_id?._id || '',
+>>>>>>> pabitra
     price: pricingValues.price || '',
   });
 

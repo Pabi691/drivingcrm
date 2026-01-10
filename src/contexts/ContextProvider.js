@@ -4,6 +4,10 @@ import { enquiriesData as initialEnquiries } from '../data/dummy';
 import { BranchService } from '../services/branch.service';
 import { PackageService } from '../services/package.service';
 import { PricingService } from '../services/pricing.service';
+<<<<<<< HEAD
+=======
+import { InstructorService } from '../services/instructor.service';
+>>>>>>> pabitra
 
 const StateContext = createContext();
 
@@ -28,6 +32,11 @@ export const ContextProvider = ({ children }) => {
   const [packageLoading, setPackageLoading] = useState(false);
   const [pricing, setPricing] = useState([]);
   const [pricingLoading, setPricingLoading] = useState(false);
+<<<<<<< HEAD
+=======
+  const [instructors, setInstructors] = useState([]);
+  const [instructorLoading, setInstructorLoading] = useState(false);
+>>>>>>> pabitra
 
   const setMode = (e) => {
     setCurrentMode(e.target.value);
@@ -121,6 +130,72 @@ export const ContextProvider = ({ children }) => {
       toast.error('Failed to delete package');
     }
   }, []);
+<<<<<<< HEAD
+=======
+
+    const fetchPricing = useCallback(async () => {
+    setPricingLoading(true);
+    try {
+      const res = await PricingService.getAll();
+      setPricing(res.data);
+    } catch (err) {
+      toast.error('Failed to load pricing.');
+    }
+    setPricingLoading(false);
+  }, []);
+
+  const addPricing = useCallback(async (data) => {
+    await PricingService.create(data);
+    fetchPricing();
+  }, [fetchPricing]);
+
+  const updatePricing = useCallback(async (id, data) => {
+    await PricingService.update(id, data);
+    fetchPricing();
+  }, [fetchPricing]);
+
+  const deletePricing = useCallback(async (id) => {
+    try {
+      await PricingService.remove(id);
+      setPricing(prev => prev.filter(pkg => pkg._id !== id));
+      toast.success('Pricing deleted successfully');
+    } catch (err) {
+      toast.error('Failed to delete pricing');
+    }
+  }, []);
+
+  const fetchInstructors = useCallback(async () => {
+    setInstructorLoading(true);
+    try {
+      const res = await InstructorService.getAll();
+      // console.log('Fetched instructors:', res.data);
+      setInstructors(res.data);
+    } catch (err) {
+      toast.error('Failed to load instructors.');
+    }
+    setInstructorLoading(false);
+  }, []);
+
+  const addInstructor = useCallback(async (data) => {
+    await InstructorService.create(data);
+    fetchInstructors();
+  }, [fetchInstructors]);
+
+  const updateInstructor = useCallback(async (id, data) => {
+    await InstructorService.update(id, data);
+    fetchInstructors();
+  }, [fetchInstructors]);
+
+  const deleteInstructor = useCallback(async (id) => {
+    try {
+      await InstructorService.remove(id);
+      setInstructors(prev => prev.filter(instructor => instructor._id !== id));
+      toast.success('Instructor deleted successfully');
+    } catch (err) {
+      toast.error('Failed to delete instructor');
+    }
+  }, []);
+>>>>>>> pabitra
 
     const fetchPricing = useCallback(async () => {
     setPricingLoading(true);
@@ -192,6 +267,15 @@ export const ContextProvider = ({ children }) => {
     updatePricing,
     deletePricing,
     pricingLoading,
+<<<<<<< HEAD
+=======
+    instructors,
+    fetchInstructors,
+    addInstructor,
+    updateInstructor,
+    deleteInstructor,
+    instructorLoading,
+>>>>>>> pabitra
   }), [
     currentColor,
     currentMode,
@@ -219,6 +303,15 @@ export const ContextProvider = ({ children }) => {
     addPricing,
     updatePricing,
     deletePricing,
+<<<<<<< HEAD
+=======
+    instructors,
+    instructorLoading,
+    fetchInstructors,
+    addInstructor,
+    updateInstructor,
+    deleteInstructor,
+>>>>>>> pabitra
   ]);
 
   return (
