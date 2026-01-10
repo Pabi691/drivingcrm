@@ -1,15 +1,17 @@
 import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { MdAccessTime } from 'react-icons/md';
-import { instructorsData } from '../data/dummy';
+import { useStateContext } from '../contexts/ContextProvider';
 import Doughnut from '../components/Charts/Pie';
 import Scheduler from './Calendar';
 
 const InstructorProfilePage = () => {
   const { id } = useParams();
+  const { instructors } = useStateContext();
 
-  const instructor = instructorsData.find(
-    (i) => i.InstructorID === Number(id),
+  // Find instructor by _id
+  const instructor = instructors.find(
+    (i) => i._id === id,
   );
 
   if (!instructor) {
@@ -50,29 +52,30 @@ const InstructorProfilePage = () => {
       <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow flex-col items-center gap-4">
         <div className='flex items-center justify-between gap-4'>
           <div className="flex gap-6 items-center">
-            <img
-              src={instructor.ProfileImage}
-              alt={instructor.Name}
+            {/* <img
+              src={instructor?.ProfileImage}
+              alt={instructor.name}
               className="w-20 h-20 rounded-full object-cover"
-            />
+            /> */}
             <div>
-              <h1 className="text-2xl font-bold">{instructor.Name}</h1>
-              <p className="text-gray-500 text-sm">{instructor.Designation} Instructor</p>
-              <p className="text-sm text-gray-600">{instructor.Email}</p>
-              <p className="text-sm text-gray-600">{instructor.Phone}</p>
+              <h1 className="text-2xl font-bold">{instructor.name}</h1>
+              {/* <p className="text-gray-500 text-sm">{instructor.Designation} Instructor</p> */}
+              <p className="text-sm text-gray-600">{instructor.email}</p>
+              <p className="text-sm text-gray-600">{instructor.mobile}</p>
             </div>
           </div>
           <div>
             <h3 className="text-2xl font-bold">Location</h3>
-            <p className="text-sm text-gray-600">Zone {instructor.Zone}</p>
+            {/* <p className="text-sm text-gray-600">Zone {instructor.Zone}</p>
             <p className="text-sm text-gray-600">{instructor.Postcode}</p>
-            <p className="text-sm text-gray-600">{instructor.Country}</p>
+            <p className="text-sm text-gray-600">{instructor.Country}</p> */}
+            <p className="text-sm text-gray-600">{instructor.full_address}</p>
           </div>
         </div>
 
         <div className="mt-6">
           <h3 className="font-semibold mb-2">Instructor Bio</h3>
-          <p className="text-gray-600 text-sm leading-relaxed">{instructor.Bio}</p>
+          <p className="text-gray-600 text-sm leading-relaxed">{instructor.instructor_bio}</p>
         </div>
       </div>
 
@@ -84,19 +87,19 @@ const InstructorProfilePage = () => {
           {/* SCHEDULER */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-2xl p-6 shadow">
             <h3 className="text-lg font-semibold mb-5">Scheduler</h3>
-            <Scheduler instructorId={instructor.InstructorID} />
-          </div>         
+            <Scheduler instructorId={instructor._id} />
+          </div>
 
           {/* STATS */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Stat label="Pupils" value={instructor.PupilCount} />
             <Stat label="Pass Rate" value={`${instructor.PassRate}%`} />
             <Stat label="Lessons Completed" value={instructor.LessonsCompleted} />
             <Stat label="Conversion Rate" value={`${instructor.ConversionRate}%`} />
-          </div>
+          </div> */}
 
           {/* LESSON PROGRESS */}
-          <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
+          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
             <h3 className="font-semibold mb-3">Lessons Progress</h3>
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
@@ -107,14 +110,14 @@ const InstructorProfilePage = () => {
             <p className="text-sm text-gray-600 mt-2">
               {((instructor.LessonsCompleted / instructor.LessonsBooked) * 100).toFixed(0)}% completed
             </p>
-          </div>
+          </div> */}
 
         </div>
 
         {/* RIGHT */}
         <div className="space-y-6">
           {/* INFO */}
-          <div className="bg-white dark:bg-secondary-dark-bg rounded-2xl p-6 shadow">
+          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-2xl p-6 shadow">
             <h3 className="text-lg font-semibold mb-5">Weekly Availability</h3>
 
             <div className="space-y-3">
@@ -127,7 +130,6 @@ const InstructorProfilePage = () => {
                       : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
                     }`}
                 >
-                  {/* DAY */}
                   <div>
                     <p className="font-medium">{day}</p>
                     {!info.available && (
@@ -135,7 +137,6 @@ const InstructorProfilePage = () => {
                     )}
                   </div>
 
-                  {/* TIME */}
                   {info.available && (
                     <div className="text-right text-sm">
                       <p className="font-semibold flex items-center justify-end gap-1">
@@ -154,10 +155,10 @@ const InstructorProfilePage = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* LESSON CHART */}
-          <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">
+          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">
             <h3 className="font-semibold text-center mb-2">Lessons Overview</h3>
             <Doughnut
               id="lesson-chart"
@@ -165,10 +166,10 @@ const InstructorProfilePage = () => {
               legendVisiblity
               height="250px"
             />
-          </div>
+          </div> */}
 
           {/* CONVERSION CHART */}
-          <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">
+          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">
             <h3 className="font-semibold text-center mb-2">Conversion Rate</h3>
             <Doughnut
               id="conversion-chart"
@@ -176,47 +177,47 @@ const InstructorProfilePage = () => {
               legendVisiblity
               height="220px"
             />
-          </div>
+          </div> */}
 
           {/* LOCATION */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">
             <h3 className="font-semibold mb-2">Instructor Location</h3>
 
-            <iframe
+            {/* <iframe
               title="Instructor Location"
               src={mapSrc}
               className="w-full h-60 rounded-lg border"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-            />
+            /> */}
           </div>
 
           {/* FINANCIAL SUMMARY */}
-          <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow text-sm">
+          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow text-sm">
             <h3 className="font-semibold mb-3">Monthly Summary</h3>
             <p>Income: {instructor.IncomeMonth}</p>
             <p>Expenses: {instructor.ExpensesMonth}</p>
             <p>Franchise Fee: {instructor.FranchiseFee}</p>
-          </div>
+          </div> */}
 
           {/* DOCUMENTS */}
-          <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow text-sm">
+          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow text-sm">
             <h3 className="font-semibold mb-3">Documents</h3>
             <p>ADI Expiry: {instructor.ADIExpiry}</p>
             <p>PDI Expiry: {instructor.PDIExpiry}</p>
             <p>Insurance: {instructor.InsuranceExpiry}</p>
             <p>MOT: {instructor.MOTExpiry}</p>
-          </div>
+          </div> */}
 
           {/* STATUS */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
             <h3 className="font-semibold mb-2">Status</h3>
             <span className={`px-3 py-1 rounded-full text-sm
-              ${instructor.OnLeave === 'No'
+              ${instructor.status === 1
                 ? 'bg-green-100 text-green-700'
                 : 'bg-yellow-100 text-yellow-700'
               }`}>
-              {instructor.OnLeave === 'No' ? 'Active' : instructor.OnLeave}
+              {instructor.status === 1 ? 'Active' : instructor.status === 0 ? 'Inactive' : instructor.status}
             </span>
           </div>
 

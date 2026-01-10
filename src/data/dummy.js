@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 // import { AiOutlineCalendar, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock, AiOutlineEye } from 'react-icons/ai';
 import { AiOutlineEye, AiOutlineQuestionCircle } from 'react-icons/ai';
-import { FiBarChart, FiCreditCard, FiStar, FiShoppingCart, FiBookOpen, FiPackage, FiMapPin } from 'react-icons/fi';
+import { FiBarChart, FiCreditCard, FiStar, FiShoppingCart, FiBookOpen, FiPackage, FiMapPin, FiDollarSign } from 'react-icons/fi';
 import { BsBoxSeam, BsCurrencyDollar, BsShield, BsChatLeft } from 'react-icons/bs';
 // import { BiColorFill } from 'react-icons/bi';
 import { IoMdContacts } from 'react-icons/io';
@@ -1203,6 +1203,10 @@ export const links = [
       {
         name: 'packages',
         icon: <FiPackage />,
+      },
+      {
+        name: 'pricing',
+        icon: <FiDollarSign />,
       },
     ],
   },
