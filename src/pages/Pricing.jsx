@@ -14,11 +14,7 @@ import {
 } from '@syncfusion/ej2-react-grids';
 import toast from 'react-hot-toast';
 import { useStateContext } from '../contexts/ContextProvider';
-<<<<<<< HEAD
 import {pricingGrid} from '../data/pricingGrid';
-=======
-import { pricingGrid } from '../data/pricingGrid';
->>>>>>> pabitra
 import { Header } from '../components';
 import EditPricingTemplate from '../components/templates/EditPricingTemplate';
 
@@ -28,17 +24,10 @@ import EditPricingTemplate from '../components/templates/EditPricingTemplate';
 const GridEditTemplate = (props) => {
   const { branches, packages } = useStateContext(); // get current data
   return (
-<<<<<<< HEAD
     <EditPricingTemplate 
       pricingData={props} 
       branches={branches || []} 
       packages={packages || []} 
-=======
-    <EditPricingTemplate
-      pricingData={props}
-      branches={branches || []}
-      packages={packages || []}
->>>>>>> pabitra
     />
   );
 };
@@ -69,17 +58,11 @@ const Pricing = () => {
     const newArgs = { ...args };
 
     if (newArgs.requestType === 'save') {
-<<<<<<< HEAD
-        newArgs.data = {...newArgs.data,
-  branches: branches || [],
-  packages: packages || [],};
-=======
       newArgs.data = {
         ...newArgs.data,
         branches: branches || [],
         packages: packages || [],
       };
->>>>>>> pabitra
       try {
         if (newArgs.action === 'add') {
           await addPricing(newArgs.data);
@@ -93,16 +76,6 @@ const Pricing = () => {
     }
 
     if (newArgs.requestType === 'delete') {
-<<<<<<< HEAD
-  const row = newArgs.data?.[0];
-  if (!row?._id) return;
-  try {
-    await deletePricing(row._id);
-  } catch {
-    toast.error('Delete failed');
-  }
-}
-=======
       const row = newArgs.data?.[0];
       if (!row?._id) return;
       try {
@@ -111,7 +84,6 @@ const Pricing = () => {
         toast.error('Delete failed');
       }
     }
->>>>>>> pabitra
   };
 
   return (
