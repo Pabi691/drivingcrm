@@ -57,7 +57,9 @@ export const ContextProvider = ({ children }) => {
     try {
       const res = await BranchService.getAll();
       // console.log('Fetched branches:', res.branches);
+      console.log('branches data',res)
       setBranches(res.branches);
+      
     } catch (err) {
       toast.error('Failed to load branches.');
     }
@@ -66,7 +68,8 @@ export const ContextProvider = ({ children }) => {
 
   const addBranch = useCallback(async (data) => {
     try {
-      await BranchService.create(data);
+      const res=await BranchService.createBranch(data);
+      console.log('creating branch',res)
       fetchBranches(); // Safe because fetchBranches is stable with useCallback
       toast.success('Branch created successfully');
     } catch (err) {
