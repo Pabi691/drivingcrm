@@ -9,8 +9,8 @@ export const BranchService = {
     return axios.get(`/branchs/${id}`);
   },
 
-  create(data) {
-    return axios.post('/branchs', data);
+  createBranch(data) {
+    return axios.post('/branchs',data);
   },
 
   update(id, data) {
