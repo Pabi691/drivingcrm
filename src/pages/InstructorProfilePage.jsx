@@ -1,19 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { MdAccessTime } from 'react-icons/md';
 import { useStateContext } from '../contexts/ContextProvider';
 import Doughnut from '../components/Charts/Pie';
+import toast from 'react-hot-toast';
 import Scheduler from './Calendar';
 
 const InstructorProfilePage = () => {
   const { id } = useParams();
-  const { instructors } = useStateContext();
+  const { instructors, approvedInstructor,fetchInstructors } = useStateContext();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isApproved, setIsApproved] = useState(false)
 
   // Find instructor by _id
   const instructor = instructors.find(
     (i) => i._id === id,
   );
 
+  // click approve function 
+  function OpenClick(value) {
+    setOpen(value)
+  }
+  // approving instructor
+  async function handleConfirm() {
+    try {
+      console.log('clicking')
+      setLoading(true)
+      const res = await approvedInstructor(instructor._id);
+      console.log('res', res)
+      if (res.success === true) {
+        toast.success(res.message);
+        fetchInstructors()
+        setIsApproved(true)
+      }
+      setLoading(false)
+    } catch (error) {
+      console.log('error', error)
+      setLoading(false)
+      setIsApproved(false)
+
+    }
+  }
   if (!instructor) {
     return <Navigate to="/instructors" replace />;
   }
@@ -71,12 +99,83 @@ const InstructorProfilePage = () => {
             <p className="text-sm text-gray-600">{instructor.Country}</p> */}
             <p className="text-sm text-gray-600">{instructor.full_address}</p>
           </div>
+
         </div>
 
-        <div className="mt-6">
-          <h3 className="font-semibold mb-2">Instructor Bio</h3>
-          <p className="text-gray-600 text-sm leading-relaxed">{instructor.instructor_bio}</p>
+        <div className='flex gap-16'>
+          <div className="mt-6 ">
+            <h3 className="font-semibold mb-2">Instructor Bio</h3>
+            <p className="text-gray-600 text-sm leading-relaxed">{instructor.instructor_bio}</p>
+          </div>
+          {!instructor.status == 1 && <button
+            className="
+    mt-4
+    inline-flex items-center gap-2
+    rounded-xl
+    bg-[#03C9D7]
+    px-6 py-1
+    text-sm font-semibold text-white
+    shadow-lg shadow-[#03C9D7]
+    transition-all duration-300
+    hover:scale-105 
+    active:scale-95
+  "
+            onClick={() => OpenClick(true)}
+          >
+            Approve Instructor
+          </button>}
         </div>
+        {open && !isApproved && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+
+              {/* Header */}
+              <h2 className="text-xl font-bold text-gray-800">
+                Confirm Instructor Approval
+              </h2>
+
+              {/* Message */}
+              <p className="mt-3 text-sm text-gray-600">
+                Are you sure you want to approve this instructor and add them to
+                your business?
+                <span className="block mt-2 font-medium text-gray-700">
+                  This action cannot be undone.
+                </span>
+              </p>
+
+              {/* Actions */}
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  onClick={() => setOpen(false)}
+                  className="
+                  rounded-lg border border-gray-300
+                  px-4 py-2 text-sm font-medium text-gray-700
+                  hover:bg-gray-100
+                "
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={handleConfirm}
+                  disabled={loading}
+                  className="
+                  rounded-lg
+                  bg-green-600
+                  px-5 py-2 text-sm font-semibold text-white
+                  shadow-md
+                  transition
+                  hover:bg-green-700
+                  disabled:opacity-60
+                "
+                >
+                  {loading ? 'Approving...' : "Yes, Approve"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -172,7 +172,8 @@ export const ContextProvider = ({ children }) => {
   }, []);
 
   const addInstructor = useCallback(async (data) => {
-    await InstructorService.create(data);
+   const res=  await InstructorService.create(data);
+    console.log('instructor created',res)
     fetchInstructors();
   }, [fetchInstructors]);
 
@@ -180,6 +181,15 @@ export const ContextProvider = ({ children }) => {
     await InstructorService.update(id, data);
     fetchInstructors();
   }, [fetchInstructors]);
+
+
+  // approve instructor 
+   const approvedInstructor = useCallback(async (id) => {
+   const res=  await InstructorService.approveInstructor(id);
+    console.log('approve',res)
+    return res;
+  }, []);
+  
 
   const deleteInstructor = useCallback(async (id) => {
     try {
@@ -235,6 +245,7 @@ export const ContextProvider = ({ children }) => {
     fetchInstructors,
     addInstructor,
     updateInstructor,
+    approvedInstructor,
     deleteInstructor,
     instructorLoading,
   }), [
@@ -270,6 +281,7 @@ export const ContextProvider = ({ children }) => {
     addInstructor,
     updateInstructor,
     deleteInstructor,
+    approvedInstructor
   ]);
 
   return (
