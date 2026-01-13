@@ -217,14 +217,14 @@ export const ContextProvider = ({ children }) => {
   }, []);
 
   
-    const fetchInstructorWorkingHours = useCallback(async (id) => {
+    const fetchInstructorWorkingHours = useCallback(async (id,day) => {
     try {
-   const res=await InstructorService.instructorWorkingHours(id);
+   const res=await InstructorService.instructorWorkingHours(id,day);
    console.log('instructor working days ',res)
    return res.data
      
     } catch (err) {
-      toast.error('Failed to delete instructor');
+      toast.error('failed to get working hours');
     }
   }, []);
 

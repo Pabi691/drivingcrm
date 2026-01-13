@@ -25,8 +25,10 @@ export const InstructorService = {
   instructorWorkingDays(instructor_id){
     return axios.get(`ds/instructor-working-days/${instructor_id}`)
   },
-  instructorWorkingHours(id){
-    return axios.get(`ds/instructor-working-hours/${id}`,)
+  instructorWorkingHours(instructorId,dayOfWeek){
+     return api.get(
+    `/instructor-working-hours/${instructorId}?day_of_week=${dayOfWeek}`
+  );
   },
 
   remove(id) {

@@ -80,19 +80,29 @@ useEffect(() => {
   const getWorkingDays = async () => {
     try {
       setLoading(true);
-      // fetch working days array
-      const res = await fetchInstructorWorkingDays(id); // returns array like you showed
+
+      // 1️⃣ get all working days
+      const res = await fetchInstructorWorkingDays(id);
       const days = Array.isArray(res) ? res : res.data || [];
 
-      // fetch hours for each working day
+      // 2️⃣ get hours for EACH day
       const daysWithHours = await Promise.all(
         days.map(async (day) => {
           if (Number(day.is_working) === 1) {
-            // fetch hours for this day
-            const hours = await fetchInstructorWorkingHours(id);
-            return { ...day, hours };
+            const hoursRes = await fetchInstructorWorkingHours(
+              id,
+              day.day_of_week
+            );
+
+            return {
+              ...day,
+              hours: Array.isArray(hoursRes)
+                ? hoursRes
+                : hoursRes.data || [],
+            };
           }
-          return day; // day off
+
+          return { ...day, hours: [] };
         })
       );
 
@@ -106,6 +116,7 @@ useEffect(() => {
 
   if (id) getWorkingDays();
 }, [id]);
+
 
 
 useEffect(()=>{
@@ -276,71 +287,37 @@ const activeDays = workingDays?.filter(
     <p className="text-sm text-gray-500 dark:text-gray-400">No working days found</p>
   ) : (
     <div className="grid grid-cols-1  gap-4">
-      {workingDays.map((day) => {
-        const dayHours = day.hours && day.hours.length > 0 ? day.hours[0] : null;
+    {workingDays.map((day) => {
+  const dayHours =
+    day.hours && day.hours.length > 0 ? day.hours[0] : null;
 
-        return (
-          <div
-            key={day._id}
-            className={`flex flex-col justify-between p-4 rounded-xl shadow hover:shadow-lg transition-shadow duration-200
-              ${Number(day.is_working) === 1
-                ? 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600'
-                : 'bg-red-50 border border-red-200 dark:bg-red-900/20 dark:border-red-700'
-              }`}
-          >
-            {/* Day Name & Status */}
-            <div className="flex items-center justify-between mb-2">
-              <p className="font-semibold text-gray-800 dark:text-gray-100 text-lg">
-                {DAY_MAP[day.day_of_week]}
-              </p>
-              {Number(day.is_working) === 1 ? (
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-200">
-                  Working
-                </span>
-              ) : (
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700 dark:bg-red-800/30 dark:text-red-300">
-                  Day Off
-                </span>
-              )}
-            </div>
+  return (
+    <div key={day._id} className="p-4 rounded-xl bg-white shadow">
+      <div className="flex justify-between mb-2">
+        <p className="font-semibold">{DAY_MAP[day.day_of_week]}</p>
+        <span className="text-xs bg-green-100 px-2 py-1 rounded-full">
+          Working
+        </span>
+      </div>
 
-            {/* Work Hours */}
-            {Number(day.is_working) === 1 && dayHours && (
-              <div className="flex flex-col gap-1 text-gray-700 dark:text-gray-200">
-                <p className="flex items-center gap-2">
-                  <svg
-                    className="w-4 h-4 text-blue-500"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
-                  </svg>
-                  <span className="font-medium">Work:</span> {dayHours.start_time} – {dayHours.end_time}
-                </p>
+      {dayHours && (
+        <>
+          <p>
+            <strong>Work:</strong> {dayHours.start_time} – {dayHours.end_time}
+          </p>
 
-                {dayHours.break_start && dayHours.break_end && (
-                  <p className="flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4 text-yellow-500"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
-                    </svg>
-                    <span className="font-medium">Break:</span> {dayHours.break_start} – {dayHours.break_end}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-        );
-      })}
+          {dayHours.break_start && (
+            <p>
+              <strong>Break:</strong>{" "}
+              {dayHours.break_start} – {dayHours.break_end}
+            </p>
+          )}
+        </>
+      )}
+    </div>
+  );
+})}
+
     </div>
   )}
 </div>
