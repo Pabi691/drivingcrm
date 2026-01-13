@@ -22,6 +22,13 @@ export const InstructorService = {
     return axios.patch(`/ds/instructor-masters/${id}`, data);
   },
 
+  instructorWorkingDays(instructor_id){
+    return axios.get(`ds/instructor-working-days/${instructor_id}`)
+  },
+  instructorWorkingHours(id){
+    return axios.get(`ds/instructor-working-hours/${id}`,)
+  },
+
   remove(id) {
     return axios.delete(`/ds/instructor-masters/${id}`);
   },

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { MdAccessTime } from 'react-icons/md';
 import { useStateContext } from '../contexts/ContextProvider';
@@ -8,10 +8,11 @@ import Scheduler from './Calendar';
 
 const InstructorProfilePage = () => {
   const { id } = useParams();
-  const { instructors, approvedInstructor,fetchInstructors } = useStateContext();
+  const { instructors, approvedInstructor, fetchInstructors ,fetchInstructorWorkingDays,fetchInstructorWorkingHours} = useStateContext();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isApproved, setIsApproved] = useState(false)
+  const [isApproved, setIsApproved] = useState(false);
+  const[workingDays, setWorkingDays]=useState([])
 
   // Find instructor by _id
   const instructor = instructors.find(
@@ -64,6 +65,58 @@ const InstructorProfilePage = () => {
     { x: 'Converted', y: instructor.ConversionRate, text: `${instructor.ConversionRate}%` },
     { x: 'Not Converted', y: 100 - instructor.ConversionRate, text: `${100 - instructor.ConversionRate}%` },
   ];
+ const DAY_MAP = {
+  1: 'Monday',
+  2: 'Tuesday',
+  3: 'Wednesday',
+  4: 'Thursday',
+  5: 'Friday',
+  6: 'Saturday',
+  7: 'Sunday',
+};
+
+
+useEffect(() => {
+  const getWorkingDays = async () => {
+    try {
+      setLoading(true);
+      // fetch working days array
+      const res = await fetchInstructorWorkingDays(id); // returns array like you showed
+      const days = Array.isArray(res) ? res : res.data || [];
+
+      // fetch hours for each working day
+      const daysWithHours = await Promise.all(
+        days.map(async (day) => {
+          if (Number(day.is_working) === 1) {
+            // fetch hours for this day
+            const hours = await fetchInstructorWorkingHours(id);
+            return { ...day, hours };
+          }
+          return day; // day off
+        })
+      );
+
+      setWorkingDays(daysWithHours);
+    } catch (error) {
+      console.error('Error fetching working days', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (id) getWorkingDays();
+}, [id]);
+
+
+useEffect(()=>{
+console.log('working days',workingDays)
+},[workingDays])
+
+
+const activeDays = workingDays?.filter(
+  d => Number(d.is_working) === 1
+);
+
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
@@ -214,113 +267,86 @@ const InstructorProfilePage = () => {
         </div>
 
         {/* RIGHT */}
-        <div className="space-y-6">
-          {/* INFO */}
-          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-2xl p-6 shadow">
-            <h3 className="text-lg font-semibold mb-5">Weekly Availability</h3>
+<div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl shadow-md space-y-4">
+  <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
+    Weekly Availability
+  </h3>
 
-            <div className="space-y-3">
-              {Object.entries(instructor.Availability).map(([day, info]) => (
-                <div
-                  key={day}
-                  className={`flex items-center justify-between rounded-xl p-4 border
-          ${info.available
-                      ? 'bg-gray-50 dark:bg-main-dark-bg border-gray-200 dark:border-gray-700'
-                      : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
-                    }`}
-                >
-                  <div>
-                    <p className="font-medium">{day}</p>
-                    {!info.available && (
-                      <p className="text-xs text-red-500 mt-1">Day Off</p>
-                    )}
-                  </div>
+  {workingDays.length === 0 ? (
+    <p className="text-sm text-gray-500 dark:text-gray-400">No working days found</p>
+  ) : (
+    <div className="grid grid-cols-1  gap-4">
+      {workingDays.map((day) => {
+        const dayHours = day.hours && day.hours.length > 0 ? day.hours[0] : null;
 
-                  {info.available && (
-                    <div className="text-right text-sm">
-                      <p className="font-semibold flex items-center justify-end gap-1">
-                        <MdAccessTime />
-                        {info.start} – {info.end}
-                      </p>
-
-                      {info.break && (
-                        <span className="inline-block mt-1 px-3 py-0.5 rounded-full text-xs
-                bg-yellow-100 text-yellow-700 dark:bg-yellow-800/30 dark:text-yellow-300">
-                          Break {info.break.start} – {info.break.end}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
+        return (
+          <div
+            key={day._id}
+            className={`flex flex-col justify-between p-4 rounded-xl shadow hover:shadow-lg transition-shadow duration-200
+              ${Number(day.is_working) === 1
+                ? 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600'
+                : 'bg-red-50 border border-red-200 dark:bg-red-900/20 dark:border-red-700'
+              }`}
+          >
+            {/* Day Name & Status */}
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-semibold text-gray-800 dark:text-gray-100 text-lg">
+                {DAY_MAP[day.day_of_week]}
+              </p>
+              {Number(day.is_working) === 1 ? (
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-800/30 dark:text-green-200">
+                  Working
+                </span>
+              ) : (
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700 dark:bg-red-800/30 dark:text-red-300">
+                  Day Off
+                </span>
+              )}
             </div>
-          </div> */}
 
-          {/* LESSON CHART */}
-          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">
-            <h3 className="font-semibold text-center mb-2">Lessons Overview</h3>
-            <Doughnut
-              id="lesson-chart"
-              data={lessonChartData}
-              legendVisiblity
-              height="250px"
-            />
-          </div> */}
+            {/* Work Hours */}
+            {Number(day.is_working) === 1 && dayHours && (
+              <div className="flex flex-col gap-1 text-gray-700 dark:text-gray-200">
+                <p className="flex items-center gap-2">
+                  <svg
+                    className="w-4 h-4 text-blue-500"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+                  </svg>
+                  <span className="font-medium">Work:</span> {dayHours.start_time} – {dayHours.end_time}
+                </p>
 
-          {/* CONVERSION CHART */}
-          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">
-            <h3 className="font-semibold text-center mb-2">Conversion Rate</h3>
-            <Doughnut
-              id="conversion-chart"
-              data={conversionChartData}
-              legendVisiblity
-              height="220px"
-            />
-          </div> */}
-
-          {/* LOCATION */}
-          <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">
-            <h3 className="font-semibold mb-2">Instructor Location</h3>
-
-            {/* <iframe
-              title="Instructor Location"
-              src={mapSrc}
-              className="w-full h-60 rounded-lg border"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            /> */}
+                {dayHours.break_start && dayHours.break_end && (
+                  <p className="flex items-center gap-2">
+                    <svg
+                      className="w-4 h-4 text-yellow-500"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+                    </svg>
+                    <span className="font-medium">Break:</span> {dayHours.break_start} – {dayHours.break_end}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
+        );
+      })}
+    </div>
+  )}
+</div>
 
-          {/* FINANCIAL SUMMARY */}
-          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow text-sm">
-            <h3 className="font-semibold mb-3">Monthly Summary</h3>
-            <p>Income: {instructor.IncomeMonth}</p>
-            <p>Expenses: {instructor.ExpensesMonth}</p>
-            <p>Franchise Fee: {instructor.FranchiseFee}</p>
-          </div> */}
 
-          {/* DOCUMENTS */}
-          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow text-sm">
-            <h3 className="font-semibold mb-3">Documents</h3>
-            <p>ADI Expiry: {instructor.ADIExpiry}</p>
-            <p>PDI Expiry: {instructor.PDIExpiry}</p>
-            <p>Insurance: {instructor.InsuranceExpiry}</p>
-            <p>MOT: {instructor.MOTExpiry}</p>
-          </div> */}
 
-          {/* STATUS */}
-          <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
-            <h3 className="font-semibold mb-2">Status</h3>
-            <span className={`px-3 py-1 rounded-full text-sm
-              ${instructor.status === 1
-                ? 'bg-green-100 text-green-700'
-                : 'bg-yellow-100 text-yellow-700'
-              }`}>
-              {instructor.status === 1 ? 'Active' : instructor.status === 0 ? 'Inactive' : instructor.status}
-            </span>
-          </div>
-
-        </div>
       </div>
     </div>
   );

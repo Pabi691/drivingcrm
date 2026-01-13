@@ -31,6 +31,7 @@ export const ContextProvider = ({ children }) => {
   const [pricingLoading, setPricingLoading] = useState(false);
   const [instructors, setInstructors] = useState([]);
   const [instructorLoading, setInstructorLoading] = useState(false);
+  const [instructorWorkingDays, setInstructorWorkingDays]=useState([])
 
   const setMode = (e) => {
     setCurrentMode(e.target.value);
@@ -171,6 +172,8 @@ export const ContextProvider = ({ children }) => {
     setInstructorLoading(false);
   }, []);
 
+
+
   const addInstructor = useCallback(async (data) => {
    const res=  await InstructorService.create(data);
     console.log('instructor created',res)
@@ -200,6 +203,31 @@ export const ContextProvider = ({ children }) => {
       toast.error('Failed to delete instructor');
     }
   }, []);
+
+
+    const fetchInstructorWorkingDays = useCallback(async (instructorId) => {
+    try {
+   const res=await InstructorService.instructorWorkingDays(instructorId);
+   console.log('instructor working days ',res)
+   return res.data
+     
+    } catch (err) {
+      toast.error('Failed to delete instructor');
+    }
+  }, []);
+
+  
+    const fetchInstructorWorkingHours = useCallback(async (id) => {
+    try {
+   const res=await InstructorService.instructorWorkingHours(id);
+   console.log('instructor working days ',res)
+   return res.data
+     
+    } catch (err) {
+      toast.error('Failed to delete instructor');
+    }
+  }, []);
+
 
   // ✅ Memoize the context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({
@@ -248,6 +276,8 @@ export const ContextProvider = ({ children }) => {
     approvedInstructor,
     deleteInstructor,
     instructorLoading,
+    fetchInstructorWorkingDays,
+    fetchInstructorWorkingHours
   }), [
     currentColor,
     currentMode,
