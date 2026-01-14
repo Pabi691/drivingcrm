@@ -5,6 +5,7 @@ import { useStateContext } from '../contexts/ContextProvider';
 import Doughnut from '../components/Charts/Pie';
 import toast from 'react-hot-toast';
 import Scheduler from './Calendar';
+import WeeklyAvailability from '../components/SetupWeeklyPopup';
 
 const InstructorProfilePage = () => {
   const { id } = useParams();
@@ -235,10 +236,10 @@ const InstructorProfilePage = () => {
           {!instructor.status == 1 && <button
             className="
     mt-4
-    inline-flex items-center gap-2
+    inline-flex items-start gap-2
     rounded-xl
     bg-[#03C9D7]
-    px-6 py-1
+    px-6 py-3
     text-sm font-semibold text-white
     shadow-lg shadow-[#03C9D7]
     transition-all duration-300
@@ -317,9 +318,9 @@ const InstructorProfilePage = () => {
           {/* STATS */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Stat label="Pupils" value={instructor.PupilCount} />
-            <Stat label="Pass Rate" value={`${instructor.PassRate?instructor.PassRate:30}%`} />
-            <Stat label="Lessons Completed" value={instructor.LessonsCompleted?instructor.LessonsCompleted:40} />
-            <Stat label="Conversion Rate" value={`${instructor.ConversionRate?instructor.ConversionRate:50}%`} />
+            <Stat label="Pass Rate" value={`${instructor.PassRate ? instructor.PassRate : 30}%`} />
+            <Stat label="Lessons Completed" value={instructor.LessonsCompleted ? instructor.LessonsCompleted : 40} />
+            <Stat label="Conversion Rate" value={`${instructor.ConversionRate ? instructor.ConversionRate : 50}%`} />
           </div>
 
           {/* LESSON PROGRESS */}
@@ -340,9 +341,21 @@ const InstructorProfilePage = () => {
 
         {/* RIGHT */}
         <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl shadow-md">
-          <h3 className="text-xl font-semibold mb-5 text-gray-800 dark:text-gray-100">
-            Weekly Availability
-          </h3>
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+              Weekly Availability
+            </h3>
+
+            <WeeklyAvailability />
+            {/* 
+            <button
+              onClick={() => setShowSetup(true)}
+              className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+            >
+              Setup
+            </button> */}
+          </div>
+
 
           <div className="grid grid-cols-1 gap-4">
             {displayDays.map((day) => {
@@ -396,6 +409,8 @@ const InstructorProfilePage = () => {
             })}
           </div>
         </div>
+
+
 
 
 

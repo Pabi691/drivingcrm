@@ -19,7 +19,7 @@ export const InstructorService = {
   },
 
   update(id, data) {
-    return axios.patch(`/ds/instructor-masters/${id}`, data);
+    return axios.post(`/ds/instructor-masters/${id}`, data);
   },
 
   instructorWorkingDays(instructor_id){
