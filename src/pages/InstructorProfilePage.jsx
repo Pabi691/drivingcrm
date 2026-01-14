@@ -8,11 +8,71 @@ import Scheduler from './Calendar';
 
 const InstructorProfilePage = () => {
   const { id } = useParams();
-  const { instructors, approvedInstructor, fetchInstructors ,fetchInstructorWorkingDays,fetchInstructorWorkingHours} = useStateContext();
+  const { instructors, approvedInstructor, fetchInstructors, fetchInstructorWorkingDays, fetchInstructorWorkingHours } = useStateContext();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
-  const[workingDays, setWorkingDays]=useState([])
+  const [workingDays, setWorkingDays] = useState([])
+
+
+  // dummy data 
+
+  const dummyWorkingDays = [
+    {
+      _id: "1",
+      day_of_week: 1,
+      hours: [
+        {
+          start_time: "09:00 AM",
+          end_time: "05:00 PM",
+          break_start: "01:00 PM",
+          break_end: "02:00 PM",
+        },
+      ],
+    },
+    {
+      _id: "2",
+      day_of_week: 2,
+      hours: [
+        {
+          start_time: "10:00 AM",
+          end_time: "06:00 PM",
+        },
+      ],
+    },
+    {
+      _id: "3",
+      day_of_week: 3,
+      hours: [
+        {
+          start_time: "09:30 AM",
+          end_time: "04:30 PM",
+          break_start: "01:30 PM",
+          break_end: "02:00 PM",
+        },
+      ],
+    },
+    {
+      _id: "4",
+      day_of_week: 4,
+      hours: [
+        {
+          start_time: "11:00 AM",
+          end_time: "07:00 PM",
+        },
+      ],
+    },
+    {
+      _id: "5",
+      day_of_week: 5,
+      hours: [
+        {
+          start_time: "09:00 AM",
+          end_time: "03:00 PM",
+        },
+      ],
+    },
+  ];
 
   // Find instructor by _id
   const instructor = instructors.find(
@@ -65,68 +125,69 @@ const InstructorProfilePage = () => {
     { x: 'Converted', y: instructor.ConversionRate, text: `${instructor.ConversionRate}%` },
     { x: 'Not Converted', y: 100 - instructor.ConversionRate, text: `${100 - instructor.ConversionRate}%` },
   ];
- const DAY_MAP = {
-  1: 'Monday',
-  2: 'Tuesday',
-  3: 'Wednesday',
-  4: 'Thursday',
-  5: 'Friday',
-  6: 'Saturday',
-  7: 'Sunday',
-};
-
-
-useEffect(() => {
-  const getWorkingDays = async () => {
-    try {
-      setLoading(true);
-
-      // 1️⃣ get all working days
-      const res = await fetchInstructorWorkingDays(id);
-      const days = Array.isArray(res) ? res : res.data || [];
-
-      // 2️⃣ get hours for EACH day
-      const daysWithHours = await Promise.all(
-        days.map(async (day) => {
-          if (Number(day.is_working) === 1) {
-            const hoursRes = await fetchInstructorWorkingHours(
-              id,
-              day.day_of_week
-            );
-
-            return {
-              ...day,
-              hours: Array.isArray(hoursRes)
-                ? hoursRes
-                : hoursRes.data || [],
-            };
-          }
-
-          return { ...day, hours: [] };
-        })
-      );
-
-      setWorkingDays(daysWithHours);
-    } catch (error) {
-      console.error('Error fetching working days', error);
-    } finally {
-      setLoading(false);
-    }
+  const DAY_MAP = {
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday',
+    7: 'Sunday',
   };
 
-  if (id) getWorkingDays();
-}, [id]);
+
+  useEffect(() => {
+    const getWorkingDays = async () => {
+      try {
+        setLoading(true);
+
+        // 1️⃣ get all working days
+        const res = await fetchInstructorWorkingDays(id);
+        const days = Array.isArray(res) ? res : res.data || [];
+
+        // 2️⃣ get hours for EACH day
+        const daysWithHours = await Promise.all(
+          days.map(async (day) => {
+            if (Number(day.is_working) === 1) {
+              const hoursRes = await fetchInstructorWorkingHours(
+                id,
+                day.day_of_week
+              );
+
+              console.log('hours', hoursRes)
+              return {
+                ...day,
+                hours: Array.isArray(hoursRes)
+                  ? hoursRes
+                  : hoursRes.data || [],
+              };
+            }
+
+            return { ...day, hours: [] };
+          })
+        );
+
+        setWorkingDays(daysWithHours);
+      } catch (error) {
+        console.error('Error fetching working days', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) getWorkingDays();
+  }, [id]);
 
 
 
-useEffect(()=>{
-console.log('working days',workingDays)
-},[workingDays])
+  const activeDays = workingDays?.filter(
+    d => Number(d.is_working) === 1
+  );
+  const displayDays =
+    workingDays && workingDays.length > 0
+      ? workingDays
+      : dummyWorkingDays;
 
-
-const activeDays = workingDays?.filter(
-  d => Number(d.is_working) === 1
-);
 
 
   return (
@@ -166,7 +227,7 @@ const activeDays = workingDays?.filter(
 
         </div>
 
-        <div className='flex gap-16'>
+        <div className='flex  items-center justify-between   gap-16'>
           <div className="mt-6 ">
             <h3 className="font-semibold mb-2">Instructor Bio</h3>
             <p className="text-gray-600 text-sm leading-relaxed">{instructor.instructor_bio}</p>
@@ -254,15 +315,15 @@ const activeDays = workingDays?.filter(
           </div>
 
           {/* STATS */}
-          {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Stat label="Pupils" value={instructor.PupilCount} />
-            <Stat label="Pass Rate" value={`${instructor.PassRate}%`} />
-            <Stat label="Lessons Completed" value={instructor.LessonsCompleted} />
-            <Stat label="Conversion Rate" value={`${instructor.ConversionRate}%`} />
-          </div> */}
+            <Stat label="Pass Rate" value={`${instructor.PassRate?instructor.PassRate:30}%`} />
+            <Stat label="Lessons Completed" value={instructor.LessonsCompleted?instructor.LessonsCompleted:40} />
+            <Stat label="Conversion Rate" value={`${instructor.ConversionRate?instructor.ConversionRate:50}%`} />
+          </div>
 
           {/* LESSON PROGRESS */}
-          {/* <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
+          <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
             <h3 className="font-semibold mb-3">Lessons Progress</h3>
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
@@ -273,54 +334,69 @@ const activeDays = workingDays?.filter(
             <p className="text-sm text-gray-600 mt-2">
               {((instructor.LessonsCompleted / instructor.LessonsBooked) * 100).toFixed(0)}% completed
             </p>
-          </div> */}
+          </div>
 
         </div>
 
         {/* RIGHT */}
-<div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl shadow-md space-y-4">
-  <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
-    Weekly Availability
-  </h3>
+        <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+          <h3 className="text-xl font-semibold mb-5 text-gray-800 dark:text-gray-100">
+            Weekly Availability
+          </h3>
 
-  {workingDays.length === 0 ? (
-    <p className="text-sm text-gray-500 dark:text-gray-400">No working days found</p>
-  ) : (
-    <div className="grid grid-cols-1  gap-4">
-    {workingDays.map((day) => {
-  const dayHours =
-    day.hours && day.hours.length > 0 ? day.hours[0] : null;
+          <div className="grid grid-cols-1 gap-4">
+            {displayDays.map((day) => {
+              const dayHours =
+                day.hours && day.hours.length > 0 ? day.hours[0] : null;
 
-  return (
-    <div key={day._id} className="p-4 rounded-xl bg-white shadow">
-      <div className="flex justify-between mb-2">
-        <p className="font-semibold">{DAY_MAP[day.day_of_week]}</p>
-        <span className="text-xs bg-green-100 px-2 py-1 rounded-full">
-          Working
-        </span>
-      </div>
+              return (
+                <div
+                  key={day._id}
+                  className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition"
+                >
+                  {/* Header */}
+                  <div className="flex justify-between items-center mb-3">
+                    <p className="font-semibold text-gray-700 dark:text-gray-200">
+                      {DAY_MAP[day.day_of_week]}
+                    </p>
+                    <span className="text-xs font-medium text-green-700 bg-green-100 dark:bg-green-900 dark:text-green-300 px-3 py-1 rounded-full">
+                      Working
+                    </span>
+                  </div>
 
-      {dayHours && (
-        <>
-          <p>
-            <strong>Work:</strong> {dayHours.start_time} – {dayHours.end_time}
-          </p>
+                  {/* Work Time */}
+                  {dayHours && (
+                    <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                      <p>
+                        <strong className="text-gray-700 dark:text-gray-300">
+                          Work:
+                        </strong>{" "}
+                        {dayHours.start_time} – {dayHours.end_time}
+                      </p>
 
-          {dayHours.break_start && (
-            <p>
-              <strong>Break:</strong>{" "}
-              {dayHours.break_start} – {dayHours.break_end}
-            </p>
-          )}
-        </>
-      )}
-    </div>
-  );
-})}
+                      {dayHours.break_start && (
+                        <p>
+                          <strong className="text-gray-700 dark:text-gray-300">
+                            Break:
+                          </strong>{" "}
+                          {dayHours.break_start} – {dayHours.break_end}
+                        </p>
+                      )}
+                    </div>
+                  )}
 
-    </div>
-  )}
-</div>
+                  {/* Dummy Label */}
+                  {workingDays.length === 0 && (
+                    <p className="mt-3 text-xs text-gray-400 italic">
+                      Sample availability
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
 
 
 

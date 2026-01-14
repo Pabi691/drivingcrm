@@ -7,7 +7,7 @@ export const InstructorService = {
   approveInstructor(id)
   {
     console.log('calling approove',id)
-    return axios.patch(`/ds/instructor-masters/status/${id}`,{"businessName":"Drive4Pass"})
+    return axios.get(`/ds/instructor-masters/status/${id}`,{"businessName":"Drive4Pass"})
   },
 
   getOne(id) {
@@ -26,8 +26,8 @@ export const InstructorService = {
     return axios.get(`ds/instructor-working-days/${instructor_id}`)
   },
   instructorWorkingHours(instructorId,dayOfWeek){
-     return api.get(
-    `/instructor-working-hours/${instructorId}?day_of_week=${dayOfWeek}`
+     return axios.get(
+    `ds/instructor-working-hours/${instructorId}?day_of_week=${dayOfWeek}`
   );
   },
 

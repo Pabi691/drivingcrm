@@ -220,10 +220,11 @@ export const ContextProvider = ({ children }) => {
     const fetchInstructorWorkingHours = useCallback(async (id,day) => {
     try {
    const res=await InstructorService.instructorWorkingHours(id,day);
-   console.log('instructor working days ',res)
+   console.log('instructor working hours',res)
    return res.data
      
     } catch (err) {
+      console.log('error to get working hours',err)
       toast.error('failed to get working hours');
     }
   }, []);
