@@ -217,15 +217,15 @@ export const ContextProvider = ({ children }) => {
   }, []);
 
   
-    const fetchInstructorWorkingHours = useCallback(async (id,day) => {
+    const instructorWorkingDaysCreateAndUpdate = useCallback(async (data) => {
     try {
-   const res=await InstructorService.instructorWorkingHours(id,day);
+   const res=await InstructorService.instructorWorkingDayCreateAndUpdate(data);
    console.log('instructor working hours',res)
    return res.data
      
     } catch (err) {
       console.log('error to get working hours',err)
-      toast.error('failed to get working hours');
+      toast.error('failed to update workings days ');
     }
   }, []);
 
@@ -278,7 +278,7 @@ export const ContextProvider = ({ children }) => {
     deleteInstructor,
     instructorLoading,
     fetchInstructorWorkingDays,
-    fetchInstructorWorkingHours
+   instructorWorkingDaysCreateAndUpdate
   }), [
     currentColor,
     currentMode,

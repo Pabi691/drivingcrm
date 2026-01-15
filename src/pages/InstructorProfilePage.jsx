@@ -6,6 +6,7 @@ import Doughnut from '../components/Charts/Pie';
 import toast from 'react-hot-toast';
 import Scheduler from './Calendar';
 import WeeklyAvailability from '../components/SetupWeeklyPopup';
+import WeeklyAvailabilityList from '../components/InstructorWeeklyDisplay';
 
 const InstructorProfilePage = () => {
   const { id } = useParams();
@@ -18,62 +19,6 @@ const InstructorProfilePage = () => {
 
   // dummy data 
 
-  const dummyWorkingDays = [
-    {
-      _id: "1",
-      day_of_week: 1,
-      hours: [
-        {
-          start_time: "09:00 AM",
-          end_time: "05:00 PM",
-          break_start: "01:00 PM",
-          break_end: "02:00 PM",
-        },
-      ],
-    },
-    {
-      _id: "2",
-      day_of_week: 2,
-      hours: [
-        {
-          start_time: "10:00 AM",
-          end_time: "06:00 PM",
-        },
-      ],
-    },
-    {
-      _id: "3",
-      day_of_week: 3,
-      hours: [
-        {
-          start_time: "09:30 AM",
-          end_time: "04:30 PM",
-          break_start: "01:30 PM",
-          break_end: "02:00 PM",
-        },
-      ],
-    },
-    {
-      _id: "4",
-      day_of_week: 4,
-      hours: [
-        {
-          start_time: "11:00 AM",
-          end_time: "07:00 PM",
-        },
-      ],
-    },
-    {
-      _id: "5",
-      day_of_week: 5,
-      hours: [
-        {
-          start_time: "09:00 AM",
-          end_time: "03:00 PM",
-        },
-      ],
-    },
-  ];
 
   // Find instructor by _id
   const instructor = instructors.find(
@@ -126,49 +71,15 @@ const InstructorProfilePage = () => {
     { x: 'Converted', y: instructor.ConversionRate, text: `${instructor.ConversionRate}%` },
     { x: 'Not Converted', y: 100 - instructor.ConversionRate, text: `${100 - instructor.ConversionRate}%` },
   ];
-  const DAY_MAP = {
-    1: 'Monday',
-    2: 'Tuesday',
-    3: 'Wednesday',
-    4: 'Thursday',
-    5: 'Friday',
-    6: 'Saturday',
-    7: 'Sunday',
-  };
 
 
   useEffect(() => {
     const getWorkingDays = async () => {
       try {
         setLoading(true);
-
-        // 1️⃣ get all working days
         const res = await fetchInstructorWorkingDays(id);
-        const days = Array.isArray(res) ? res : res.data || [];
-
-        // 2️⃣ get hours for EACH day
-        const daysWithHours = await Promise.all(
-          days.map(async (day) => {
-            if (Number(day.is_working) === 1) {
-              const hoursRes = await fetchInstructorWorkingHours(
-                id,
-                day.day_of_week
-              );
-
-              console.log('hours', hoursRes)
-              return {
-                ...day,
-                hours: Array.isArray(hoursRes)
-                  ? hoursRes
-                  : hoursRes.data || [],
-              };
-            }
-
-            return { ...day, hours: [] };
-          })
-        );
-
-        setWorkingDays(daysWithHours);
+        console.log('reso',res)
+        setWorkingDays(res || []);
       } catch (error) {
         console.error('Error fetching working days', error);
       } finally {
@@ -181,13 +92,6 @@ const InstructorProfilePage = () => {
 
 
 
-  const activeDays = workingDays?.filter(
-    d => Number(d.is_working) === 1
-  );
-  const displayDays =
-    workingDays && workingDays.length > 0
-      ? workingDays
-      : dummyWorkingDays;
 
 
 
@@ -346,7 +250,7 @@ const InstructorProfilePage = () => {
               Weekly Availability
             </h3>
 
-            <WeeklyAvailability />
+            <WeeklyAvailability instructor={id}  workingDays={workingDays}/>
             {/* 
             <button
               onClick={() => setShowSetup(true)}
@@ -357,57 +261,8 @@ const InstructorProfilePage = () => {
           </div>
 
 
-          <div className="grid grid-cols-1 gap-4">
-            {displayDays.map((day) => {
-              const dayHours =
-                day.hours && day.hours.length > 0 ? day.hours[0] : null;
+       <WeeklyAvailabilityList workingDays={workingDays}/>
 
-              return (
-                <div
-                  key={day._id}
-                  className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition"
-                >
-                  {/* Header */}
-                  <div className="flex justify-between items-center mb-3">
-                    <p className="font-semibold text-gray-700 dark:text-gray-200">
-                      {DAY_MAP[day.day_of_week]}
-                    </p>
-                    <span className="text-xs font-medium text-green-700 bg-green-100 dark:bg-green-900 dark:text-green-300 px-3 py-1 rounded-full">
-                      Working
-                    </span>
-                  </div>
-
-                  {/* Work Time */}
-                  {dayHours && (
-                    <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                      <p>
-                        <strong className="text-gray-700 dark:text-gray-300">
-                          Work:
-                        </strong>{" "}
-                        {dayHours.start_time} – {dayHours.end_time}
-                      </p>
-
-                      {dayHours.break_start && (
-                        <p>
-                          <strong className="text-gray-700 dark:text-gray-300">
-                            Break:
-                          </strong>{" "}
-                          {dayHours.break_start} – {dayHours.break_end}
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Dummy Label */}
-                  {workingDays.length === 0 && (
-                    <p className="mt-3 text-xs text-gray-400 italic">
-                      Sample availability
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
         </div>
 
 

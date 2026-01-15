@@ -23,11 +23,13 @@ export const InstructorService = {
   },
 
   instructorWorkingDays(instructor_id){
-    return axios.get(`ds/instructor-working-days/${instructor_id}`)
+    return axios.get(`/ds/instructor-working-days/${instructor_id}`)
   },
-  instructorWorkingHours(instructorId,dayOfWeek){
-     return axios.get(
-    `ds/instructor-working-hours/${instructorId}?day_of_week=${dayOfWeek}`
+  
+  instructorWorkingDayCreateAndUpdate(data){
+    console.log('data',data)
+     return axios.post(
+    `/ds/instructor-working-days/upsert`,data
   );
   },
 
