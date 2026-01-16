@@ -1,30 +1,106 @@
-import React from 'react';
-import { GridComponent, Inject, ColumnsDirective, ColumnDirective, Search, Page, Selection, Edit, Toolbar, Sort, Filter } from '@syncfusion/ej2-react-grids';
-import { learnersData, learnersGrid } from '../data/dummy';
+import React, { useEffect } from 'react';
+import {
+  GridComponent,
+  Inject,
+  ColumnsDirective,
+  ColumnDirective,
+  Search,
+  Page,
+  Selection,
+  Edit,
+  Toolbar,
+  Sort,
+  Filter,
+} from '@syncfusion/ej2-react-grids';
+import toast from 'react-hot-toast';
+import { useStateContext } from '../contexts/ContextProvider';
+import { learnersGrid } from '../data/dummy';
 import { Header } from '../components';
+import EditLearnerTemplate from '../components/templates/EditLearnerTemplate';
 
-const Learners = () => {
-  const selectionsettings = { persistSelection: true };
-  const toolbarOptions = ['Search', 'Delete', 'Add', 'Edit', 'Update', 'Cancel'];
-  const editing = { allowDeleting: true, allowEditing: true, allowAdding: true, newRowPosition: 'Top', mode: 'Dialog' };
+const GridLearnerTemplate = (props) => {
+  const { branches, packages, instructors } = useStateContext();
+
 
   return (
-    <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-      <Header category="Page" title="Learners" />
+    <EditLearnerTemplate
+      learnerData={props.data}
+      branches={branches || []}
+      packages={packages || []}
+      instructors={instructors || []}   
+    />
+  );
+};
+
+const Learners = () => {
+  const {
+    learners,
+    fetchLearners,
+    addLearner,
+    updateLearner,
+    instructors,
+    deleteLearner,
+    branches,
+    packages,
+  } = useStateContext();
+
+  useEffect(() => {
+    fetchLearners();
+  }, [fetchLearners]);
+  useEffect(()=>{
+   console.log('brnches',branches)
+  },[])
+
+  const handleActionBegin = async (args) => {
+    if (args.requestType === 'save') {
+      try {
+        if (args.action === 'add') {
+          await addLearner(args.data);
+        }
+        if (args.action === 'edit') {
+          await updateLearner(args.data._id, args.data);
+        }
+      } catch {
+        toast.error('Save failed');
+      }
+    }
+
+    if (args.requestType === 'delete') {
+      const row = args.data?.[0];
+      if (!row?._id) return;
+      try {
+        console.log('id',row._id)
+        await deleteLearner(row._id);
+      } catch {
+        toast.error('Delete failed');
+      }
+    }
+  };
+
+  return (
+    <div className="m-2 md:m-6 mt-6 p-2 md:p-4 bg-white rounded-2xl">
+      <Header title="Pupils" />
+
       <GridComponent
-        dataSource={learnersData}
-        enableHover={false}
-        width="auto"
+        dataSource={learners}
         allowPaging
         allowSorting
-        pageSettings={{ pageCount: 5 }}
-        selectionSettings={selectionsettings}
-        editSettings={editing}
-        toolbar={toolbarOptions}
+        toolbar={['Search', 'Add', 'Edit', 'Delete']}
+        actionBegin={handleActionBegin}
+        editSettings={{
+          allowAdding: true,
+          allowEditing: true,
+          allowDeleting: true,
+          mode: 'Dialog',
+          template: GridLearnerTemplate,
+          dialog: { width: '1000px', minHeight: '450px' },
+          showDeleteConfirmDialog: true,
+        }}
       >
         <ColumnsDirective>
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          {learnersGrid.map((item, index) => <ColumnDirective key={index} {...item} />)}
+          {learnersGrid.map((item, index) => (
+            <ColumnDirective key={index} {...item} />
+          ))}
         </ColumnsDirective>
         <Inject services={[Search, Page, Selection, Edit, Toolbar, Sort, Filter]} />
       </GridComponent>

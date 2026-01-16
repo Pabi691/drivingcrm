@@ -10,7 +10,7 @@ import WeeklyAvailabilityList from '../components/InstructorWeeklyDisplay';
 
 const InstructorProfilePage = () => {
   const { id } = useParams();
-  const { instructors, approvedInstructor, fetchInstructors, fetchInstructorWorkingDays, fetchInstructorWorkingHours } = useStateContext();
+  const { instructors, approvedInstructor, fetchInstructors, fetchInstructorWorkingDays, IsUpdate,fetchInstructorWorkingHours } = useStateContext();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
@@ -89,6 +89,26 @@ const InstructorProfilePage = () => {
 
     if (id) getWorkingDays();
   }, [id]);
+
+
+  useEffect(() => {
+    const getWorkingDays = async () => {
+      try {
+        setLoading(true);
+        const res = await fetchInstructorWorkingDays(id);
+        console.log('reso',res)
+        setWorkingDays(res || []);
+      } catch (error) {
+        console.error('Error fetching working days', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) getWorkingDays();
+  }, [IsUpdate]);
+
+
 
 
 
@@ -207,7 +227,7 @@ const InstructorProfilePage = () => {
         )}
 
       </div>
-
+     
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* LEFT */}

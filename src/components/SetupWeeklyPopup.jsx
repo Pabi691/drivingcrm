@@ -30,6 +30,8 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
 
       mappedAvailability[dayNumber] = {
         enabled: day.enabled ?? false,
+       
+        is_working:day.is_working??1,
         workStart: day.start_time ?? "",
         workEnd: day.end_time ?? "",
         breakStart: day.break_start ?? "",
@@ -48,7 +50,7 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
       ...prev,
       [dayNumber]: {
         ...(prev[dayNumber] || {}),
-        enabled: !prev[dayNumber]?.enabled,
+        open: !prev[dayNumber]?.open,
       },
     }));
   };
@@ -75,7 +77,8 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
 
       Object.entries(availability).forEach(([day, data]) => {
         workingDaysPayload[day] = {
-          enabled: data.enabled,
+          is_working: 1,
+          
           ...(data.workStart && { workStart: data.workStart }),
           ...(data.workEnd && { workEnd: data.workEnd }),
           ...(data.breakStart && { breakStart: data.breakStart }),
@@ -90,7 +93,6 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
 
       console.log("FINAL PAYLOAD 👉", payload);
       const res = await instructorWorkingDaysCreateAndUpdate(payload)
-      fetchInstructorWorkingDays()
 
        console.log('res',res)
       if (res) {
@@ -127,7 +129,7 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
 
             <div className="space-y-4">
               {Object.entries(DAY_MAP).map(([dayNumber, dayName]) => {
-                const day = availability[dayNumber] || { enabled: false };
+                const day = availability[dayNumber] || { open: 0 };
 
                 return (
                   <div key={dayNumber} className="border rounded-xl p-4">
@@ -138,7 +140,7 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={day.enabled}
+                          checked={day.open}
                           onChange={() => toggleDay(dayNumber)}
                           className="sr-only peer"
                         />
@@ -148,7 +150,7 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
                     </div>
 
                     {/* TIME INPUTS */}
-                    {day.enabled && (
+                    {day.open && (
                       <div className="grid grid-cols-2 gap-4 mt-4">
                         {[
                           ["Work Start", "workStart"],

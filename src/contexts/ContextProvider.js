@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { enquiriesData as initialEnquiries } from '../data/dummy';
 import { BranchService } from '../services/branch.service';
 import { PackageService } from '../services/package.service';
 import { PricingService } from '../services/pricing.service';
 import { InstructorService } from '../services/instructor.service';
+import { LearnerService } from '../services/Learner';
 
 const StateContext = createContext();
 
@@ -31,7 +32,11 @@ export const ContextProvider = ({ children }) => {
   const [pricingLoading, setPricingLoading] = useState(false);
   const [instructors, setInstructors] = useState([]);
   const [instructorLoading, setInstructorLoading] = useState(false);
-  const [instructorWorkingDays, setInstructorWorkingDays]=useState([])
+  const [instructorWorkingDays, setInstructorWorkingDays] = useState([])
+  const [learners, setLearners] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [IsUpdate,setIsUpdate] = useState(false)
+
 
   const setMode = (e) => {
     setCurrentMode(e.target.value);
@@ -53,14 +58,74 @@ export const ContextProvider = ({ children }) => {
     );
   };
 
+
+
+
+  // Fetch all learners
+  const fetchLearners = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await LearnerService.getAll();
+      console.log('learner', res.data)
+      setLearners(res.data);
+    } catch (err) {
+      toast.error('Failed to load learners.');
+    }
+    setLoading(false);
+  }, []);
+
+  // Add a new learner
+  const addLearner = useCallback(
+    async (data) => {
+      try {
+        const res = await LearnerService.create(data);
+        console.log('response to add', res)
+        toast.success('Learner added successfully');
+        fetchLearners();
+      } catch (err) {
+        toast.error('Failed to add learner');
+      }
+    },
+    [fetchLearners]
+  );
+
+  // Update a learner
+  const updateLearner = useCallback(
+    async (id, data) => {
+      try {
+        await LearnerService.update(id, data);
+        toast.success('Learner updated successfully');
+        fetchLearners();
+      } catch (err) {
+        toast.error('Failed to update learner');
+      }
+    },
+    [fetchLearners]
+  );
+
+  // Delete a learner
+  const deleteLearner = useCallback(
+    async (id) => {
+      try {
+        const res = await LearnerService.remove(id);
+        console.log('learned deleted', res)
+        setLearners((prev) => prev.filter((l) => l._id !== id));
+        toast.success('Learner deleted successfully');
+      } catch (err) {
+        toast.error('Failed to delete learner');
+      }
+    },
+    []
+  );
+
   const fetchBranches = useCallback(async () => {
     setBranchLoading(true);
     try {
       const res = await BranchService.getAll();
       // console.log('Fetched branches:', res.branches);
-      console.log('branches data',res)
+      console.log('branches data', res)
       setBranches(res.branches);
-      
+
     } catch (err) {
       toast.error('Failed to load branches.');
     }
@@ -69,8 +134,8 @@ export const ContextProvider = ({ children }) => {
 
   const addBranch = useCallback(async (data) => {
     try {
-      const res=await BranchService.createBranch(data);
-      console.log('creating branch',res)
+      const res = await BranchService.createBranch(data);
+      console.log('creating branch', res)
       fetchBranches(); // Safe because fetchBranches is stable with useCallback
       toast.success('Branch created successfully');
     } catch (err) {
@@ -129,7 +194,7 @@ export const ContextProvider = ({ children }) => {
     }
   }, []);
 
-    const fetchPricing = useCallback(async () => {
+  const fetchPricing = useCallback(async () => {
     setPricingLoading(true);
     try {
       const res = await PricingService.getAll();
@@ -175,8 +240,8 @@ export const ContextProvider = ({ children }) => {
 
 
   const addInstructor = useCallback(async (data) => {
-   const res=  await InstructorService.create(data);
-    console.log('instructor created',res)
+    const res = await InstructorService.create(data);
+    console.log('instructor created', res)
     fetchInstructors();
   }, [fetchInstructors]);
 
@@ -187,12 +252,12 @@ export const ContextProvider = ({ children }) => {
 
 
   // approve instructor 
-   const approvedInstructor = useCallback(async (id) => {
-   const res=  await InstructorService.approveInstructor(id);
-    console.log('approve',res)
+  const approvedInstructor = useCallback(async (id) => {
+    const res = await InstructorService.approveInstructor(id);
+    console.log('approve', res)
     return res;
   }, []);
-  
+
 
   const deleteInstructor = useCallback(async (id) => {
     try {
@@ -205,30 +270,39 @@ export const ContextProvider = ({ children }) => {
   }, []);
 
 
-    const fetchInstructorWorkingDays = useCallback(async (instructorId) => {
+  const fetchInstructorWorkingDays = useCallback(async (instructorId) => {
     try {
-   const res=await InstructorService.instructorWorkingDays(instructorId);
-   console.log('instructor working days ',res)
-   return res.data
-     
+      const res = await InstructorService.instructorWorkingDays(instructorId);
+      console.log('instructor working days ', res)
+      return res.data
+
     } catch (err) {
       toast.error('Failed to delete instructor');
     }
   }, []);
 
-  
-    const instructorWorkingDaysCreateAndUpdate = useCallback(async (data) => {
+
+  const instructorWorkingDaysCreateAndUpdate = useCallback(async (data) => {
     try {
-   const res=await InstructorService.instructorWorkingDayCreateAndUpdate(data);
-   console.log('instructor working hours',res)
-   return res.data
-     
+      const res = await InstructorService.instructorWorkingDayCreateAndUpdate(data);
+      console.log('instructor working hours', res)
+      setIsUpdate(true)
+
+      return res.data;
+
     } catch (err) {
-      console.log('error to get working hours',err)
+      console.log('error to get working hours', err)
       toast.error('failed to update workings days ');
     }
-  }, []);
+  }, [fetchInstructorWorkingDays]);
 
+
+  useEffect(() => {
+    fetchBranches();
+    fetchInstructors();
+    fetchPackages();
+    fetchLearners()
+  }, []);
 
   // ✅ Memoize the context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({
@@ -278,7 +352,16 @@ export const ContextProvider = ({ children }) => {
     deleteInstructor,
     instructorLoading,
     fetchInstructorWorkingDays,
-   instructorWorkingDaysCreateAndUpdate
+    instructorWorkingDaysCreateAndUpdate,
+
+    // === ADD LEARNERS ===
+    learners,
+
+    fetchLearners,
+    addLearner,
+    updateLearner,
+    deleteLearner
+
   }), [
     currentColor,
     currentMode,
@@ -312,8 +395,18 @@ export const ContextProvider = ({ children }) => {
     addInstructor,
     updateInstructor,
     deleteInstructor,
-    approvedInstructor
+    approvedInstructor,
+    fetchInstructorWorkingDays,
+
+    // === ADD LEARNERS DEPENDENCIES ===
+    learners,
+    fetchLearners,
+    addLearner,
+    updateLearner,
+    deleteLearner,
+    IsUpdate
   ]);
+
 
   return (
     <StateContext.Provider value={contextValue}>

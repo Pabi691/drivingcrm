@@ -711,115 +711,62 @@ export const instructorsGrid = [
 ];
 
 export const learnersGrid = [
-
   { type: 'checkbox', width: '50' },
-
+ 
   {
-    field: 'LearnerID',
+    field: '_id',
     headerText: 'Learner ID',
-    width: '125',
-    textAlign: 'Center',
+    width: '180',
     isPrimaryKey: true,
+    visible: false,
   },
-
-  // {
-  //   headerText: 'Learner',
-  //   width: '150',
-  //   template: gridLearnerProfile,
-  //   textAlign: 'Center',
-  // },
+ 
   {
     headerText: 'View',
     width: '80',
     textAlign: 'Center',
     template: (rowData) => (
-      <Link to={`/learners/${rowData.LearnerID}`}>
+      <Link to={`/learners/${rowData._id}`}>
         <AiOutlineEye className="text-xl text-red-600 hover:text-blue-800 cursor-pointer" />
       </Link>
     ),
   },
-
-  { field: 'Name', headerText: 'Full Name', width: '150', textAlign: 'Center' },
-
-  // { field: 'Email', headerText: 'Email', width: '200', textAlign: 'Center' },
-
-  { field: 'Phone', headerText: 'Phone', width: '150', textAlign: 'Center' },
-
-  { field: 'Instructor', headerText: 'Instructor', width: '150', textAlign: 'Center' },
-
-  // { field: 'Zone', headerText: 'Zone (1–4)', width: '120', textAlign: 'Center' },
-
-  // { field: 'Postcode', headerText: 'Postcode', width: '120', textAlign: 'Center' },
-
-  // {
-  //   headerText: 'Country',
-  //   width: '120',
-  //   textAlign: 'Center',
-  //   template: gridLearnerCountry,
-  // },
-
-  // { field: 'JoinDate', headerText: 'Join Date', width: '135', format: 'yMd', textAlign: 'Center' },
-
-  // { field: 'TestDate', headerText: 'Test Date', width: '135', format: 'yMd', textAlign: 'Center' },
-
-  // { field: 'TestCountdown', headerText: 'Days Until Test', width: '130', textAlign: 'Center' },
-
-  // { field: 'NextLessonDate', headerText: 'Next Lesson', width: '135', format: 'yMd', textAlign: 'Center' },
-
-  // { field: 'PreferredDuration', headerText: 'Lesson Duration', width: '130', textAlign: 'Center' },
-
-  // { field: 'LessonsBooked', headerText: 'Lessons Booked', width: '130', textAlign: 'Center' },
-
-  // { field: 'LessonsCompleted', headerText: 'Lessons Completed', width: '150', textAlign: 'Center' },
-
-  // { field: 'LessonsCancelled', headerText: 'Cancelled', width: '100', textAlign: 'Center' },
-
-  // { field: 'LateCancellations', headerText: 'Late Cancellations', width: '140', textAlign: 'Center' },
-
-  // { field: 'TotalHours', headerText: 'Total Hours', width: '110', textAlign: 'Center' },
-
+ 
+  {
+    field: 'full_name',        // ✅ MATCHES API
+    headerText: 'Full Name',
+    width: '150',
+    textAlign: 'Center',
+  },
+ 
+  {
+    field: 'phone',            // ✅ MATCHES API
+    headerText: 'Phone',
+    width: '150',
+    textAlign: 'Center',
+  },
+ 
+  {
+    field: 'instructor_id.email', // ✅ NESTED OBJECT
+    headerText: 'Instructor',
+    width: '200',
+    textAlign: 'Center',
+  },
+ 
   {
     headerText: 'Progress',
     width: '180',
-    template: gridProgressBar,
+    template: gridProgressBar,   // works because template
     textAlign: 'Center',
   },
-
-  // { field: 'ProgressPercentage', headerText: 'Progress %', width: '110', textAlign: 'Center' },
-
+ 
   {
+    field: 'payment_status',    // ✅ MATCHES API
     headerText: 'Payment Status',
     width: '130',
-    template: gridPaymentStatus,
     textAlign: 'Center',
+    template: gridPaymentStatus,
   },
-
-  // { field: 'LastPaymentDate', headerText: 'Last Payment', width: '135', format: 'yMd', textAlign: 'Center' },
-
-  // { field: 'LastPaymentAmount', headerText: 'Last Amount', width: '120', textAlign: 'Center' },
-
-  // { field: 'TotalSpent', headerText: 'Total Spent', width: '120', textAlign: 'Center' },
-
-  // { field: 'OutstandingBalance', headerText: 'Outstanding', width: '120', textAlign: 'Center' },
-
-  // { field: 'BlockBookingRemaining', headerText: 'Block Lessons Remaining', width: '180', textAlign: 'Center' },
-
-  // { field: 'AutoPay', headerText: 'Auto-Pay', width: '100', textAlign: 'Center' },
-
-  // { field: 'PaymentMethod', headerText: 'Payment Method', width: '150', textAlign: 'Center' },
-
-  // { field: 'LicenceUploaded', headerText: 'Licence Uploaded', width: '140', textAlign: 'Center' },
-
-  // { field: 'IDUploaded', headerText: 'ID Uploaded', width: '120', textAlign: 'Center' },
-
-  // { field: 'TheoryTestPassed', headerText: 'Theory Test', width: '110', textAlign: 'Center' },
-
-  // { field: 'TheoryTestDate', headerText: 'Theory Test Date', width: '140', format: 'yMd', textAlign: 'Center' },
-
-  // { field: 'ReflectiveLogsCount', headerText: 'Reflective Logs', width: '130', textAlign: 'Center' },
-
-  // { field: 'LastActivityDate', headerText: 'Last Activity', width: '135', format: 'yMd', textAlign: 'Center' },
-
 ];
 
 export const lessonsGrid = [
@@ -1179,7 +1126,7 @@ export const links = [
         icon: <IoMdContacts />,
       },
       {
-        name: 'learners',
+        name: 'pupil',
         icon: <RiContactsLine />,
       },
       {

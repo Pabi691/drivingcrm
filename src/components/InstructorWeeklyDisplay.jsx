@@ -13,6 +13,9 @@ const DAY_MAP = {
 const WeeklyAvailabilityList = ({workingDays  = [] }) => {
   // show only working days
 
+
+
+
   if (workingDays.length === 0) {
     return (
       <p className="text-sm text-gray-500 italic">
