@@ -92,7 +92,7 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
       };
 
       console.log("FINAL PAYLOAD 👉", payload);
-      const res = await instructorWorkingDaysCreateAndUpdate(payload)
+ const res=await instructorWorkingDaysCreateAndUpdate(payload);
 
        console.log('res',res)
       if (res) {

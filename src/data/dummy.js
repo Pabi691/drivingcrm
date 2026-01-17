@@ -192,37 +192,42 @@ const gridLessonStatus = (props) => {
 //   </div>
 // );
 
-const gridProgressBar = (props) => (
-  <div className="flex items-center gap-2">
-    <div className="w-full bg-gray-200 rounded-full h-2">
-      <div
-        className="bg-blue-600 h-2 rounded-full"
-        style={{ width: `${props.ProgressPercentage}%` }}
-      />
+const gridProgressBar = (props) => {
+  const progress = props.progress ?? 0;
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className="w-full bg-gray-200 rounded-full h-2">
+        <div
+          className="bg-blue-600 h-2 rounded-full"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      <span className="text-sm">{progress}%</span>
     </div>
-    <span className="text-sm">{props.ProgressPercentage}%</span>
-  </div>
-);
+  );
+};
 
 const gridPaymentStatus = (props) => {
-  let statusClass = '';
+  const status = props.payment_status;
 
-  if (props.PaymentStatus === 'Paid') {
+  let statusClass = 'bg-red-200 text-red-800';
+
+  if (status === 'paid') {
     statusClass = 'bg-green-200 text-green-800';
-  } else if (props.PaymentStatus === 'Pending') {
+  } else if (status === 'pending') {
     statusClass = 'bg-yellow-200 text-yellow-800';
-  } else {
-    statusClass = 'bg-red-200 text-red-800';
   }
 
   return (
     <div className="flex items-center justify-center">
       <span className={`px-2 py-1 rounded text-xs font-semibold ${statusClass}`}>
-        {props.PaymentStatus}
+        {status}
       </span>
     </div>
   );
 };
+
 
 const gridEmployeeProfile = (props) => (
   <div className="flex items-center gap-2">
@@ -747,13 +752,14 @@ export const learnersGrid = [
   },
  
   {
-    field: 'instructor_id.email', // ✅ NESTED OBJECT
+    field: 'instructor_id.name', // ✅ NESTED OBJECT
     headerText: 'Instructor',
     width: '200',
     textAlign: 'Center',
   },
  
   {
+    field:'progress',
     headerText: 'Progress',
     width: '180',
     template: gridProgressBar,   // works because template

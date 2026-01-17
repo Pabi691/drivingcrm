@@ -23,7 +23,7 @@ const EditLearnerTemplate = ({
       <LearnerForm
         learnerValues={learnerData}
         branches={branches}
-        instructors={instructors}   
+        instructors={instructors}
         packages={packages}
       />
     </div>

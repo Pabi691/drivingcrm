@@ -10,7 +10,7 @@ import WeeklyAvailabilityList from '../components/InstructorWeeklyDisplay';
 
 const InstructorProfilePage = () => {
   const { id } = useParams();
-  const { instructors, approvedInstructor, fetchInstructors, fetchInstructorWorkingDays, IsUpdate,fetchInstructorWorkingHours } = useStateContext();
+  const { instructors, approvedInstructor, fetchInstructors, fetchInstructorWorkingDays, IsUpdate, fetchInstructorWorkingHours } = useStateContext();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
@@ -75,45 +75,14 @@ const InstructorProfilePage = () => {
 
   useEffect(() => {
     const getWorkingDays = async () => {
-      try {
-        setLoading(true);
-        const res = await fetchInstructorWorkingDays(id);
-        console.log('reso',res)
-        setWorkingDays(res || []);
-      } catch (error) {
-        console.error('Error fetching working days', error);
-      } finally {
-        setLoading(false);
-      }
+      setLoading(true);
+      const res = await fetchInstructorWorkingDays(id);
+      setWorkingDays(res || []);
+      setLoading(false);
     };
 
     if (id) getWorkingDays();
-  }, [id]);
-
-
-  useEffect(() => {
-    const getWorkingDays = async () => {
-      try {
-        setLoading(true);
-        const res = await fetchInstructorWorkingDays(id);
-        console.log('reso',res)
-        setWorkingDays(res || []);
-      } catch (error) {
-        console.error('Error fetching working days', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) getWorkingDays();
-  }, [IsUpdate]);
-
-
-
-
-
-
-
+  }, [id, IsUpdate]);
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
@@ -227,8 +196,7 @@ const InstructorProfilePage = () => {
         )}
 
       </div>
-     
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {instructor.status === 1 && <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* LEFT */}
         <div className="lg:col-span-2 space-y-6">
@@ -270,7 +238,7 @@ const InstructorProfilePage = () => {
               Weekly Availability
             </h3>
 
-            <WeeklyAvailability instructor={id}  workingDays={workingDays}/>
+            <WeeklyAvailability instructor={id} workingDays={workingDays} />
             {/* 
             <button
               onClick={() => setShowSetup(true)}
@@ -281,16 +249,12 @@ const InstructorProfilePage = () => {
           </div>
 
 
-       <WeeklyAvailabilityList workingDays={workingDays}/>
+          <WeeklyAvailabilityList workingDays={workingDays} />
 
         </div>
 
+      </div>}
 
-
-
-
-
-      </div>
     </div>
   );
 };

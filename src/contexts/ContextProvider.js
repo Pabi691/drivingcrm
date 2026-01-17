@@ -286,7 +286,7 @@ export const ContextProvider = ({ children }) => {
     try {
       const res = await InstructorService.instructorWorkingDayCreateAndUpdate(data);
       console.log('instructor working hours', res)
-      setIsUpdate(true)
+      setIsUpdate(Prev=>!Prev)
 
       return res.data;
 
@@ -360,7 +360,9 @@ export const ContextProvider = ({ children }) => {
     fetchLearners,
     addLearner,
     updateLearner,
-    deleteLearner
+    deleteLearner,
+    IsUpdate
+
 
   }), [
     currentColor,

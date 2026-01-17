@@ -16,12 +16,17 @@ const LearnerForm = ({
     remaining_hour: '',
     progress: 0,
     payment_status: 'pending',
-    active: 0,
+    active: '0', // ✅ string
   });
 
-  // ✅ ONLY populate when editing (has _id)
+  console.log('learnern value',learnerValues)
+  // ✅ Populate ONLY when:
+  // - editing
+  // - dropdown data is loaded
+
   useEffect(() => {
     if (!learnerValues?._id) return;
+    if (!branches.length || !instructors.length) return;
 
     setFormValues({
       full_name: learnerValues.full_name || '',
@@ -30,20 +35,16 @@ const LearnerForm = ({
       instructor_id: learnerValues.instructor_id?._id || '',
       area_id: learnerValues.area_id?._id || '',
       package_id: learnerValues.package_id?._id || '',
-      remaining_hour: learnerValues.remaining_hour || '',
-      progress: learnerValues.progress || 0,
+      remaining_hour: learnerValues.remaining_hour ?? '',
+      progress: learnerValues.progress ?? 0,
       payment_status: learnerValues.payment_status || 'pending',
-      active: learnerValues.active || 0,
+      active: String(learnerValues.active ?? 0), // ✅ convert number → string
     });
-  }, [learnerValues]);
+  }, [learnerValues, branches, instructors, packages]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -101,7 +102,7 @@ const LearnerForm = ({
         <option value="">Select Instructor</option>
         {instructors.map((i) => (
           <option key={i._id} value={i._id}>
-            {i.name}
+            {i.name || i.email}
           </option>
         ))}
       </select>
@@ -130,16 +131,18 @@ const LearnerForm = ({
         placeholder="Remaining Hours"
       />
 
+      {/* Active */}
       <select
         name="active"
         value={formValues.active}
         onChange={handleChange}
         className="e-input w-full"
       >
-        <option value={1}>active</option>
-        <option value={0}>inactive</option>
+        <option value="1">Active</option>
+        <option value="0">Inactive</option>
       </select>
 
+      {/* Payment Status */}
       <select
         name="payment_status"
         value={formValues.payment_status}

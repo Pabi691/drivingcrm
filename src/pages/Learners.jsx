@@ -20,11 +20,12 @@ import EditLearnerTemplate from '../components/templates/EditLearnerTemplate';
 
 const GridLearnerTemplate = (props) => {
   const { branches, packages, instructors } = useStateContext();
+  
 
 
   return (
     <EditLearnerTemplate
-      learnerData={props.data}
+      learnerData={props}
       branches={branches || []}
       packages={packages || []}
       instructors={instructors || []}   
