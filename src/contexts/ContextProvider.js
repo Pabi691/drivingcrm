@@ -253,9 +253,14 @@ export const ContextProvider = ({ children }) => {
 
   // approve instructor 
   const approvedInstructor = useCallback(async (id) => {
+    try{
     const res = await InstructorService.approveInstructor(id);
     console.log('approve', res)
     return res;
+        }catch(err)
+        {
+          toast.error('Could not approved ')
+        }
   }, []);
 
 

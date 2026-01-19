@@ -13,10 +13,8 @@ const LearnerForm = ({
     instructor_id: '',
     area_id: '',
     package_id: '',
-    remaining_hour: '',
-    progress: 0,
-    payment_status: 'pending',
-    active: '0', // ✅ string
+
+    
   });
 
   console.log('learnern value',learnerValues)
@@ -35,10 +33,7 @@ const LearnerForm = ({
       instructor_id: learnerValues.instructor_id?._id || '',
       area_id: learnerValues.area_id?._id || '',
       package_id: learnerValues.package_id?._id || '',
-      remaining_hour: learnerValues.remaining_hour ?? '',
-      progress: learnerValues.progress ?? 0,
-      payment_status: learnerValues.payment_status || 'pending',
-      active: String(learnerValues.active ?? 0), // ✅ convert number → string
+      
     });
   }, [learnerValues, branches, instructors, packages]);
 
@@ -122,37 +117,10 @@ const LearnerForm = ({
         ))}
       </select>
 
-      <input
-        type="number"
-        name="remaining_hour"
-        value={formValues.remaining_hour}
-        onChange={handleChange}
-        className="e-input w-full"
-        placeholder="Remaining Hours"
-      />
 
-      {/* Active */}
-      <select
-        name="active"
-        value={formValues.active}
-        onChange={handleChange}
-        className="e-input w-full"
-      >
-        <option value="1">Active</option>
-        <option value="0">Inactive</option>
-      </select>
+     
 
-      {/* Payment Status */}
-      <select
-        name="payment_status"
-        value={formValues.payment_status}
-        onChange={handleChange}
-        className="e-input w-full"
-      >
-        <option value="pending">Pending</option>
-        <option value="paid">Paid</option>
-      </select>
-
+     
     </div>
   );
 };

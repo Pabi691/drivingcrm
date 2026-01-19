@@ -726,16 +726,7 @@ export const learnersGrid = [
     visible: false,
   },
  
-  {
-    headerText: 'View',
-    width: '80',
-    textAlign: 'Center',
-    template: (rowData) => (
-      <Link to={`/learners/${rowData._id}`}>
-        <AiOutlineEye className="text-xl text-red-600 hover:text-blue-800 cursor-pointer" />
-      </Link>
-    ),
-  },
+
  
   {
     field: 'full_name',        // ✅ MATCHES API

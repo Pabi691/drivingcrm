@@ -253,6 +253,7 @@ const InstructorProfilePage = () => {
 
         </div>
 
+
       </div>}
 
     </div>
