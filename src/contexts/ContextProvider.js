@@ -6,6 +6,7 @@ import { PackageService } from '../services/package.service';
 import { PricingService } from '../services/pricing.service';
 import { InstructorService } from '../services/instructor.service';
 import { LearnerService } from '../services/Learner';
+import { bookingService } from '../services/booking.service';
 
 const StateContext = createContext();
 
@@ -301,6 +302,19 @@ export const ContextProvider = ({ children }) => {
     }
   }, [fetchInstructorWorkingDays]);
 
+  const GetBooking=useCallback(async(instructorId)=>{
+    try {
+      const res = await bookingService.getAll(instructorId);
+      console.log('get bookings', res)
+      
+
+      return res.data;
+
+    } catch (err) {
+      throw err;
+    }
+  })
+
 
   useEffect(() => {
     fetchBranches();
@@ -366,7 +380,8 @@ export const ContextProvider = ({ children }) => {
     addLearner,
     updateLearner,
     deleteLearner,
-    IsUpdate
+    IsUpdate,
+    GetBooking
 
 
   }), [
@@ -411,7 +426,8 @@ export const ContextProvider = ({ children }) => {
     addLearner,
     updateLearner,
     deleteLearner,
-    IsUpdate
+    IsUpdate,
+    GetBooking
   ]);
 
 
