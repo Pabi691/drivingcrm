@@ -5,5 +5,10 @@ export const bookingService = {
     return axios.get(`/ds/booking/${instructor_id}`);
   },
 
+    create(data) {
+    return axios.post(`/ds/booking/`,data);
+  },
+
+
   
 };
