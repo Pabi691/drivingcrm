@@ -36,7 +36,8 @@ export const ContextProvider = ({ children }) => {
   const [instructorWorkingDays, setInstructorWorkingDays] = useState([])
   const [learners, setLearners] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [IsUpdate,setIsUpdate] = useState(false)
+  const [IsUpdate, setIsUpdate] = useState(false);
+  const [IsBooked, setIsBooked]=useState(false)
 
 
   const setMode = (e) => {
@@ -254,14 +255,13 @@ export const ContextProvider = ({ children }) => {
 
   // approve instructor 
   const approvedInstructor = useCallback(async (id) => {
-    try{
-    const res = await InstructorService.approveInstructor(id);
-    console.log('approve', res)
-    return res;
-        }catch(err)
-        {
-          toast.error('Could not approved ')
-        }
+    try {
+      const res = await InstructorService.approveInstructor(id);
+      console.log('approve', res)
+      return res;
+    } catch (err) {
+      toast.error('Could not approved ')
+    }
   }, []);
 
 
@@ -292,7 +292,7 @@ export const ContextProvider = ({ children }) => {
     try {
       const res = await InstructorService.instructorWorkingDayCreateAndUpdate(data);
       console.log('instructor working hours', res)
-      setIsUpdate(Prev=>!Prev)
+      setIsUpdate(Prev => !Prev)
 
       return res.data;
 
@@ -302,11 +302,11 @@ export const ContextProvider = ({ children }) => {
     }
   }, [fetchInstructorWorkingDays]);
 
-  const GetBooking=useCallback(async(instructorId)=>{
+  const GetBooking = useCallback(async (instructorId) => {
     try {
       const res = await bookingService.getAll(instructorId);
       console.log('get bookings', res)
-      
+
 
       return res.data;
 
@@ -314,6 +314,19 @@ export const ContextProvider = ({ children }) => {
       throw err;
     }
   })
+
+  const createBooking = useCallback(async (data) => {
+    try {
+      const res = await bookingService.create(data);
+      console.log('creating ', res)
+
+
+      return res.data;
+
+    } catch (err) {
+      throw err;
+    }
+  }, [GetBooking])
 
 
   useEffect(() => {
@@ -381,7 +394,9 @@ export const ContextProvider = ({ children }) => {
     updateLearner,
     deleteLearner,
     IsUpdate,
-    GetBooking
+    GetBooking,
+    createBooking
+ 
 
 
   }), [
@@ -427,7 +442,9 @@ export const ContextProvider = ({ children }) => {
     updateLearner,
     deleteLearner,
     IsUpdate,
-    GetBooking
+    GetBooking,
+    IsBooked,
+    createBooking
   ]);
 
 
