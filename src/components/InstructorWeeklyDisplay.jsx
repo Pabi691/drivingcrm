@@ -38,7 +38,7 @@ const WeeklyAvailabilityList = ({workingDays  = [] }) => {
                     {DAY_MAP[day.day_of_week]}
                   </p>
 
-                 {day.is_working===1? <span className="text-xs font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">
+                 {day.is_working===1 && day.start_time ? <span className="text-xs font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">
                     Working
                   </span>:<span className="text-xs font-medium text-white  bg-red-400 px-3 py-1 rounded-full">
                     Leave
@@ -46,7 +46,7 @@ const WeeklyAvailabilityList = ({workingDays  = [] }) => {
                 </div>
 
                 {/* Work Time */}
-                {day.is_working===1? <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                {day.is_working===1  && day.start_time ? <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
                   <p>
                     <strong className="text-gray-700 dark:text-gray-300">
                       Work:

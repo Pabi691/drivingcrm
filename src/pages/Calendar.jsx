@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ScheduleComponent,
   ViewsDirective,
@@ -16,102 +16,114 @@ import { DatePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { useStateContext } from '../contexts/ContextProvider';
 import EditorTemplate from '../components/templates/EditorTemplate';
 
-const toDate = (date) => {
-  if (!date) return '';
-  return new Date(date).toISOString().slice(0, 10);
-};
+/* ================= UTILITIES ================= */
 
-const toTime = (date) => {
-  if (!date) return '';
-  return new Date(date).toTimeString().slice(0, 5);
-};
-const PropertyPane = (props) => <div className="mt-5">{props.children}</div>;
+const toDate = (date) =>
+  date ? new Date(date).toISOString().slice(0, 10) : '';
+
+const toTime = (date) =>
+  date ? new Date(date).toTimeString().slice(0, 5) : '';
+
+const PropertyPane = ({ children }) => (
+  <div className="mt-5">{children}</div>
+);
+
+/* ================= COMPONENT ================= */
 
 const Scheduler = ({ instructorId }) => {
-  const { GetBooking ,createBooking} = useStateContext();
-  const [scheduleObj, setScheduleObj] = useState(null);
+  const { GetBooking, createBooking } = useStateContext();
+
+  const scheduleRef = useRef(null);
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  /* ================= HELPER FUNCTIONS ================= */
+  /* ================= FETCH BOOKINGS (SAFE) ================= */
 
-  const toDate = (date) => {
-    if (!date) return '';
-    return new Date(date).toISOString().slice(0, 10);
-  };
+  useEffect(() => {
+    let isMounted = true;
 
-  const toTime = (date) => {
-    if (!date) return '';
-    return new Date(date).toTimeString().slice(0, 5);
-  };
-
-  /* ================= FETCH EXISTING BOOKINGS ================= */
- const fetchBookings = async () => {
+    const fetchBookings = async () => {
       try {
         const res = await GetBooking(instructorId);
-        console.log('Bookings:', res);
+        if (!isMounted) return;
 
         if (!res || res.length === 0) {
           setEvents([]);
           return;
         }
 
-        const formattedEvents = res.map((booking) => {
-          const dateOnly = booking.booking_date.split('T')[0];
-          const start = new Date(`${dateOnly}T${booking.start_time}:00`);
-          const end = new Date(`${dateOnly}T${booking.end_time}:00`);
-
+        const formatted = res.map((b) => {
+          const dateOnly = b.booking_date.split('T')[0];
           return {
-            Id: booking._id,
+            Id: b._id,
             Subject: 'Booking',
-            StartTime: start,
-            EndTime: end,
+            StartTime: new Date(`${dateOnly}T${b.start_time}`),
+            EndTime: new Date(`${dateOnly}T${b.end_time}`),
+            InstructorId: b.instructor_id,
+            PupilId: b.pupil_id,
             IsAllDay: false
           };
         });
 
-        setEvents(formattedEvents);
-      } catch (error) {
-        console.error('Error fetching bookings:', error);
-        setEvents([]);
+        setEvents(formatted);
+      } catch (err) {
+      
+        if (isMounted) {
+          console.error(err);
+            GetBooking()
+          setEvents([]);
+        }
       }
     };
-  useEffect(() => {
-    if (!instructorId) return;
 
-   fetchBookings()
+    if (instructorId) fetchBookings();
 
-    fetchBookings();
+    return () => {
+      isMounted = false;
+    };
   }, [instructorId, GetBooking]);
 
   /* ================= DATE PICKER ================= */
 
-  const change = (args) => {
+  const onDateChange = (args) => {
     setSelectedDate(args.value);
-    if (scheduleObj) {
-      scheduleObj.selectedDate = args.value;
-      scheduleObj.dataBind();
+    if (scheduleRef.current) {
+      scheduleRef.current.selectedDate = args.value;
+      scheduleRef.current.dataBind();
+    }
+  };
+
+  /* ================= POPUP OPEN (AUTO INSTRUCTOR) ================= */
+
+  const onPopupOpen = (args) => {
+    if (args.type === 'Editor' && instructorId) {
+      // ADD MODE (cell click)
+      if (!args.data.Id) {
+        args.data.InstructorId = instructorId;
+      }
     }
   };
 
   /* ================= DRAG ================= */
 
-  const onDragStart = (arg) => {
-    arg.navigation.enable = true;
+  const onDragStart = (args) => {
+    args.navigation.enable = true;
   };
 
-  /* ================= SAVE / UPDATE ================= */
+  /* ================= CREATE / UPDATE ================= */
 
   const onActionBegin = async (args) => {
     if (
       args.requestType === 'eventCreate' ||
       args.requestType === 'eventChange'
     ) {
-      const data = Array.isArray(args.data) ? args.data[0] : args.data;
+      const data = Array.isArray(args.data)
+        ? args.data[0]
+        : args.data;
 
       const body = {
-        pupil_id: '696f3be082912426d00c6f97',
-        instructor_id: instructorId,
+        pupil_id: data.PupilId,
+        instructor_id: instructorId || data.InstructorId,
         booking_date: toDate(data.StartTime),
         start_time: toTime(data.StartTime),
         end_time: toTime(data.EndTime)
@@ -119,13 +131,27 @@ const Scheduler = ({ instructorId }) => {
 
       console.log('API BODY:', body);
 
-      // 👉 Call your API here-
-       const res=await createBooking(body);
-       console.log('response to create',res);
-       fetchBookings()
+      await createBooking(body);
 
-      // ❌ Uncomment if backend is source of truth
-      // args.cancel = true;
+      // Backend is source of truth
+      args.cancel = true;
+
+      // Reload
+      const refreshed = await GetBooking(instructorId);
+      const formatted = refreshed.map((b) => {
+        const dateOnly = b.booking_date.split('T')[0];
+        return {
+          Id: b._id,
+          Subject: 'Booking',
+          StartTime: new Date(`${dateOnly}T${b.start_time}`),
+          EndTime: new Date(`${dateOnly}T${b.end_time}`),
+          InstructorId: b.instructor_id,
+          PupilId: b.pupil_id,
+          IsAllDay: false
+        };
+      });
+
+      setEvents(formatted);
     }
   };
 
@@ -135,17 +161,20 @@ const Scheduler = ({ instructorId }) => {
     <div className="m-2 p-2 md:p-4 bg-white rounded-2xl">
       <ScheduleComponent
         height="650px"
-        ref={(schedule) => setScheduleObj(schedule)}
+        ref={scheduleRef}
         selectedDate={selectedDate}
         eventSettings={{ dataSource: events }}
         editorTemplate={EditorTemplate}
+        popupOpen={onPopupOpen}
         actionBegin={onActionBegin}
         dragStart={onDragStart}
       >
         <ViewsDirective>
-          {['Day', 'Week', 'WorkWeek', 'Month', 'Agenda'].map((item) => (
-            <ViewDirective key={item} option={item} />
-          ))}
+          <ViewDirective option="Day" />
+          <ViewDirective option="Week" />
+          <ViewDirective option="WorkWeek" />
+          <ViewDirective option="Month" />
+          <ViewDirective option="Agenda" />
         </ViewsDirective>
 
         <Inject
@@ -162,21 +191,13 @@ const Scheduler = ({ instructorId }) => {
       </ScheduleComponent>
 
       <PropertyPane>
-        <table style={{ width: '100%', background: 'white' }}>
-          <tbody>
-            <tr style={{ height: '50px' }}>
-              <td style={{ width: '100%' }}>
-                <DatePickerComponent
-                  value={selectedDate}
-                  showClearButton={false}
-                  placeholder="Current Date"
-                  floatLabelType="Always"
-                  change={change}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <DatePickerComponent
+          value={selectedDate}
+          showClearButton={false}
+          placeholder="Current Date"
+          floatLabelType="Always"
+          change={onDateChange}
+        />
       </PropertyPane>
     </div>
   );
