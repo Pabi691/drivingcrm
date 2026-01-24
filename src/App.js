@@ -32,7 +32,7 @@ const App = () => {
   const { setCurrentColor, setCurrentMode, currentMode, activeMenu, currentColor, themeSettings, setThemeSettings } = useStateContext();
   const location = useLocation();
 
-  const isAuthPage = location.pathname === '/login' || !isLoggedIn;
+  const isAuthPage = location.pathname === '/login' ;
 
   useEffect(() => {
     const currentThemeColor = localStorage.getItem('colorMode');
@@ -92,7 +92,7 @@ const App = () => {
           <div>
             {!isAuthPage && themeSettings && <ThemeSettings />}
 
-            {!isLoggedIn ? (
+            {isAuthPage ? (
               <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="*" element={<Navigate to="/login" replace />} />
