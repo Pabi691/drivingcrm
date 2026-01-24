@@ -37,7 +37,7 @@ export const ContextProvider = ({ children }) => {
   const [learners, setLearners] = useState([]);
   const [loading, setLoading] = useState(false);
   const [IsUpdate, setIsUpdate] = useState(false);
-  const [IsBooked, setIsBooked]=useState(false)
+  const [IsBooked, setIsBooked] = useState(false)
 
 
   const setMode = (e) => {
@@ -324,10 +324,21 @@ export const ContextProvider = ({ children }) => {
       return res.data;
 
     } catch (err) {
+      console.log('error is ', err)
+      toast.error(err.response.data.message)
       throw err;
     }
   }, [GetBooking])
+  const GetAllBookings = useCallback(async () => {
+    try {
+      const res=await bookingService.getAllOFAllInstructos();
+      console.log('response to get all data',res);
+      return res
 
+    } catch (error) {
+      throw error
+    }
+  }, [])
 
   useEffect(() => {
     fetchBranches();
@@ -395,8 +406,9 @@ export const ContextProvider = ({ children }) => {
     deleteLearner,
     IsUpdate,
     GetBooking,
-    createBooking
- 
+    createBooking,
+    GetAllBookings
+
 
 
   }), [
@@ -444,7 +456,8 @@ export const ContextProvider = ({ children }) => {
     IsUpdate,
     GetBooking,
     IsBooked,
-    createBooking
+    createBooking,
+    GetAllBookings
   ]);
 
 
