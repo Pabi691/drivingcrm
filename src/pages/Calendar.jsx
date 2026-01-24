@@ -44,7 +44,9 @@ const Scheduler = ({ instructorId }) => {
 
     const fetchBookings = async () => {
       try {
+        console.log('id is here to send',instructorId)
         const res = await GetBooking(instructorId);
+        console.log('getting calender data',res)
         if (!isMounted) return;
 
         if (!res || res.length === 0) {
@@ -131,7 +133,8 @@ const Scheduler = ({ instructorId }) => {
 
       console.log('API BODY:', body);
 
-      await createBooking(body);
+     const res= await createBooking(body);
+     console.log('response to create booking ',res)
 
       // Backend is source of truth
       args.cancel = true;
