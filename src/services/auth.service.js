@@ -15,6 +15,9 @@ export const AuthService = {
   },
 
   isAuthenticated() {
-    return !!localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');
+    // Check if token exists, is not an empty string, and is not the string 'undefined' or 'null'
+    console.log('authToken:', token);
+    return token && token.length > 0 && token !== 'undefined' && token !== 'null';
   },
 };

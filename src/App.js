@@ -24,15 +24,12 @@ import Areas from './pages/Area';
 import ProtectedRoute from './routes/ProtectedRoute';
 import AreaView from './pages/AreaView';
 import Pricing from './pages/Pricing';
-// import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
-  const isLoggedIn = !!localStorage.getItem('authToken');
-
   const { setCurrentColor, setCurrentMode, currentMode, activeMenu, currentColor, themeSettings, setThemeSettings } = useStateContext();
   const location = useLocation();
 
-  const isAuthPage = location.pathname === '/login' || !isLoggedIn;
+  const isAuthPage = location.pathname === '/login';
 
   useEffect(() => {
     const currentThemeColor = localStorage.getItem('colorMode');
@@ -74,7 +71,6 @@ const App = () => {
               >
                 <FiSettings />
               </button>
-
             </TooltipComponent>
           </div>
         )}
@@ -92,61 +88,60 @@ const App = () => {
           <div>
             {!isAuthPage && themeSettings && <ThemeSettings />}
 
-            {!isLoggedIn ? (
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="*" element={<Navigate to="/login" replace />} />
-              </Routes>
-            ) : (
-              <Routes>
-                {/* dashboard  */}
-                <Route path="/" element={(<Diary />)} />
-                {/* <Route path="/ecommerce" element={(<Ecommerce />)} /> */}
-                <Route path="/diary" element={(<Diary />)} />
+            <Routes>
+              <Route path="/login" element={<Login />} />
 
-                {/* Profile */}
-                <Route path="/profile" element={<UserProfilePage />} />
-                <Route path="/instructors/:id" element={<InstructorProfilePage />} />
-                <Route path="/learners/:id" element={<LearnerProfilePage />} />
-                <Route path="/lessons/:id" element={
-                  <ProtectedRoute roles={['admin', 'instructor']}>
-                      <LessonProfilePage />
+              {/* Protected Routes */}
+              <Route
+                path="/*"
+                element={(
+                  <ProtectedRoute>
+                    <Routes>
+                      {/* dashboard  */}
+                      <Route path="/" element={<Diary />} />
+                      <Route path="/diary" element={<Diary />} />
+
+                      {/* Profile */}
+                      <Route path="/profile" element={<UserProfilePage />} />
+                      <Route path="/instructors/:id" element={<InstructorProfilePage />} />
+                      <Route path="/learners/:id" element={<LearnerProfilePage />} />
+                      <Route path="/lessons/:id" element={<LessonProfilePage />} roles={['admin', 'instructor']} />
+                      <Route path="/packages/:id" element={<PackageProfilePage />} />
+                      <Route path="/enquiries/:id" element={<EnquiryProfilePage />} />
+                      <Route path="/areas/:id" element={<AreaView />} />
+
+                      {/* pages  */}
+                      <Route path="/orders" element={<Orders />} />
+                      <Route path="/employees" element={<Employees />} />
+                      <Route path="/lessons" element={<Lessons />} />
+                      <Route path="/instructors" element={<Instructors />} />
+                      <Route path="/pupil" element={<Learners />} />
+                      <Route path="/enquiries" element={<Enquiries />} />
+                      <Route path="/packages" element={<Packages />} />
+                      <Route path="/customers" element={<Customers />} />
+                      <Route path="/areas" element={<Areas />} />
+                      <Route path="/pricing" element={<Pricing />} />
+
+                      {/* apps  */}
+                      <Route path="/kanban" element={<Kanban />} />
+                      <Route path="/editor" element={<Editor />} />
+                      <Route path="/calendar" element={<Calendar />} />
+                      <Route path="/color-picker" element={<ColorPicker />} />
+
+                      {/* charts  */}
+                      <Route path="/line" element={<Line />} />
+                      <Route path="/area" element={<Area />} />
+                      <Route path="/bar" element={<Bar />} />
+                      <Route path="/pie" element={<Pie />} />
+                      <Route path="/financial" element={<Financial />} />
+                      <Route path="/color-mapping" element={<ColorMapping />} />
+                      <Route path="/pyramid" element={<Pyramid />} />
+                      <Route path="/stacked" element={<Stacked />} />
+                    </Routes>
                   </ProtectedRoute>
-                } />
-                <Route path="/packages/:id" element={<PackageProfilePage />} />
-                <Route path="/enquiries/:id" element={<EnquiryProfilePage />} />
-                <Route path="/areas/:id" element={<AreaView />} />
-
-                {/* pages  */}
-                <Route path="/orders" element={<Orders />} />
-                <Route path="/employees" element={<Employees />} />
-                <Route path="/lessons" element={<Lessons />} />
-                <Route path="/instructors" element={<Instructors />} />
-                <Route path="/pupil" element={<Learners />} />
-                <Route path="/enquiries" element={<Enquiries />} />
-                <Route path="/packages" element={<Packages />} />
-                <Route path="/customers" element={<Customers />} />
-                <Route path="/areas" element={<Areas />} />
-                <Route path="/pricing" element={<Pricing />} />
-
-                {/* apps  */}
-                <Route path="/kanban" element={<Kanban />} />
-                <Route path="/editor" element={<Editor />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/color-picker" element={<ColorPicker />} />
-
-                {/* charts  */}
-                <Route path="/line" element={<Line />} />
-                <Route path="/area" element={<Area />} />
-                <Route path="/bar" element={<Bar />} />
-                <Route path="/pie" element={<Pie />} />
-                <Route path="/financial" element={<Financial />} />
-                <Route path="/color-mapping" element={<ColorMapping />} />
-                <Route path="/pyramid" element={<Pyramid />} />
-                <Route path="/stacked" element={<Stacked />} />
-
-              </Routes>
-            )}
+                )}
+              />
+            </Routes>
           </div>
           {!isAuthPage && <Footer />}
         </div>
