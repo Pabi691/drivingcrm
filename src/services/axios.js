@@ -13,13 +13,11 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
 
-    return {
-      ...config,
-      headers: {
-        ...config.headers,
-        ...(token && { Authorization: `Bearer ${token}` }),
-      },
-    };
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
   },
   (error) => Promise.reject(error)
 );
@@ -41,18 +39,17 @@ axiosInstance.interceptors.response.use(
           { refreshToken }
         );
 
-        localStorage.setItem('authToken', res.token);
+        const newToken = res.data.token;
 
-        return axiosInstance({
-          ...originalRequest,
-          headers: {
-            ...originalRequest.headers,
-            Authorization: `Bearer ${res.token}`,
-          },
-        });
-      } catch {
+        localStorage.setItem('authToken', newToken);
+
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
+        return axiosInstance(originalRequest);
+      } catch (err) {
         localStorage.clear();
         window.location.href = '/login';
+        return Promise.reject(err);
       }
     }
 

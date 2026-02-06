@@ -3,6 +3,8 @@ import { useStateContext } from '../../contexts/ContextProvider';
 const EditorTemplate = (props) => {
   const { learners, instructors } = useStateContext();
 
+  const isEditMode = !!props.Id;
+
   const formatDateTime = (date) => {
     if (!date) return '';
     return new Date(date).toLocaleString('en-IN', {
@@ -13,7 +15,8 @@ const EditorTemplate = (props) => {
 
   return (
     <div className="event-editor-card">
-      <h3 className="editor-title">New Booking</h3>
+
+      <h3>{isEditMode ? 'Edit Booking' : 'New Booking'}</h3>
 
       {/* Title */}
       <div className="field">
@@ -29,13 +32,15 @@ const EditorTemplate = (props) => {
       {/* Instructor */}
       <div className="field">
         <label>Instructor</label>
+
         <select
           name="InstructorId"
           className="e-field input"
           defaultValue={props.InstructorId || ''}
-          disabled={!!props.InstructorId}
+          disabled={!isEditMode}  // locked only during create
         >
           <option value="">Select Instructor</option>
+
           {instructors?.map((i) => (
             <option key={i._id} value={i._id}>
               {i.name}
@@ -47,12 +52,14 @@ const EditorTemplate = (props) => {
       {/* Pupil */}
       <div className="field">
         <label>Pupil</label>
+
         <select
           name="PupilId"
           className="e-field input"
-          defaultValue={props?.PupilId || ''}
+          defaultValue={props.PupilId || ''}
         >
           <option value="">Select Pupil</option>
+
           {learners?.map((l) => (
             <option key={l._id} value={l._id}>
               {l.full_name}
@@ -64,32 +71,27 @@ const EditorTemplate = (props) => {
       {/* Time Display */}
       <div className="time-box">
         <div>
-          <span className="time-label">Start</span>
-          <span className="time-value">
-            {formatDateTime(props.StartTime)}
-          </span>
+          <b>Start:</b> {formatDateTime(props.StartTime)}
         </div>
 
         <div>
-          <span className="time-label">End</span>
-          <span className="time-value">
-            {formatDateTime(props.EndTime)}
-          </span>
+          <b>End:</b> {formatDateTime(props.EndTime)}
         </div>
       </div>
 
-      {/* 🔒 Hidden fields to preserve values */}
+      {/* Hidden fields for Syncfusion */}
       <input
         type="hidden"
         name="StartTime"
         className="e-field"
-        value={props.StartTime}
+        defaultValue={props.StartTime}
       />
+
       <input
         type="hidden"
         name="EndTime"
         className="e-field"
-        value={props.EndTime}
+        defaultValue={props.EndTime}
       />
     </div>
   );

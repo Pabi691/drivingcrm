@@ -208,8 +208,11 @@ export const ContextProvider = ({ children }) => {
   }, []);
 
   const addPricing = useCallback(async (data) => {
-    await PricingService.create(data);
+  const price = await PricingService.create(data);
+  console.log('pricing',price)
+  
     fetchPricing();
+    return price;
   }, [fetchPricing]);
 
   const updatePricing = useCallback(async (id, data) => {
@@ -219,19 +222,21 @@ export const ContextProvider = ({ children }) => {
 
   const deletePricing = useCallback(async (id) => {
     try {
-      await PricingService.remove(id);
-      setPricing(prev => prev.filter(pkg => pkg._id !== id));
+       const res= await PricingService.remove(id);
+       console.log('deleting price',res)
+          fetchPricing();
+
       toast.success('Pricing deleted successfully');
     } catch (err) {
       toast.error('Failed to delete pricing');
     }
-  }, []);
+  }, [fetchPricing]);
 
   const fetchInstructors = useCallback(async () => {
     setInstructorLoading(true);
     try {
       const res = await InstructorService.getAll();
-      // console.log('Fetched instructors:', res.data);
+      console.log('Fetched instructors:', res.data);
       setInstructors(res.data);
     } catch (err) {
       toast.error('Failed to load instructors.');

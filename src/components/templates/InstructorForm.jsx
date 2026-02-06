@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 
 const InstructorForm = ({ instructorValues = {} }) => {
+    console.log('formvalues',instructorValues)
     const [formValues, setFormValues] = useState({
         name: instructorValues.name || '',
         email: instructorValues.email || '',
         phone: instructorValues.mobile || '',
         bio: instructorValues.instructor_bio || '',
         address: instructorValues.full_address || '',
+        status:instructorValues.status || '1'
     });
+    console.log('formvalues',formValues)
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues((prev) => ({ ...prev, [name]: value }));
@@ -76,7 +79,7 @@ const InstructorForm = ({ instructorValues = {} }) => {
                     id="status"
                     name="status"
                     className="e-input w-full"
-                    defaultValue={formValues.status === 1 ? '1' : '0'}
+                    defaultValue={formValues.status === 1? '1' : '0'}
                 >
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>

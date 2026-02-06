@@ -3,6 +3,7 @@ import { Header, Stacked, Pie } from '../components';
 import { lessonsData } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
 import DiaryCalendar from './DairyCalender';
+import MasterBookingCalendar from './MasterBookingCalender';
 
 const Diary = () => {
   const { currentColor } = useStateContext();
@@ -18,7 +19,7 @@ const Diary = () => {
       {/* SCHOOL DIARY CALENDAR */}
       <div className="bg-white rounded-2xl p-4 mb-6">
         <Header title="School Diary (All Bookings)" />
-        <DiaryCalendar />
+        <MasterBookingCalendar />
       </div>
 
       {/* KPIs */}

@@ -12,44 +12,37 @@ import {
 } from '@syncfusion/ej2-react-schedule';
 import { useStateContext } from '../contexts/ContextProvider';
 
-const DiaryCalendar = () => {
+const AllInstructorsCalendar = () => {
   const { GetAllBookings } = useStateContext();
-
   const [events, setEvents] = useState([]);
-  const [selectedDate] = useState(new Date());
 
   useEffect(() => {
     let mounted = true;
 
     const loadBookings = async () => {
-      try {
-        const res = await GetAllBookings();
-        if (!mounted) return;
+      const res = await GetAllBookings();
+      if (!mounted) return;
 
-        const formatted = res.map((b) => {
-          const dateOnly = b.booking_date.split('T')[0];
+      const formatted = res.map((b) => {
+        const dateOnly = b.booking_date.split('T')[0];
 
-          return {
-            Id: b._id,
-            Subject: `${b.pupil_id?.full_name} • ${b.instructor_id?.name}`,
-            StartTime: new Date(`${dateOnly}T${b.start_time}`),
-            EndTime: new Date(`${dateOnly}T${b.end_time}`),
-            IsAllDay: false
-          };
-        });
+        return {
+          Id: b._id,
+          Subject: 'Lesson', // 👈 no details shown
+          StartTime: new Date(`${dateOnly}T${b.start_time}`),
+          EndTime: new Date(`${dateOnly}T${b.end_time}`),
+          IsAllDay: false
+        };
+      });
 
-        setEvents(formatted);
-      } catch (err) {
-        console.error(err);
-      }
+      setEvents(formatted);
     };
 
     loadBookings();
-
     return () => (mounted = false);
   }, [GetAllBookings]);
 
-  /* Disable popup */
+  // 🚫 Disable all interaction
   const disablePopup = (args) => {
     args.cancel = true;
   };
@@ -58,7 +51,7 @@ const DiaryCalendar = () => {
     <div className="bg-white rounded-2xl p-4">
       <ScheduleComponent
         height="650px"
-        selectedDate={selectedDate}
+        selectedDate={new Date()}
         eventSettings={{ dataSource: events }}
         popupOpen={disablePopup}
         readonly={true}
@@ -77,4 +70,4 @@ const DiaryCalendar = () => {
   );
 };
 
-export default DiaryCalendar;
+export default AllInstructorsCalendar;

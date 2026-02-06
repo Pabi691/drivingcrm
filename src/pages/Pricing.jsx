@@ -53,38 +53,56 @@ const Pricing = () => {
     fetchBranches();
     fetchPackages();
   }, [fetchPricing, fetchBranches, fetchPackages]);
+const handleActionBegin = async (args) => {
 
-  const handleActionBegin = async (args) => {
-    const newArgs = { ...args };
+  // ================= SAVE =================
+  if (args.requestType === 'save') {
 
-    if (newArgs.requestType === 'save') {
-      newArgs.data = {
-        ...newArgs.data,
-        branches: branches || [],
-        packages: packages || [],
-      };
-      try {
-        if (newArgs.action === 'add') {
-          await addPricing(newArgs.data);
-        }
-        if (newArgs.action === 'edit') {
-          await updatePricing(newArgs.data._id, newArgs.data);
-        }
-      } catch {
-        toast.error('Save failed');
+    args.cancel = true;
+
+    const payload = {
+      branch_id: args.data.branch_id,
+      package_id: args.data.package_id,
+      price: Number(args.data.price),
+      duration: args.data.duration || null
+    };
+
+    try {
+      if (args.action === 'add') {
+        await addPricing(payload);
+        toast.success('Pricing Added');
       }
-    }
 
-    if (newArgs.requestType === 'delete') {
-      const row = newArgs.data?.[0];
-      if (!row?._id) return;
-      try {
-        await deletePricing(row._id);
-      } catch {
-        toast.error('Delete failed');
+      if (args.action === 'edit') {
+        await updatePricing(args.data._id, payload);
+        toast.success('Pricing Updated');
       }
+
+    } catch (err) {
+      console.log(err);
+      toast.error('Save failed');
     }
-  };
+  }
+
+  // ================= DELETE =================
+  if (args.requestType === 'delete') {
+
+    args.cancel = true;
+
+    const row = args.data?.[0];   // ⭐ VERY IMPORTANT
+
+    if (!row?._id) return;
+
+    try {
+      await deletePricing(row._id);
+      toast.success('Pricing Deleted');
+    } catch (err) {
+      console.log(err);
+      toast.error('Delete failed');
+    }
+  }
+};
+
 
   return (
     <div className="m-2 md:m-6 mt-6 p-2 md:p-4 bg-white rounded-2xl">
