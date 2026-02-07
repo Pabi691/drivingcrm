@@ -9,13 +9,13 @@ import {
 const LessonCalendar = ({ lessons }) => {
   const events = lessons.map((l) => ({
     Id: l.LessonID,
-    Subject: `${l.LearnerName} (${l.Instructor})`,
-    StartTime: new Date(`${l.LessonDate} ${l.StartTime}`),
-    EndTime: new Date(`${l.LessonDate} ${l.EndTime}`),
+    Subject: `${l.Learner} (${l.Instructor})`,
+    StartTime: new Date(l.StartTime),
+    EndTime: new Date(l.EndTime),
   }));
 
   return (
-    <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">
+    <div className="bg-white rounded-xl p-4 shadow">
       <ScheduleComponent
         height="650px"
         eventSettings={{ dataSource: events }}

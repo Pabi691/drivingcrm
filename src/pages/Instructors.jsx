@@ -13,8 +13,18 @@ const Instructors = () => {
   const selectionsettings = { persistSelection: true };
   const toolbarOptions = ['Search', 'Delete', 'Add', 'Edit'];
 
+  async function InstructorGets()
+  {
+    try{
+      
+      await fetchInstructors()
+    }catch(error)
+    {
+      toast.error("failed to load instructors")
+    }
+  }
   React.useEffect(() => {
-    fetchInstructors();
+    InstructorGets();
   }, [fetchInstructors]);
 
   const handleActionBegin = async (args) => {

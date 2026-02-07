@@ -20,7 +20,7 @@ import EditLearnerTemplate from '../components/templates/EditLearnerTemplate';
 
 const GridLearnerTemplate = (props) => {
   const { branches, packages, instructors } = useStateContext();
-  
+
 
 
   return (
@@ -28,7 +28,7 @@ const GridLearnerTemplate = (props) => {
       learnerData={props}
       branches={branches || []}
       packages={packages || []}
-      instructors={instructors || []}   
+      instructors={instructors || []}
     />
   );
 };
@@ -45,12 +45,20 @@ const Learners = () => {
     packages,
   } = useStateContext();
 
+  async function FetchLearner() {
+    try {
+      fetchLearners();
+    } catch (error) {
+      toast.error("failed to load learners")
+    }
+  }
+  
   useEffect(() => {
-    fetchLearners();
+    FetchLearner()
   }, [fetchLearners]);
-  useEffect(()=>{
-   console.log('brnches',branches)
-  },[])
+  useEffect(() => {
+    console.log('brnches', branches)
+  }, [])
 
   const handleActionBegin = async (args) => {
     if (args.requestType === 'save') {
@@ -70,7 +78,7 @@ const Learners = () => {
       const row = args.data?.[0];
       if (!row?._id) return;
       try {
-        console.log('id',row._id)
+        console.log('id', row._id)
         await deleteLearner(row._id);
       } catch {
         toast.error('Delete failed');

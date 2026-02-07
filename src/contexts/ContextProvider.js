@@ -71,7 +71,7 @@ export const ContextProvider = ({ children }) => {
       console.log('learner', res.data)
       setLearners(res.data);
     } catch (err) {
-      toast.error('Failed to load learners.');
+      throw err;
     }
     setLoading(false);
   }, []);
@@ -85,7 +85,7 @@ export const ContextProvider = ({ children }) => {
         toast.success('Learner added successfully');
         fetchLearners();
       } catch (err) {
-        toast.error('Failed to add learner');
+        throw err;
       }
     },
     [fetchLearners]
@@ -129,7 +129,7 @@ export const ContextProvider = ({ children }) => {
       setBranches(res.branches);
 
     } catch (err) {
-      toast.error('Failed to load branches.');
+     throw err;
     }
     setBranchLoading(false);
   }, []);
@@ -171,7 +171,7 @@ export const ContextProvider = ({ children }) => {
       const res = await PackageService.getAll();
       setPackages(res.data);
     } catch (err) {
-      toast.error('Failed to load packages.');
+    throw err;
     }
     setPackageLoading(false);
   }, []);
@@ -202,8 +202,8 @@ export const ContextProvider = ({ children }) => {
       const res = await PricingService.getAll();
       setPricing(res.data);
     } catch (err) {
-      toast.error('Failed to load pricing.');
-    }
+      throw err;
+     }
     setPricingLoading(false);
   }, []);
 
@@ -239,8 +239,8 @@ export const ContextProvider = ({ children }) => {
       console.log('Fetched instructors:', res.data);
       setInstructors(res.data);
     } catch (err) {
-      toast.error('Failed to load instructors.');
-    }
+      throw err;
+     }
     setInstructorLoading(false);
   }, []);
 
@@ -288,7 +288,7 @@ export const ContextProvider = ({ children }) => {
       return res.data
 
     } catch (err) {
-      toast.error('Failed to delete instructor');
+      // toast.error('Failed to delete instructor');
     }
   }, []);
 

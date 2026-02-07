@@ -2,7 +2,6 @@ import React from 'react';
 import { Header, Stacked, Pie } from '../components';
 import { lessonsData } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
-import DiaryCalendar from './DairyCalender';
 import MasterBookingCalendar from './MasterBookingCalender';
 
 const Diary = () => {
@@ -16,13 +15,11 @@ const Diary = () => {
   return (
     <div className="mt-10 m-2 md:m-6">
 
-      {/* SCHOOL DIARY CALENDAR */}
       <div className="bg-white rounded-2xl p-4 mb-6">
         <Header title="School Diary (All Bookings)" />
         <MasterBookingCalendar />
       </div>
 
-      {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <StatCard title="Total Lessons" value={totalLessons} color={currentColor} />
         <StatCard title="Scheduled" value={scheduled} color="#3b82f6" />
@@ -30,8 +27,7 @@ const Diary = () => {
         <StatCard title="Cancelled" value={cancelled} color="#ef4444" />
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white rounded-2xl p-6">
           <h3 className="font-semibold mb-4">Lesson Status Overview</h3>
           <Pie
