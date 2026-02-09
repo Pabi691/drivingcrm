@@ -43,8 +43,9 @@ const MasterBookingCalendar = () => {
           Subject: 'Booking',
           StartTime: new Date(`${dateOnly}T${b.start_time}`),
           EndTime: new Date(`${dateOnly}T${b.end_time}`),
-          InstructorId: b.instructor_id,
-          LearnerId: b.pupil_id,
+          InstructorId: b.instructor_id?._id,
+          LearnerId:b.pupil_id?._id,
+          
           IsAllDay: false
         };
       });

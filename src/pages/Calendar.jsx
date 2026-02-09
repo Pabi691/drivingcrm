@@ -51,8 +51,8 @@ const Scheduler = ({ instructorId }) => {
             Subject: 'Booking',
             StartTime: new Date(`${dateOnly}T${b.start_time}`),
             EndTime: new Date(`${dateOnly}T${b.end_time}`),
-            InstructorId: b.instructor_id,
-            PupilId: b.pupil_id,
+            InstructorId: b.instructor_id?._id,
+    PupilId: b.pupil_id?._id,
             IsAllDay: false
           };
         });
