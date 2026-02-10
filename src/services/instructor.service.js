@@ -34,6 +34,6 @@ export const InstructorService = {
   },
 
   remove(id) {
-    return axios.delete(`/ds/instructor-masters/${id}`);
+    return axios.get(`/ds/instructor-masters/delete/${id}`);
   },
 };

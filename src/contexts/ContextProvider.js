@@ -71,7 +71,7 @@ export const ContextProvider = ({ children }) => {
       console.log('learner', res.data)
       setLearners(res.data);
     } catch (err) {
-      toast.error('Failed to load learners.');
+      throw err;
     }
     setLoading(false);
   }, []);
@@ -85,7 +85,7 @@ export const ContextProvider = ({ children }) => {
         toast.success('Learner added successfully');
         fetchLearners();
       } catch (err) {
-        toast.error('Failed to add learner');
+        throw err;
       }
     },
     [fetchLearners]
@@ -129,7 +129,7 @@ export const ContextProvider = ({ children }) => {
       setBranches(res.branches);
 
     } catch (err) {
-      toast.error('Failed to load branches.');
+     throw err;
     }
     setBranchLoading(false);
   }, []);
@@ -171,7 +171,7 @@ export const ContextProvider = ({ children }) => {
       const res = await PackageService.getAll();
       setPackages(res.data);
     } catch (err) {
-      toast.error('Failed to load packages.');
+    throw err;
     }
     setPackageLoading(false);
   }, []);
@@ -202,14 +202,17 @@ export const ContextProvider = ({ children }) => {
       const res = await PricingService.getAll();
       setPricing(res.data);
     } catch (err) {
-      toast.error('Failed to load pricing.');
-    }
+      throw err;
+     }
     setPricingLoading(false);
   }, []);
 
   const addPricing = useCallback(async (data) => {
-    await PricingService.create(data);
+  const price = await PricingService.create(data);
+  console.log('pricing',price)
+  
     fetchPricing();
+    return price;
   }, [fetchPricing]);
 
   const updatePricing = useCallback(async (id, data) => {
@@ -219,23 +222,25 @@ export const ContextProvider = ({ children }) => {
 
   const deletePricing = useCallback(async (id) => {
     try {
-      await PricingService.remove(id);
-      setPricing(prev => prev.filter(pkg => pkg._id !== id));
+       const res= await PricingService.remove(id);
+       console.log('deleting price',res)
+          fetchPricing();
+
       toast.success('Pricing deleted successfully');
     } catch (err) {
       toast.error('Failed to delete pricing');
     }
-  }, []);
+  }, [fetchPricing]);
 
   const fetchInstructors = useCallback(async () => {
     setInstructorLoading(true);
     try {
       const res = await InstructorService.getAll();
-      // console.log('Fetched instructors:', res.data);
+      console.log('Fetched instructors:', res.data);
       setInstructors(res.data);
     } catch (err) {
-      toast.error('Failed to load instructors.');
-    }
+      throw err;
+     }
     setInstructorLoading(false);
   }, []);
 
@@ -283,7 +288,7 @@ export const ContextProvider = ({ children }) => {
       return res.data
 
     } catch (err) {
-      toast.error('Failed to delete instructor');
+      // toast.error('Failed to delete instructor');
     }
   }, []);
 

@@ -31,8 +31,17 @@ const Area = () => {
   const selectionsettings = { persistSelection: true };
   const toolbarOptions = ['Search', 'Delete', 'Add', 'Edit'];
 
+  async function GettingBranches()
+  {
+    try{
+       await fetchBranches(); 
+    }catch(error)
+    {
+      toast.error('Failed to load areas ')
+    }
+  }
   useEffect(() => {
-    fetchBranches();
+    GettingBranches()
   }, [fetchBranches]);
 
   const handleActionBegin = async (args) => {

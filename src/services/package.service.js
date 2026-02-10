@@ -14,10 +14,10 @@ export const PackageService = {
   },
 
   update(id, data) {
-    return axios.patch(`/ds/package-masters/${id}`, data);
+    return axios.post(`/ds/package-masters/${id}`, data);
   },
 
   remove(id) {
-    return axios.delete(`/ds/package-masters/${id}`);
+    return axios.get(`/ds/package-masters/delete/${id}`);
   },
 };

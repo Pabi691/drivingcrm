@@ -14,7 +14,7 @@ import {
 } from '@syncfusion/ej2-react-grids';
 import toast from 'react-hot-toast';
 import { useStateContext } from '../contexts/ContextProvider';
-import {pricingGrid} from '../data/pricingGrid';
+import { pricingGrid } from '../data/pricingGrid';
 import { Header } from '../components';
 import EditPricingTemplate from '../components/templates/EditPricingTemplate';
 
@@ -24,10 +24,10 @@ import EditPricingTemplate from '../components/templates/EditPricingTemplate';
 const GridEditTemplate = (props) => {
   const { branches, packages } = useStateContext(); // get current data
   return (
-    <EditPricingTemplate 
-      pricingData={props} 
-      branches={branches || []} 
-      packages={packages || []} 
+    <EditPricingTemplate
+      pricingData={props}
+      branches={branches || []}
+      packages={packages || []}
     />
   );
 };
@@ -48,43 +48,71 @@ const Pricing = () => {
   const selectionsettings = { persistSelection: true };
   const toolbarOptions = ['Search', 'Delete', 'Add', 'Edit'];
 
+  async function PricingGets() {
+    try {
+      fetchPricing();
+
+    } catch (error) {
+      toast.error('Failed to load pricing.');
+
+
+    }
+  }
   useEffect(() => {
-    fetchPricing();
+    PricingGets()
     fetchBranches();
     fetchPackages();
   }, [fetchPricing, fetchBranches, fetchPackages]);
-
   const handleActionBegin = async (args) => {
-    const newArgs = { ...args };
 
-    if (newArgs.requestType === 'save') {
-      newArgs.data = {
-        ...newArgs.data,
-        branches: branches || [],
-        packages: packages || [],
+    // ================= SAVE =================
+    if (args.requestType === 'save') {
+
+      args.cancel = true;
+
+      const payload = {
+        branch_id: args.data.branch_id,
+        package_id: args.data.package_id,
+        price: Number(args.data.price),
+        duration: args.data.duration || null
       };
+
       try {
-        if (newArgs.action === 'add') {
-          await addPricing(newArgs.data);
+        if (args.action === 'add') {
+          await addPricing(payload);
+          toast.success('Pricing Added');
         }
-        if (newArgs.action === 'edit') {
-          await updatePricing(newArgs.data._id, newArgs.data);
+
+        if (args.action === 'edit') {
+          await updatePricing(args.data._id, payload);
+          toast.success('Pricing Updated');
         }
-      } catch {
+
+      } catch (err) {
+        console.log(err);
         toast.error('Save failed');
       }
     }
 
-    if (newArgs.requestType === 'delete') {
-      const row = newArgs.data?.[0];
+    // ================= DELETE =================
+    if (args.requestType === 'delete') {
+
+      args.cancel = true;
+
+      const row = args.data?.[0];   // ⭐ VERY IMPORTANT
+
       if (!row?._id) return;
+
       try {
         await deletePricing(row._id);
-      } catch {
+        toast.success('Pricing Deleted');
+      } catch (err) {
+        console.log(err);
         toast.error('Delete failed');
       }
     }
   };
+
 
   return (
     <div className="m-2 md:m-6 mt-6 p-2 md:p-4 bg-white rounded-2xl">
