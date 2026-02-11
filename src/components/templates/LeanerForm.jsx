@@ -13,14 +13,8 @@ const LearnerForm = ({
     instructor_id: '',
     area_id: '',
     package_id: '',
-
-    
+    status: 'active', // ✅ DEFAULT ACTIVE
   });
-
-  console.log('learnern value',learnerValues)
-  // ✅ Populate ONLY when:
-  // - editing
-  // - dropdown data is loaded
 
   useEffect(() => {
     if (!learnerValues?._id) return;
@@ -33,7 +27,7 @@ const LearnerForm = ({
       instructor_id: learnerValues.instructor_id?._id || '',
       area_id: learnerValues.area_id?._id || '',
       package_id: learnerValues.package_id?._id || '',
-      
+      status: learnerValues.status || 'active', // ✅ fallback active
     });
   }, [learnerValues, branches, instructors, packages]);
 
@@ -117,10 +111,20 @@ const LearnerForm = ({
         ))}
       </select>
 
+      {/* Status */}
+      <select
+        name="status"
+        value={formValues.status}
+        onChange={handleChange}
+        className="e-input w-full"
+      >
+        <option value="active">Active</option>
+        <option value="waiting">Waiting</option>
+        <option value="inactive">Inactive</option>
+        <option value="enquires">Enquires</option>
+        <option value="passed">Passed</option>
+      </select>
 
-     
-
-     
     </div>
   );
 };

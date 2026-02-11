@@ -104,7 +104,7 @@ const App = () => {
                       {/* Profile */}
                       <Route path="/profile" element={<UserProfilePage />} />
                       <Route path="/instructors/:id" element={<InstructorProfilePage />} />
-                      <Route path="/learners/:id" element={<LearnerProfilePage />} />
+                      <Route path="/pupil/:id" element={<LearnerProfilePage />} />
                       <Route path="/lessons/:id" element={<LessonProfilePage />} roles={['admin', 'instructor']} />
                       <Route path="/packages/:id" element={<PackageProfilePage />} />
                       <Route path="/enquiries/:id" element={<EnquiryProfilePage />} />

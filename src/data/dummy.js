@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // import { AiOutlineCalendar, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock, AiOutlineEye } from 'react-icons/ai';
 import { AiOutlineEye, AiOutlineQuestionCircle } from 'react-icons/ai';
 import { FiBarChart, FiCreditCard, FiStar, FiShoppingCart, FiBookOpen, FiPackage, FiMapPin, FiDollarSign } from 'react-icons/fi';
@@ -9,6 +9,8 @@ import { IoMdContacts } from 'react-icons/io';
 import { RiContactsLine } from 'react-icons/ri';
 import { MdOutlineSupervisorAccount } from 'react-icons/md';
 import { HiOutlineRefresh } from 'react-icons/hi';
+import { FaEye } from "react-icons/fa";
+
 import { TiTick } from 'react-icons/ti';
 // import { GiLouvrePyramid } from 'react-icons/gi';
 import { GrLocation } from 'react-icons/gr';
@@ -23,6 +25,7 @@ import product4 from './product4.jpg';
 import product5 from './product5.jpg';
 import product6 from './product6.jpg';
 import product7 from './product7.jpg';
+import { GridViewTemplate } from '../components/viewIcon';
 // import product8 from './product8.jpg';
 
 export const gridOrderImage = (props) => (
@@ -34,6 +37,7 @@ export const gridOrderImage = (props) => (
     />
   </div>
 );
+
 
 export const gridOrderStatus = (props) => (
   <button
@@ -192,18 +196,16 @@ const gridLessonStatus = (props) => {
 //   </div>
 // );
 
-const gridProgressBar = (props) => {
-  const progress = props.progress ?? 0;
-
+export const gridProgressBar = (props) => {
   return (
-    <div className="flex items-center gap-2">
-      <div className="w-full bg-gray-200 rounded-full h-2">
+    <div className="flex items-center justify-center gap-2 w-full">
+      <div className="w-24 bg-gray-200 rounded-full h-2">
         <div
-          className="bg-blue-600 h-2 rounded-full"
-          style={{ width: `${progress}%` }}
-        />
+          className="bg-blue-500 h-2 rounded-full"
+          style={{ width: `${props.progress || 0}%` }}
+        ></div>
       </div>
-      <span className="text-sm">{progress}%</span>
+      <span>{props.progress || 0}%</span>
     </div>
   );
 };
@@ -619,6 +621,25 @@ export const customersGrid = [
   },
 
 ];
+export const gridStatusTemplate = (props) => {
+  const status = (props.status || "active").toLowerCase();
+
+  let bg = "bg-gray-200 text-gray-700";
+
+  if (status === "active") bg = "bg-green-100 text-green-700";
+  else if (status === "waiting") bg = "bg-yellow-100 text-yellow-700";
+  else if (status === "inactive") bg = "bg-red-100 text-red-700";
+  else if (status === "enquires") bg = "bg-blue-100 text-blue-700";
+  else if (status === "passed") bg = "bg-purple-100 text-purple-700";
+
+  return (
+    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${bg}`}>
+      {status.charAt(0).toUpperCase() + status.slice(1)}
+    </span>
+  );
+};
+
+
 
 export const instructorsGrid = [
   { type: 'checkbox', width: '50' },
@@ -715,9 +736,12 @@ export const instructorsGrid = [
   
 ];
 
+
+
+
 export const learnersGrid = [
   { type: 'checkbox', width: '50' },
- 
+
   {
     field: '_id',
     headerText: 'Learner ID',
@@ -725,46 +749,54 @@ export const learnersGrid = [
     isPrimaryKey: true,
     visible: false,
   },
- 
 
- 
   {
-    field: 'full_name',        // ✅ MATCHES API
+    field: 'full_name',
     headerText: 'Full Name',
     width: '150',
     textAlign: 'Center',
   },
- 
+
   {
-    field: 'phone',            // ✅ MATCHES API
+    field: 'phone',
     headerText: 'Phone',
     width: '150',
     textAlign: 'Center',
   },
- 
+
   {
-    field: 'instructor_id.name', // ✅ NESTED OBJECT
+    field: 'instructor_id.name',
     headerText: 'Instructor',
     width: '200',
     textAlign: 'Center',
   },
- 
+
   {
-    field:'progress',
-    headerText: 'Progress',
-    width: '180',
-    template: gridProgressBar,   // works because template
+    field: 'status',
+    headerText: 'Status',
+    width: '140',
     textAlign: 'Center',
+    template: gridStatusTemplate,
   },
- 
-  {
-    field: 'payment_status',    // ✅ MATCHES API
-    headerText: 'Payment Status',
-    width: '130',
-    textAlign: 'Center',
-    template: gridPaymentStatus,
-  },
+
+ {
+  field: 'progress',
+  headerText: 'Progress',
+  width: '180',
+  textAlign: 'Center',
+  headerTextAlign: 'Center',
+  template: gridProgressBar,
+},
+
+{
+  headerText: 'View',
+  width: '120',
+  textAlign: 'Center',
+  headerTextAlign: 'Center',
+  template: GridViewTemplate,
+}
 ];
+
 
 export const lessonsGrid = [
   { type: 'checkbox', width: '50' },

@@ -17,6 +17,7 @@ const EXCLUDED_FIELDS = [
   'approved_by',
   'instructor_user_id',
   'status',
+  'password'
 ];
 
 const InstructorProfilePage = () => {
@@ -78,6 +79,7 @@ const InstructorProfilePage = () => {
 
       const payload = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
+        console.log('values',key, value)
         payload.append(key, value);
       });
 

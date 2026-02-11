@@ -1,36 +1,42 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { learnersData } from '../data/dummy';
 import Doughnut from '../components/Charts/Pie';
+import { useStateContext } from '../contexts/ContextProvider';
 
 const LearnerProfilePage = () => {
+  const { learners } = useStateContext()
+
   const { id } = useParams();
 
-  const learner = learnersData.find(
-    (l) => l.LearnerID === Number(id)
+  const learner = learners.find(
+    (l) => l._id === id
   );
+  useEffect(() => {
+    console.log('learners', learner)
+  }, [learner])
 
   // 🔒 Safety check FIRST
-  if (!learner) {
-    return <Navigate to="/learners" replace />;
-  }
+  // if (!learner) {
+  //   return <Navigate to="/learners" replace />;
+  // }
 
   // 📊 Chart Data
   const lessonChartData = [
-    { x: 'Completed', y: learner.LessonsCompleted, text: `${learner.LessonsCompleted}` },
+    { x: 'Completed', y: learner?.LessonsCompleted, text: `${learner?.LessonsCompleted}` },
     {
       x: 'Remaining',
-      y: learner.LessonsBooked - learner.LessonsCompleted,
-      text: `${learner.LessonsBooked - learner.LessonsCompleted}`,
+      y: learner?.LessonsBooked - learner?.LessonsCompleted,
+      text: `${learner?.LessonsBooked - learner?.LessonsCompleted}`,
     },
   ];
 
   const paymentChartData = [
-    { x: 'Paid', y: learner.PaymentStatus === 'Paid' ? 1 : 0, text: 'Paid' },
+    { x: 'Paid', y: learner?.PaymentStatus === 'Paid' ? 1 : 0, text: 'Paid' },
     {
       x: 'Pending / Overdue',
-      y: learner.PaymentStatus !== 'Paid' ? 1 : 0,
-      text: learner.PaymentStatus,
+      y: learner?.PaymentStatus !== 'Paid' ? 1 : 0,
+      text: learner?.PaymentStatus,
     },
   ];
 
@@ -47,15 +53,15 @@ const LearnerProfilePage = () => {
 
       {/* HEADER */}
       <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow flex items-center gap-4">
-        <img
-          src={learner.ProfileImage}
-          alt={learner.Name}
+        {learner.ProfileImage ? <img
+          src={learner?.ProfileImage}
+          alt={learner?.Name}
           className="w-20 h-20 rounded-full object-cover"
-        />
+        /> : <div className='w-20 h-20 rounded-full flex justify-center items-center bg-[#03C9D7] text-3xl text-white '>{learner.full_name.charAt(0)}</div>}
         <div>
-          <h1 className="text-2xl font-bold">{learner.Name}</h1>
-          <p className="text-gray-500 text-sm">Learner ID #{learner.LearnerID}</p>
-          <p className="text-sm text-gray-600">{learner.Email}</p>
+          <h1 className="text-2xl font-bold">{learner?.Name}</h1>
+          <p className="text-gray-500 text-sm">Pupil Id #{learner?._id}</p>
+          <p className="text-sm text-gray-600">{learner?.Email}</p>
         </div>
       </div>
 
@@ -66,44 +72,46 @@ const LearnerProfilePage = () => {
 
           {/* INFO */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
-            <h3 className="font-semibold mb-4">Learner Information</h3>
+            <h3 className="font-semibold mb-4">Pupil Information</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <Info label="Phone" value={learner.Phone} />
-              <Info label="Instructor" value={learner.Instructor} />
-              <Info label="Join Date" value={learner.JoinDate} />
-              <Info label="Test Date" value={learner.TestDate} />
-              <Info label="Zone" value={learner.Zone} />
-              <Info label="Postcode" value={learner.Postcode} />
-              <Info label="Country" value={learner.Country} />
-              <Info label="Auto Pay" value={learner.AutoPay} />
-              <Info label="Payment Method" value={learner.PaymentMethod} />
-              <Info label="Theory Test" value={learner.TheoryTestPassed} />
+              <Info label="Name" value={learner?.full_name} />
+
+              <Info label="Phone" value={learner?.phone} />
+              <Info label="Instructor" value={learner?.instructor_id.name} />
+              <Info label="Email" value={learner?.email} />
+              {/* <Info label="Test Date" value={learner?.TestDate} />
+              <Info label="Zone" value={learner?.Zone} />
+              <Info label="Postcode" value={learner?.Postcode} />
+              <Info label="Country" value={learner?.Country} />
+              <Info label="Auto Pay" value={learner?.AutoPay} />
+              <Info label="Payment Method" value={learner?.PaymentMethod} />
+              <Info label="Theory Test" value={learner?.TheoryTestPassed} /> */}
             </div>
           </div>
 
           {/* PROGRESS */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow">
-            <h3 className="font-semibold mb-3">Learning Progress</h3>
+            <h3 className="font-semibold mb-3">Pupil Progress</h3>
 
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
                 className="bg-green-500 h-3 rounded-full"
-                style={{ width: `${learner.ProgressPercentage}%` }}
+                style={{ width: `${learner?.ProgressPercentage}%` }}
               />
             </div>
 
             <p className="text-sm text-gray-600 mt-2">
-              {learner.ProgressPercentage}% completed
+              {learner?.ProgressPercentage}% completed
             </p>
           </div>
 
           {/* STATS */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Stat label="Booked" value={learner.LessonsBooked} />
-            <Stat label="Completed" value={learner.LessonsCompleted} />
-            <Stat label="Cancelled" value={learner.LessonsCancelled} />
-            <Stat label="Hours" value={learner.TotalHours} />
+            <Stat label="Booked" value={learner?.LessonsBooked} />
+            <Stat label="Completed" value={learner?.LessonsCompleted} />
+            <Stat label="Cancelled" value={learner?.LessonsCancelled} />
+            <Stat label="Hours" value={learner?.TotalHours} />
           </div>
         </div>
 
@@ -112,7 +120,7 @@ const LearnerProfilePage = () => {
 
           {/* LESSON CHART */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">
-            <h3 className="font-semibold text-center mb-2">Lessons Overview</h3>
+            <h3 className="font-semibold text-center mb-2">Payment  Overview</h3>
             <Doughnut
               id="lesson-chart"
               data={lessonChartData}
@@ -124,9 +132,9 @@ const LearnerProfilePage = () => {
           {/* PAYMENT */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow text-sm">
             <h3 className="font-semibold mb-3">Payment Summary</h3>
-            <p>Status: <strong>{learner.PaymentStatus}</strong></p>
-            <p>Total Spent: {learner.TotalSpent}</p>
-            <p>Outstanding: {learner.OutstandingBalance}</p>
+            <p>Status: <strong>{learner?.PaymentStatus}</strong></p>
+            <p>Total Spent: {learner?.TotalSpent}</p>
+            <p>Outstanding: {learner?.OutstandingBalance}</p>
           </div>
 
           {/* PAYMENT CHART */}

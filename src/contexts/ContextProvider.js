@@ -253,7 +253,8 @@ export const ContextProvider = ({ children }) => {
   }, [fetchInstructors]);
 
   const updateInstructor = useCallback(async (id, data) => {
-    await InstructorService.update(id, data);
+     const res=await InstructorService.update(id, data);
+     console.log('response',res)
     fetchInstructors();
   }, [fetchInstructors]);
 
