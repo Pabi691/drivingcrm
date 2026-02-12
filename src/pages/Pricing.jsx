@@ -18,11 +18,9 @@ import { pricingGrid } from '../data/pricingGrid';
 import { Header } from '../components';
 import EditPricingTemplate from '../components/templates/EditPricingTemplate';
 
-// Memo wrapper
-// const EditTemplateWrapper = memo((props) => <EditPackageTemplate {...props} />);
-// const EditTemplateWrapper = memo(({ pricingData }) => <EditPricingTemplate pricingData={pricingData} />);
 const GridEditTemplate = (props) => {
-  const { branches, packages } = useStateContext(); // get current data
+  const { branches, packages } = useStateContext();
+
   return (
     <EditPricingTemplate
       pricingData={props}
@@ -41,28 +39,21 @@ const Pricing = () => {
     addPricing,
     updatePricing,
     deletePricing,
-    branches,
-    packages,
   } = useStateContext();
 
   const selectionsettings = { persistSelection: true };
   const toolbarOptions = ['Search', 'Delete', 'Add', 'Edit'];
 
-  async function PricingGets() {
-    try {
-      fetchPricing();
 
-    } catch (error) {
-      toast.error('Failed to load pricing.');
-
-
-    }
-  }
+  useEffect(()=>{
+   console.log('pricing',pricing)
+  },[pricing])
   useEffect(() => {
-    PricingGets()
+    fetchPricing();
     fetchBranches();
     fetchPackages();
-  }, [fetchPricing, fetchBranches, fetchPackages]);
+  }, []);
+
   const handleActionBegin = async (args) => {
 
     // ================= SAVE =================
@@ -74,10 +65,10 @@ const Pricing = () => {
         branch_id: args.data.branch_id,
         package_id: args.data.package_id,
         price: Number(args.data.price),
-        duration: args.data.duration || null
       };
 
       try {
+
         if (args.action === 'add') {
           await addPricing(payload);
           toast.success('Pricing Added');
@@ -87,6 +78,8 @@ const Pricing = () => {
           await updatePricing(args.data._id, payload);
           toast.success('Pricing Updated');
         }
+
+        await fetchPricing(); // ⭐ refresh grid
 
       } catch (err) {
         console.log(err);
@@ -99,12 +92,16 @@ const Pricing = () => {
 
       args.cancel = true;
 
-      const row = args.data?.[0];   // ⭐ VERY IMPORTANT
+      const row = Array.isArray(args.data)
+        ? args.data[0]
+        : args.data;
 
       if (!row?._id) return;
 
       try {
+        console.log('row id ',row._id)
         await deletePricing(row._id);
+        await fetchPricing(); // ⭐ refresh
         toast.success('Pricing Deleted');
       } catch (err) {
         console.log(err);
@@ -113,10 +110,10 @@ const Pricing = () => {
     }
   };
 
-
   return (
     <div className="m-2 md:m-6 mt-6 p-2 md:p-4 bg-white rounded-2xl">
       <Header title="Pricing" />
+
       <GridComponent
         dataSource={pricing}
         allowPaging
@@ -146,7 +143,6 @@ const Pricing = () => {
               visible={item.visible !== undefined ? item.visible : true}
               allowEditing={item.allowEditing !== undefined ? item.allowEditing : true}
               type={item.type}
-              // Only attach template if the column has a field or is for display
               template={item.template && !item.allowEditing ? item.template : undefined}
             />
           ))}

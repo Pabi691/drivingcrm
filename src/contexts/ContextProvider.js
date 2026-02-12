@@ -7,6 +7,7 @@ import { PricingService } from '../services/pricing.service';
 import { InstructorService } from '../services/instructor.service';
 import { LearnerService } from '../services/Learner';
 import { bookingService } from '../services/booking.service';
+import { MoneyService } from '../services/money.service';
 
 const StateContext = createContext();
 
@@ -95,7 +96,8 @@ export const ContextProvider = ({ children }) => {
   const updateLearner = useCallback(
     async (id, data) => {
       try {
-        await LearnerService.update(id, data);
+        const res=await LearnerService.update(id, data);
+        console.log('response to update',res)
         toast.success('Learner updated successfully');
         fetchLearners();
       } catch (err) {
@@ -129,7 +131,7 @@ export const ContextProvider = ({ children }) => {
       setBranches(res.branches);
 
     } catch (err) {
-     throw err;
+      throw err;
     }
     setBranchLoading(false);
   }, []);
@@ -171,7 +173,7 @@ export const ContextProvider = ({ children }) => {
       const res = await PackageService.getAll();
       setPackages(res.data);
     } catch (err) {
-    throw err;
+      throw err;
     }
     setPackageLoading(false);
   }, []);
@@ -203,14 +205,14 @@ export const ContextProvider = ({ children }) => {
       setPricing(res.data);
     } catch (err) {
       throw err;
-     }
+    }
     setPricingLoading(false);
   }, []);
 
   const addPricing = useCallback(async (data) => {
-  const price = await PricingService.create(data);
-  console.log('pricing',price)
-  
+    const price = await PricingService.create(data);
+    console.log('pricing', price)
+
     fetchPricing();
     return price;
   }, [fetchPricing]);
@@ -222,11 +224,10 @@ export const ContextProvider = ({ children }) => {
 
   const deletePricing = useCallback(async (id) => {
     try {
-       const res= await PricingService.remove(id);
-       console.log('deleting price',res)
-          fetchPricing();
+      const res = await PricingService.remove(id);
+      console.log('deleting price', res)
+      fetchPricing();
 
-      toast.success('Pricing deleted successfully');
     } catch (err) {
       toast.error('Failed to delete pricing');
     }
@@ -240,9 +241,21 @@ export const ContextProvider = ({ children }) => {
       setInstructors(res.data);
     } catch (err) {
       throw err;
-     }
+    }
     setInstructorLoading(false);
   }, []);
+
+  const fetchPupilsMoney = useCallback(async (id) => {
+    try {
+      const res=await MoneyService.getPupilSMoney(id);
+      console.log('getting pupils money',res.data);
+      return res;
+
+
+    } catch (error) {
+      console.log('error', error)
+    }
+  }, [])
 
 
 
@@ -253,8 +266,8 @@ export const ContextProvider = ({ children }) => {
   }, [fetchInstructors]);
 
   const updateInstructor = useCallback(async (id, data) => {
-     const res=await InstructorService.update(id, data);
-     console.log('response',res)
+    const res = await InstructorService.update(id, data);
+    console.log('response', res)
     fetchInstructors();
   }, [fetchInstructors]);
 
@@ -321,6 +334,17 @@ export const ContextProvider = ({ children }) => {
     }
   })
 
+  const getPupilBookings=useCallback(async(id)=>{
+    try{
+      const res=await bookingService.getPupilBooking(id);
+      return res;
+
+    }catch(error)
+    {
+      throw error;
+    }
+  })
+
   const createBooking = useCallback(async (data) => {
     try {
       const res = await bookingService.create(data);
@@ -337,8 +361,8 @@ export const ContextProvider = ({ children }) => {
   }, [GetBooking])
   const GetAllBookings = useCallback(async () => {
     try {
-      const res=await bookingService.getAllOFAllInstructos();
-      console.log('response to get all data',res);
+      const res = await bookingService.getAllOFAllInstructos();
+      console.log('response to get all data', res);
       return res
 
     } catch (error) {
@@ -413,7 +437,9 @@ export const ContextProvider = ({ children }) => {
     IsUpdate,
     GetBooking,
     createBooking,
-    GetAllBookings
+    GetAllBookings,
+    fetchPupilsMoney,
+    getPupilBookings
 
 
 
@@ -463,7 +489,9 @@ export const ContextProvider = ({ children }) => {
     GetBooking,
     IsBooked,
     createBooking,
-    GetAllBookings
+    GetAllBookings,
+    fetchPupilsMoney,
+    getPupilBookings
   ]);
 
 

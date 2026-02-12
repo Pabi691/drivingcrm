@@ -622,22 +622,23 @@ export const customersGrid = [
 
 ];
 export const gridStatusTemplate = (props) => {
-  const status = (props.status || "active").toLowerCase();
-
-  let bg = "bg-gray-200 text-gray-700";
-
-  if (status === "active") bg = "bg-green-100 text-green-700";
-  else if (status === "waiting") bg = "bg-yellow-100 text-yellow-700";
-  else if (status === "inactive") bg = "bg-red-100 text-red-700";
-  else if (status === "enquires") bg = "bg-blue-100 text-blue-700";
-  else if (status === "passed") bg = "bg-purple-100 text-purple-700";
+  const value = parseInt(props.active, 10);
+  const isActive = value === 1;
 
   return (
-    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${bg}`}>
-      {status.charAt(0).toUpperCase() + status.slice(1)}
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+        isActive
+          ? "bg-green-100 text-green-700"
+          : "bg-red-100 text-red-700"
+      }`}
+    >
+      {isActive ? "Active" : "Inactive"}
     </span>
   );
 };
+
+
 
 
 
@@ -772,32 +773,30 @@ export const learnersGrid = [
   },
 
   {
-    field: 'status',
+    field: 'active', // ✅ IMPORTANT
     headerText: 'Status',
     width: '140',
     textAlign: 'Center',
     template: gridStatusTemplate,
   },
 
- {
-  field: 'progress',
-  headerText: 'Progress',
-  width: '180',
-  textAlign: 'Center',
-  headerTextAlign: 'Center',
-  template: gridProgressBar,
-},
+  {
+    field: 'progress',
+    headerText: 'Progress',
+    width: '180',
+    textAlign: 'Center',
+    headerTextAlign: 'Center',
+    template: gridProgressBar,
+  },
 
-{
-  headerText: 'View',
-  width: '120',
-  textAlign: 'Center',
-  headerTextAlign: 'Center',
-  template: GridViewTemplate,
-}
+  {
+    headerText: 'View',
+    width: '120',
+    textAlign: 'Center',
+    headerTextAlign: 'Center',
+    template: GridViewTemplate,
+  },
 ];
-
-
 export const lessonsGrid = [
   { type: 'checkbox', width: '50' },
 

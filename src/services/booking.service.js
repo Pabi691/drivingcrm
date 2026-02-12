@@ -11,8 +11,13 @@ export const bookingService = {
   },
 
     create(data) {
+      console.log('data to create booking',data)
     return axios.post(`/ds/bookings/`,data);
   },
+  getPupilBooking(pupil_id)
+  {
+    return axios.get(`/ds/bookings/pupil/${pupil_id}`)
+  }
 
 
   

@@ -14,10 +14,10 @@ const EditPricingTemplate = ({ pricingData, branches, packages }) => {
   return (
     <div className="relative min-h-[300px]">
       {pricingLoading && <DialogLoading />}
-      <PricingForm 
-        pricingValues={pricingData} 
-        branches={branches} 
-        packages={packages} 
+      <PricingForm
+        pricingValues={pricingData}
+        branches={branches}
+        packages={packages}
       />
     </div>
   );

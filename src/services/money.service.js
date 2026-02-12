@@ -15,4 +15,8 @@ export const MoneyService = {
   get(id) {
     return axios.get(`/ds/money/instructor/${id}`);
   },
+  getPupilSMoney(id)
+  {
+    return axios.get(`/ds/money/pupil/${id}`)
+  }
 };

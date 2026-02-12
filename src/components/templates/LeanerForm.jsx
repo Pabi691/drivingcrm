@@ -13,12 +13,11 @@ const LearnerForm = ({
     instructor_id: '',
     area_id: '',
     package_id: '',
-    status: 'active', // ✅ DEFAULT ACTIVE
+    active: 1, // ✅ default active
   });
 
   useEffect(() => {
     if (!learnerValues?._id) return;
-    if (!branches.length || !instructors.length) return;
 
     setFormValues({
       full_name: learnerValues.full_name || '',
@@ -27,13 +26,21 @@ const LearnerForm = ({
       instructor_id: learnerValues.instructor_id?._id || '',
       area_id: learnerValues.area_id?._id || '',
       package_id: learnerValues.package_id?._id || '',
-      status: learnerValues.status || 'active', // ✅ fallback active
+      active: learnerValues.active ?? 1,
     });
-  }, [learnerValues, branches, instructors, packages]);
+  }, [learnerValues]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "active") {
+      setFormValues((prev) => ({
+        ...prev,
+        active: parseInt(value, 10),
+      }));
+    } else {
+      setFormValues((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   return (
@@ -111,18 +118,15 @@ const LearnerForm = ({
         ))}
       </select>
 
-      {/* Status */}
+      {/* Active / Inactive */}
       <select
-        name="status"
-        value={formValues.status}
+        name="active"
+        value={formValues.active}
         onChange={handleChange}
         className="e-input w-full"
       >
-        <option value="active">Active</option>
-        <option value="waiting">Waiting</option>
-        <option value="inactive">Inactive</option>
-        <option value="enquires">Enquires</option>
-        <option value="passed">Passed</option>
+        <option value={1}>Active</option>
+        <option value={0}>Inactive</option>
       </select>
 
     </div>
