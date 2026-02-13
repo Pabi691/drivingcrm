@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { learnersData } from '../data/dummy';
 import Doughnut from '../components/Charts/Pie';
@@ -9,7 +9,12 @@ const LearnerProfilePage = () => {
   const [MoneyHistory, setMoneyHistory] = useState([]);
   const [AllBookings, setBookings] = useState([]);
   const [Cancelled, setCancelled] = useState(0);
-  const [Completed, setCompleted] = useState(0)
+  const [Completed, setCompleted] = useState(0);
+  const [AllUsedHour, setAllUsedHour] = useState([])
+  const [TotalCreditUsed, setTotalCreditUsed] = useState(0);
+  const [TotalPaymentPending, setTotalPaymentPending] = useState(0)
+  const [PaidPaymentPercentage, setPaidPaymentPercentage] = useState(0)
+  const [PendingPaymentPercentage, setPendingPaymentPercentage] = useState(0)
 
   const { id } = useParams();
 
@@ -27,9 +32,39 @@ const LearnerProfilePage = () => {
       setBookings(res.data);
       const cancelled = res.data.filter((b) => b.status === 'cancelled');
       const completed = res.data.filter((b) => b.status === 'completed');
-      console.log('completed', completed)
+
+
+      const totalCreditUsed = res.data.reduce((sum, booking) => sum + booking.credit_use, 0);
+      setTotalCreditUsed(totalCreditUsed)
+      console.log('hours', totalCreditUsed);
+      const pendings = res.data.filter((b) => b.payment_status === "pending")
+      // total payment pending calculating
+
+      const paid = res.data.filter((b) => b.payment_status === "completed");
+
+      const totalPayments = res.data.length;
+
+      const paidCount = paid.length;
+      const pendingCount = pendings.length;
+
+      const paidPayment = totalPayments > 0
+        ? (paidCount / totalPayments) * 100
+        : 0;
+
+      const pendingPercentage = totalPayments > 0
+        ? (pendingCount / totalPayments) * 100
+        : 0;
+
+      setPaidPaymentPercentage(paidPayment);
+      setPendingPaymentPercentage(pendingPercentage);
+
+      setTotalPaymentPending(pendingCount); // ✅ send number not array
+
       setCancelled(cancelled.length);
-      setCompleted(completed.length)
+      setCompleted(completed.length);
+
+      console.log('Paid %:', paidPayment);
+      console.log('Pending %:', pendingPercentage);
 
 
 
@@ -80,23 +115,28 @@ const LearnerProfilePage = () => {
   // }
 
   // 📊 Chart Data
-  const lessonChartData = [
-    { x: 'Completed', y: learner?.LessonsCompleted, text: `${learner?.LessonsCompleted}` },
+  //   const lessonChartData = [
+  //     { x: 'Completed', y: learner?.LessonsCompleted, text: `${learner?.LessonsCompleted}` },
+  //     {
+  //       x: 'Remaining',
+  //       y: learner?.LessonsBooked - learner?.LessonsCompleted,
+  //       text: `${learner?.LessonsBooked - learner?.LessonsCompleted}`,
+  //     },
+  //   ];
+
+  const paymentChartData = [
     {
-      x: 'Remaining',
-      y: learner?.LessonsBooked - learner?.LessonsCompleted,
-      text: `${learner?.LessonsBooked - learner?.LessonsCompleted}`,
+      x: 'Paid',
+      y: PaidPaymentPercentage,
+      text: PaidPaymentPercentage.toFixed(0) + '%',
+    },
+    {
+      x: 'Pending',
+      y: PendingPaymentPercentage,
+      text: PendingPaymentPercentage.toFixed(0) + '%',
     },
   ];
 
-  const paymentChartData = [
-    { x: 'Paid', y: learner?.PaymentStatus === 'Paid' ? 1 : 0, text: 'Paid' },
-    {
-      x: 'Pending / Overdue',
-      y: learner?.PaymentStatus !== 'Paid' ? 1 : 0,
-      text: learner?.PaymentStatus,
-    },
-  ];
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
@@ -155,12 +195,12 @@ const LearnerProfilePage = () => {
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
                 className="bg-green-500 h-3 rounded-full"
-                style={{ width: `${learner?.progress}%` }}
+                style={{ width: `${(TotalCreditUsed / learner?.package_id?.duration) * 100}%` }}
               />
             </div>
 
             <p className="text-sm text-gray-600 mt-2">
-              {learner?.progress}% completed
+              {(TotalCreditUsed / learner?.package_id?.duration) * 100}% completed
             </p>
           </div>
 
@@ -304,9 +344,9 @@ const LearnerProfilePage = () => {
           {/* PAYMENT */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow text-sm">
             <h3 className="font-semibold mb-3">Payment Summary</h3>
-            <p>Status: <strong>{learner?.PaymentStatus}</strong></p>
-            <p>Total Spent: {learner?.TotalSpent}</p>
-            <p>Outstanding: {learner?.OutstandingBalance}</p>
+            <p>Total Hours: <strong>{learner?.package_id?.duration}</strong></p>
+            <p>Total Spent: {TotalCreditUsed}</p>
+            <p>Remaining: {learner?.package_id?.duration - TotalCreditUsed}</p>
           </div>
 
           {/* PAYMENT CHART */}

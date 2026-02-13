@@ -23,7 +23,7 @@ const GridEditTemplate = (props) => {
 
   return (
     <EditPricingTemplate
-      pricingData={props}
+      {...props}
       branches={branches || []}
       packages={packages || []}
     />
@@ -31,6 +31,7 @@ const GridEditTemplate = (props) => {
 };
 
 const Pricing = () => {
+
   const {
     pricing,
     fetchPricing,
@@ -41,13 +42,8 @@ const Pricing = () => {
     deletePricing,
   } = useStateContext();
 
-  const selectionsettings = { persistSelection: true };
   const toolbarOptions = ['Search', 'Delete', 'Add', 'Edit'];
 
-
-  useEffect(()=>{
-   console.log('pricing',pricing)
-  },[pricing])
   useEffect(() => {
     fetchPricing();
     fetchBranches();
@@ -56,15 +52,17 @@ const Pricing = () => {
 
   const handleActionBegin = async (args) => {
 
-    // ================= SAVE =================
+    // SAVE
     if (args.requestType === 'save') {
 
       args.cancel = true;
 
+      const form = args.form;
+
       const payload = {
-        branch_id: args.data.branch_id,
-        package_id: args.data.package_id,
-        price: Number(args.data.price),
+        branch_id: form.querySelector('[name="branch_id"]').value,
+        package_id: form.querySelector('[name="package_id"]').value,
+        price: Number(form.querySelector('[name="price"]').value),
       };
 
       try {
@@ -79,7 +77,8 @@ const Pricing = () => {
           toast.success('Pricing Updated');
         }
 
-        await fetchPricing(); // ⭐ refresh grid
+        await fetchPricing();
+        args.dialog.close();
 
       } catch (err) {
         console.log(err);
@@ -87,7 +86,7 @@ const Pricing = () => {
       }
     }
 
-    // ================= DELETE =================
+    // DELETE
     if (args.requestType === 'delete') {
 
       args.cancel = true;
@@ -99,9 +98,8 @@ const Pricing = () => {
       if (!row?._id) return;
 
       try {
-        console.log('row id ',row._id)
         await deletePricing(row._id);
-        await fetchPricing(); // ⭐ refresh
+        await fetchPricing();
         toast.success('Pricing Deleted');
       } catch (err) {
         console.log(err);
@@ -118,7 +116,6 @@ const Pricing = () => {
         dataSource={pricing}
         allowPaging
         allowSorting
-        selectionSettings={selectionsettings}
         toolbar={toolbarOptions}
         actionBegin={handleActionBegin}
         editSettings={{
@@ -127,7 +124,7 @@ const Pricing = () => {
           allowDeleting: true,
           mode: 'Dialog',
           template: GridEditTemplate,
-          dialog: { width: '1000px', minHeight: '450px' },
+          dialog: { width: '800px', minHeight: '400px' },
           showDeleteConfirmDialog: true,
         }}
       >
@@ -135,15 +132,7 @@ const Pricing = () => {
           {pricingGrid.map((item, index) => (
             <ColumnDirective
               key={index}
-              field={item.field}
-              headerText={item.headerText}
-              width={item.width}
-              textAlign={item.textAlign}
-              isPrimaryKey={item.isPrimaryKey || false}
-              visible={item.visible !== undefined ? item.visible : true}
-              allowEditing={item.allowEditing !== undefined ? item.allowEditing : true}
-              type={item.type}
-              template={item.template && !item.allowEditing ? item.template : undefined}
+              {...item}
             />
           ))}
         </ColumnsDirective>

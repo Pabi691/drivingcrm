@@ -1,10 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const PricingForm = ({ pricingValues = {}, branches = [], packages = [] }) => {
 
+  const [formData, setFormData] = useState({
+    branch_id: '',
+    package_id: '',
+    price: ''
+  });
+
+  useEffect(() => {
+    setFormData({
+      branch_id: pricingValues.branch_id?._id || pricingValues.branch_id || '',
+      package_id: pricingValues.package_id?._id || pricingValues.package_id || '',
+      price: pricingValues.price || ''
+    });
+  }, [pricingValues]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    pricingValues[name] = value; // ⭐ VERY IMPORTANT
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   return (
@@ -14,7 +32,7 @@ const PricingForm = ({ pricingValues = {}, branches = [], packages = [] }) => {
       <div>
         <select
           name="branch_id"
-          defaultValue={pricingValues.branch_id?._id || pricingValues.branch_id || ''}
+          value={formData.branch_id}
           onChange={handleChange}
           className="e-input w-full"
           required
@@ -32,7 +50,7 @@ const PricingForm = ({ pricingValues = {}, branches = [], packages = [] }) => {
       <div>
         <select
           name="package_id"
-          defaultValue={pricingValues.package_id?._id || pricingValues.package_id || ''}
+          value={formData.package_id}
           onChange={handleChange}
           className="e-input w-full"
           required
@@ -51,7 +69,7 @@ const PricingForm = ({ pricingValues = {}, branches = [], packages = [] }) => {
         <input
           type="number"
           name="price"
-          defaultValue={pricingValues.price || ''}
+          value={formData.price}
           onChange={handleChange}
           className="e-input w-full"
           required

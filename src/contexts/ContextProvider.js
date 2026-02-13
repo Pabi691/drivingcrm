@@ -96,8 +96,8 @@ export const ContextProvider = ({ children }) => {
   const updateLearner = useCallback(
     async (id, data) => {
       try {
-        const res=await LearnerService.update(id, data);
-        console.log('response to update',res)
+        const res = await LearnerService.update(id, data);
+        console.log('response to update', res)
         toast.success('Learner updated successfully');
         fetchLearners();
       } catch (err) {
@@ -199,39 +199,50 @@ export const ContextProvider = ({ children }) => {
   }, []);
 
   const fetchPricing = useCallback(async () => {
-    setPricingLoading(true);
     try {
       const res = await PricingService.getAll();
+      console.log('response',res)
       setPricing(res.data);
     } catch (err) {
-      throw err;
+      console.log(err);
     }
-    setPricingLoading(false);
   }, []);
 
   const addPricing = useCallback(async (data) => {
-    const price = await PricingService.create(data);
-    console.log('pricing', price)
+    try {
 
-    fetchPricing();
-    return price;
-  }, [fetchPricing]);
+
+      const res = await PricingService.create(data);
+      return res
+    } catch (error) {
+      return error;
+    }
+  }, []);
 
   const updatePricing = useCallback(async (id, data) => {
-    await PricingService.update(id, data);
-    fetchPricing();
-  }, [fetchPricing]);
+    try{
+
+       const res= await PricingService.update(id, data);
+       return res;
+    }catch(error)
+    {
+      throw error;
+    }
+    
+  }, []);
 
   const deletePricing = useCallback(async (id) => {
-    try {
-      const res = await PricingService.remove(id);
-      console.log('deleting price', res)
-      fetchPricing();
+    try{
+      const res=await PricingService.remove(id);
+      console.log('delete pricing',res)
+      return res;
 
-    } catch (err) {
-      toast.error('Failed to delete pricing');
+
+    }catch(error)
+    {
+      throw error
     }
-  }, [fetchPricing]);
+  }, []);
 
   const fetchInstructors = useCallback(async () => {
     setInstructorLoading(true);
@@ -247,8 +258,8 @@ export const ContextProvider = ({ children }) => {
 
   const fetchPupilsMoney = useCallback(async (id) => {
     try {
-      const res=await MoneyService.getPupilSMoney(id);
-      console.log('getting pupils money',res.data);
+      const res = await MoneyService.getPupilSMoney(id);
+      console.log('getting pupils money', res.data);
       return res;
 
 
@@ -334,13 +345,12 @@ export const ContextProvider = ({ children }) => {
     }
   })
 
-  const getPupilBookings=useCallback(async(id)=>{
-    try{
-      const res=await bookingService.getPupilBooking(id);
+  const getPupilBookings = useCallback(async (id) => {
+    try {
+      const res = await bookingService.getPupilBooking(id);
       return res;
 
-    }catch(error)
-    {
+    } catch (error) {
       throw error;
     }
   })
