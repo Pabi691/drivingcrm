@@ -2,22 +2,22 @@ import axios from './axios';
 
 export const BranchService = {
   getAll() {
-    return axios.get('/branchs');
+    return axios.get('/ds/areas');
   },
 
   getOne(id) {
-    return axios.get(`/branchs/${id}`);
+    return axios.get(`/ds/areas/${id}`);
   },
 
   createBranch(data) {
-    return axios.post('/branchs',data);
+    return axios.post('/ds/areas',data);
   },
 
   update(id, data) {
-    return axios.post(`/branchs/${id}`, data);
+    return axios.post(`/ds/areas/${id}`, data);
   },
 
   remove(id) {
-    return axios.get(`/branchs/delete/${id}`);
+    return axios.get(`/ds/areas/delete/${id}`);
   },
 };

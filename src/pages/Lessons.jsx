@@ -19,7 +19,7 @@ const InitialAvatar = ({ name }) => {
   const initial = name ? name.charAt(0).toUpperCase() : '?';
 
   return (
-    <div className="w-8 h-8 rounded-full bg-pink-600 text-white flex items-center justify-center text-sm font-semibold">
+    <div className="w-8 h-8 rounded-full bg-[#0c969e] text-white flex items-center justify-center text-sm font-semibold">
       {initial}
     </div>
   );
@@ -61,7 +61,7 @@ const StatusTemplate = (props) => {
 };
 
 const ViewTemplate = () => (
-  <FaEye className="text-pink-600 cursor-pointer mx-auto" />
+  <FaEye className="text-[#03C9D7] cursor-pointer mx-auto" />
 );
 
 /* ===================== MAIN COMPONENT ===================== */

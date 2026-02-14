@@ -13,18 +13,11 @@ const LearnerForm = ({
     instructor_id: '',
     area_id: '',
     package_id: '',
-
-    
+    active: 1, // ✅ default active
   });
-
-  console.log('learnern value',learnerValues)
-  // ✅ Populate ONLY when:
-  // - editing
-  // - dropdown data is loaded
 
   useEffect(() => {
     if (!learnerValues?._id) return;
-    if (!branches.length || !instructors.length) return;
 
     setFormValues({
       full_name: learnerValues.full_name || '',
@@ -33,13 +26,21 @@ const LearnerForm = ({
       instructor_id: learnerValues.instructor_id?._id || '',
       area_id: learnerValues.area_id?._id || '',
       package_id: learnerValues.package_id?._id || '',
-      
+      active: learnerValues.active ?? 1,
     });
-  }, [learnerValues, branches, instructors, packages]);
+  }, [learnerValues]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "active") {
+      setFormValues((prev) => ({
+        ...prev,
+        active: parseInt(value, 10),
+      }));
+    } else {
+      setFormValues((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   return (
@@ -117,10 +118,17 @@ const LearnerForm = ({
         ))}
       </select>
 
+      {/* Active / Inactive */}
+      <select
+        name="active"
+        value={formValues.active}
+        onChange={handleChange}
+        className="e-input w-full"
+      >
+        <option value={1}>Active</option>
+        <option value={0}>Inactive</option>
+      </select>
 
-     
-
-     
     </div>
   );
 };
