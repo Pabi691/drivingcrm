@@ -2,6 +2,7 @@ import { useStateContext } from '../../contexts/ContextProvider';
 
 const EditorTemplate = (props) => {
   const { learners, instructors } = useStateContext();
+  console.log('leansrs',learners)
 
   const isEditMode = !!props.Id;
 

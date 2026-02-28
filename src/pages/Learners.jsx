@@ -60,31 +60,44 @@ const Learners = () => {
     console.log('brnches', branches)
   }, [])
 
-  const handleActionBegin = async (args) => {
-    if (args.requestType === 'save') {
-      try {
-        if (args.action === 'add') {
-          await addLearner(args.data);
-        }
-        if (args.action === 'edit') {
-          await updateLearner(args.data._id, args.data);
-        }
-      } catch {
-        toast.error('Save failed');
-      }
+const handleActionBegin = async (args) => {
+
+  if (args.requestType === 'save') {
+
+    // 🔥 VERY IMPORTANT
+    args.data.active = parseInt(args.data.active, 10);
+
+    if (args.data.active !== 0 && args.data.active !== 1) {
+      args.data.active = 1;
     }
 
-    if (args.requestType === 'delete') {
-      const row = args.data?.[0];
-      if (!row?._id) return;
-      try {
-        console.log('id', row._id)
-        await deleteLearner(row._id);
-      } catch {
-        toast.error('Delete failed');
+    try {
+      if (args.action === 'add') {
+        await addLearner(args.data);
       }
+
+      if (args.action === 'edit') {
+        await updateLearner(args.data._id, args.data);
+      }
+
+    } catch (error) {
+      console.log("SAVE ERROR:", error);
+      toast.error('Save failed');
     }
-  };
+  }
+
+  if (args.requestType === 'delete') {
+    const row = args.data?.[0];
+    if (!row?._id) return;
+
+    try {
+      await deleteLearner(row._id);
+    } catch {
+      toast.error('Delete failed');
+    }
+  }
+};
+
 
   return (
     <div className="m-2 md:m-6 mt-6 p-2 md:p-4 bg-white rounded-2xl">

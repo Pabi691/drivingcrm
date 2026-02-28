@@ -9,53 +9,53 @@ export const pricingGrid = [
     field: '_id',
     headerText: 'Pricing ID',
     width: '180',
-    textAlign: 'Center',
     isPrimaryKey: true,
-    visible: false, // hidden in grid, available for edit
+    visible: false,
   },
 
   {
-    field: 'package_name',
+    field: 'branch_id.name',
+    headerText: 'Area',
+    width: '180',
+  },
+
+  {
+    field: 'package_id.package_name',
     headerText: 'Package Name',
     width: '220',
-    template: (rowData) => (
-      <span className="font-medium">
-        {rowData.package_id?.package_name}
-      </span>
-    ),
   },
+
   {
-    field: 'duration',
+    field: 'package_id.duration',
     headerText: 'Package Duration',
-    width: '220',
+    width: '200',
     template: (rowData) => (
       <span className="font-medium">
         {rowData.package_id?.duration} Hours
       </span>
     ),
   },
+
   {
     field: 'price',
     headerText: 'Price',
-    width: '220',
-    // textAlign: 'Center',
+    width: '150',
     template: (rowData) => (
-        <span>
-            {rowData.currency_symbol || '$'}{rowData.price}
-        </span>
-        )
+      <span>
+        {rowData.currency_symbol || '$'}{rowData.price}
+      </span>
+    ),
   },
 
   {
     headerText: 'View',
     width: '80',
-    // textAlign: 'Center',
     allowEditing: false,
+    visible: false,
     template: (rowData) => (
       <Link to={`/packages/${rowData._id}`}>
         <AiOutlineEye className="text-xl text-red-600 hover:text-red-800 cursor-pointer" />
       </Link>
     ),
-    visible: false,
   },
 ];

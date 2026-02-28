@@ -48,11 +48,11 @@ const Scheduler = ({ instructorId }) => {
 
           return {
             Id: b._id,
-            Subject: 'Booking',
+            Subject: b.title,
             StartTime: new Date(`${dateOnly}T${b.start_time}`),
             EndTime: new Date(`${dateOnly}T${b.end_time}`),
-            InstructorId: b.instructor_id,
-            PupilId: b.pupil_id,
+            InstructorId: b.instructor_id?._id,
+            PupilId: b.pupil_id?._id,
             IsAllDay: false
           };
         });
@@ -80,28 +80,28 @@ const Scheduler = ({ instructorId }) => {
   };
 
   /* ---------- POPUP OPEN ---------- */
-const onPopupOpen = (args) => {
+  const onPopupOpen = (args) => {
 
-  if (args.type === 'Editor') {
+    if (args.type === 'Editor') {
 
-    // 👉 Create Mode
-    if (!args.data.Id && instructorId) {
+      // 👉 Create Mode
+      if (!args.data.Id && instructorId) {
 
-      args.data.InstructorId = instructorId;
-      args.data.Subject = 'Booking';
+        args.data.InstructorId = instructorId;
+        args.data.Subject = 'Booking';
 
-      // ⭐ THIS LINE IS THE MAGIC FIX
-      setTimeout(() => {
-        const instructorField =
-          args.element.querySelector('[name="InstructorId"]');
+        // ⭐ THIS LINE IS THE MAGIC FIX
+        setTimeout(() => {
+          const instructorField =
+            args.element.querySelector('[name="InstructorId"]');
 
-        if (instructorField) {
-          instructorField.value = instructorId;
-        }
-      }, 0);
+          if (instructorField) {
+            instructorField.value = instructorId;
+          }
+        }, 0);
+      }
     }
-  }
-};
+  };
   /* ---------- DRAG ---------- */
 
   const onDragStart = (args) => {
@@ -124,7 +124,8 @@ const onPopupOpen = (args) => {
         instructor_id: data.InstructorId, // ⭐ allow edit
         booking_date: toDate(data.StartTime),
         start_time: toTime(data.StartTime),
-        end_time: toTime(data.EndTime)
+        end_time: toTime(data.EndTime),
+        title:data.Subject
       };
 
       await createBooking(body);
@@ -139,7 +140,7 @@ const onPopupOpen = (args) => {
 
         return {
           Id: b._id,
-          Subject: 'Booking',
+          Subject: b.title,
           StartTime: new Date(`${dateOnly}T${b.start_time}`),
           EndTime: new Date(`${dateOnly}T${b.end_time}`),
           InstructorId: b.instructor_id,
