@@ -2,26 +2,28 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const LessonCard = ({ lesson }) => (
-    <Link
-      to={`/lessons/${lesson.LessonID}`}
-      className="block bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow hover:shadow-lg transition"
-    >
-      <div className="flex justify-between items-center mb-2">
-        <p className="font-semibold">{lesson.LearnerName}</p>
-        <StatusBadge status={lesson.Status} />
-      </div>
+  <Link
+    to={`/lessons/${lesson.LessonID}`}
+    className="block bg-white rounded-xl p-4 shadow hover:shadow-lg transition"
+  >
+    <div className="flex justify-between items-center mb-2">
+      <p className="font-semibold">{lesson.Learner}</p>
+      <StatusBadge status={lesson.Status} />
+    </div>
 
-      <p className="text-sm text-gray-500">
-        {lesson.LessonDate} · {lesson.StartTime} – {lesson.EndTime}
-      </p>
+    <p className="text-sm text-gray-500">
+      {lesson.date} · {lesson.start} – {lesson.end}
+    </p>
 
-      <p className="text-xs text-gray-400 mt-1">
-        Instructor: {lesson.Instructor}
-      </p>
-    </Link>
-  );
+    <p className="text-xs text-gray-400 mt-1">
+      Instructor: {lesson.Instructor}
+    </p>
+  </Link>
+);
 
 export default LessonCard;
+
+/* ===================== Status Badge ===================== */
 
 const StatusBadge = ({ status }) => {
   const colors = {

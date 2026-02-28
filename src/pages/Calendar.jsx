@@ -16,7 +16,7 @@ import { DatePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { useStateContext } from '../contexts/ContextProvider';
 import EditorTemplate from '../components/templates/EditorTemplate';
 
-/* ================= UTILITIES ================= */
+/* ---------- UTIL ---------- */
 
 const toDate = (date) =>
   date ? new Date(date).toISOString().slice(0, 10) : '';
@@ -24,11 +24,7 @@ const toDate = (date) =>
 const toTime = (date) =>
   date ? new Date(date).toTimeString().slice(0, 5) : '';
 
-const PropertyPane = ({ children }) => (
-  <div className="mt-5">{children}</div>
-);
-
-/* ================= COMPONENT ================= */
+/* ---------- COMPONENT ---------- */
 
 const Scheduler = ({ instructorId }) => {
   const { GetBooking, createBooking } = useStateContext();
@@ -37,82 +33,82 @@ const Scheduler = ({ instructorId }) => {
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  /* ================= FETCH BOOKINGS (SAFE) ================= */
+  /* ---------- FETCH BOOKINGS ---------- */
 
   useEffect(() => {
-    let isMounted = true;
+    let mounted = true;
 
     const fetchBookings = async () => {
       try {
-        console.log('id is here to send',instructorId)
         const res = await GetBooking(instructorId);
-        console.log('getting calender data',res)
-        if (!isMounted) return;
-
-        if (!res || res.length === 0) {
-          setEvents([]);
-          return;
-        }
+        if (!mounted) return;
 
         const formatted = res.map((b) => {
           const dateOnly = b.booking_date.split('T')[0];
+
           return {
             Id: b._id,
-            Subject: 'Booking',
+            Subject: b.title,
             StartTime: new Date(`${dateOnly}T${b.start_time}`),
             EndTime: new Date(`${dateOnly}T${b.end_time}`),
-            InstructorId: b.instructor_id,
-            PupilId: b.pupil_id,
+            InstructorId: b.instructor_id?._id,
+            PupilId: b.pupil_id?._id,
             IsAllDay: false
           };
         });
 
         setEvents(formatted);
       } catch (err) {
-      
-        if (isMounted) {
-          console.error(err);
-            GetBooking()
-          setEvents([]);
-        }
+        console.error(err);
       }
     };
 
     if (instructorId) fetchBookings();
 
-    return () => {
-      isMounted = false;
-    };
+    return () => (mounted = false);
   }, [instructorId, GetBooking]);
 
-  /* ================= DATE PICKER ================= */
+  /* ---------- DATE PICKER ---------- */
 
   const onDateChange = (args) => {
     setSelectedDate(args.value);
+
     if (scheduleRef.current) {
       scheduleRef.current.selectedDate = args.value;
       scheduleRef.current.dataBind();
     }
   };
 
-  /* ================= POPUP OPEN (AUTO INSTRUCTOR) ================= */
-
+  /* ---------- POPUP OPEN ---------- */
   const onPopupOpen = (args) => {
-    if (args.type === 'Editor' && instructorId) {
-      // ADD MODE (cell click)
-      if (!args.data.Id) {
+
+    if (args.type === 'Editor') {
+
+      // 👉 Create Mode
+      if (!args.data.Id && instructorId) {
+
         args.data.InstructorId = instructorId;
+        args.data.Subject = 'Booking';
+
+        // ⭐ THIS LINE IS THE MAGIC FIX
+        setTimeout(() => {
+          const instructorField =
+            args.element.querySelector('[name="InstructorId"]');
+
+          if (instructorField) {
+            instructorField.value = instructorId;
+          }
+        }, 0);
       }
     }
   };
-
-  /* ================= DRAG ================= */
+  /* ---------- DRAG ---------- */
 
   const onDragStart = (args) => {
     args.navigation.enable = true;
   };
 
-  /* ================= CREATE / UPDATE ================= */
+  /* ---------- CREATE / UPDATE ---------- */
 
   const onActionBegin = async (args) => {
     if (
@@ -125,27 +121,26 @@ const Scheduler = ({ instructorId }) => {
 
       const body = {
         pupil_id: data.PupilId,
-        instructor_id: instructorId || data.InstructorId,
+        instructor_id: data.InstructorId, // ⭐ allow edit
         booking_date: toDate(data.StartTime),
         start_time: toTime(data.StartTime),
-        end_time: toTime(data.EndTime)
+        end_time: toTime(data.EndTime),
+        title:data.Subject
       };
 
-      console.log('API BODY:', body);
+      await createBooking(body);
 
-     const res= await createBooking(body);
-     console.log('response to create booking ',res)
-
-      // Backend is source of truth
       args.cancel = true;
 
-      // Reload
+      /* Reload */
       const refreshed = await GetBooking(instructorId);
+
       const formatted = refreshed.map((b) => {
         const dateOnly = b.booking_date.split('T')[0];
+
         return {
           Id: b._id,
-          Subject: 'Booking',
+          Subject: b.title,
           StartTime: new Date(`${dateOnly}T${b.start_time}`),
           EndTime: new Date(`${dateOnly}T${b.end_time}`),
           InstructorId: b.instructor_id,
@@ -158,7 +153,7 @@ const Scheduler = ({ instructorId }) => {
     }
   };
 
-  /* ================= RENDER ================= */
+  /* ---------- RENDER ---------- */
 
   return (
     <div className="m-2 p-2 md:p-4 bg-white rounded-2xl">
@@ -193,15 +188,13 @@ const Scheduler = ({ instructorId }) => {
         />
       </ScheduleComponent>
 
-      <PropertyPane>
-        <DatePickerComponent
-          value={selectedDate}
-          showClearButton={false}
-          placeholder="Current Date"
-          floatLabelType="Always"
-          change={onDateChange}
-        />
-      </PropertyPane>
+      <DatePickerComponent
+        value={selectedDate}
+        showClearButton={false}
+        placeholder="Current Date"
+        floatLabelType="Always"
+        change={onDateChange}
+      />
     </div>
   );
 };

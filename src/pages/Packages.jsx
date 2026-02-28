@@ -35,8 +35,18 @@ const Packages = () => {
   const selectionsettings = { persistSelection: true };
   const toolbarOptions = ['Search', 'Delete', 'Add', 'Edit'];
 
-  useEffect(() => {
+  async function PackagesLoad()
+  {
+    try{
     fetchPackages();
+
+    }catch(error)
+    {
+        toast.error('Failed to load packages.');
+    }
+  }
+  useEffect(() => {
+    PackagesLoad();
   }, [fetchPackages]);
 
   const handleActionBegin = async (args) => {
