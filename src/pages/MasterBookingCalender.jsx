@@ -37,6 +37,7 @@ const MasterBookingCalendar = () => {
 
       const formatted = res.map((b) => {
         const dateOnly = b.booking_date.split('T')[0];
+        const status = b.status?.toLowerCase(); // normalize
 
         return {
           Id: b._id,
@@ -44,9 +45,16 @@ const MasterBookingCalendar = () => {
           StartTime: new Date(`${dateOnly}T${b.start_time}`),
           EndTime: new Date(`${dateOnly}T${b.end_time}`),
           InstructorId: b.instructor_id?._id,
-          LearnerId:b.pupil_id?._id,
-          
-          IsAllDay: false
+          LearnerId: b.pupil_id?._id,
+          Status: status,
+          IsAllDay: false,
+
+          CategoryColor:
+            status === "completed"
+              ? "#16a34a"   // green
+              : status === "cancelled"
+              ? "#dc2626"   // red
+              : "#2563eb"   // default blue
         };
       });
 
@@ -71,7 +79,6 @@ const MasterBookingCalendar = () => {
       ? args.data[0]
       : args.data;
 
-    // ❌ Guard: missing time
     if (!data.StartTime || !data.EndTime) {
       console.error('Missing time data', data);
       args.cancel = true;
@@ -89,7 +96,7 @@ const MasterBookingCalendar = () => {
     try {
       if (args.requestType === 'eventCreate') {
         const created = await CreateBooking(payload);
-        data.Id = created._id; // attach backend ID
+        data.Id = created._id;
       }
 
       if (args.requestType === 'eventChange') {
@@ -101,11 +108,43 @@ const MasterBookingCalendar = () => {
     }
   };
 
-  /* ================= DISABLE DEFAULT POPUP ================= */
+  /* ================= DISABLE QUICK POPUP ================= */
 
   const onPopupOpen = (args) => {
     if (args.type === 'QuickInfo') {
       args.cancel = true;
+    }
+  };
+
+  /* ================= COLOR RENDERING ================= */
+
+  const onEventRendered = (args) => {
+    const status = args.data.Status;
+
+    if (status === "completed") {
+      args.element.style.setProperty(
+        "background-color",
+        "#16a34a",
+        "important"
+      );
+    }
+
+    if (status === "cancelled") {
+      args.element.style.setProperty(
+        "background-color",
+        "#dc2626",
+        "important"
+      );
+      args.element.style.opacity = "0.6";
+      args.element.style.textDecoration = "line-through";
+    }
+
+    if (!status || (status !== "completed" && status !== "cancelled")) {
+      args.element.style.setProperty(
+        "background-color",
+        "#2563eb",
+        "important"
+      );
     }
   };
 
@@ -127,6 +166,7 @@ const MasterBookingCalendar = () => {
       )}
       popupOpen={onPopupOpen}
       actionBegin={onActionBegin}
+      eventRendered={onEventRendered}
     >
       <ViewsDirective>
         <ViewDirective option="Day" />
