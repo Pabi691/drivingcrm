@@ -213,6 +213,7 @@ const LearnerProfilePage = () => {
               <Info label="Duration" value={learner?.package_id?.duration} />
               <Info label="Area Name" value={learner?.area_id?.name} />
               <Info label="Area Code" value={learner?.area_id?.code} />
+               <Info label="Package Price" value={learner?.package_price} />
               {/* <Info label="Test Date" value={learner?.TestDate} />
               <Info label="Zone" value={learner?.Zone} />
               <Info label="Postcode" value={learner?.Postcode} />
