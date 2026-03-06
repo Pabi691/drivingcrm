@@ -6,7 +6,7 @@ export const PricingService = {
   },
 
   create(data) {
-    console.log('data',data)
+    console.log('data to add pricing',data)
     return axios.post('/ds/price-masters', data);
   },
 

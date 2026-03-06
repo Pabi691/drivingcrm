@@ -45,6 +45,7 @@ const Scheduler = ({ instructorId }) => {
 
         const formatted = res.map((b) => {
           const dateOnly = b.booking_date.split('T')[0];
+          const status = b.status?.toLowerCase(); // normalize
 
           return {
             Id: b._id,
@@ -53,6 +54,7 @@ const Scheduler = ({ instructorId }) => {
             EndTime: new Date(`${dateOnly}T${b.end_time}`),
             InstructorId: b.instructor_id?._id,
             PupilId: b.pupil_id?._id,
+            Status: status,
             IsAllDay: false
           };
         });
@@ -80,17 +82,13 @@ const Scheduler = ({ instructorId }) => {
   };
 
   /* ---------- POPUP OPEN ---------- */
+
   const onPopupOpen = (args) => {
-
     if (args.type === 'Editor') {
-
-      // 👉 Create Mode
       if (!args.data.Id && instructorId) {
-
         args.data.InstructorId = instructorId;
         args.data.Subject = 'Booking';
 
-        // ⭐ THIS LINE IS THE MAGIC FIX
         setTimeout(() => {
           const instructorField =
             args.element.querySelector('[name="InstructorId"]');
@@ -102,10 +100,43 @@ const Scheduler = ({ instructorId }) => {
       }
     }
   };
+
   /* ---------- DRAG ---------- */
 
   const onDragStart = (args) => {
     args.navigation.enable = true;
+  };
+
+  /* ---------- COLOR RENDERING ---------- */
+
+  const onEventRendered = (args) => {
+    const status = args.data.Status;
+
+    if (status === "completed") {
+      args.element.style.setProperty(
+        "background-color",
+        "#16a34a",
+        "important"
+      );
+    }
+
+    if (status === "cancelled") {
+      args.element.style.setProperty(
+        "background-color",
+        "#dc2626",
+        "important"
+      );
+      args.element.style.opacity = "0.6";
+      args.element.style.textDecoration = "line-through";
+    }
+
+    if (!status || (status !== "completed" && status !== "cancelled")) {
+      args.element.style.setProperty(
+        "background-color",
+        "#2563eb",
+        "important"
+      );
+    }
   };
 
   /* ---------- CREATE / UPDATE ---------- */
@@ -121,11 +152,11 @@ const Scheduler = ({ instructorId }) => {
 
       const body = {
         pupil_id: data.PupilId,
-        instructor_id: data.InstructorId, // ⭐ allow edit
+        instructor_id: data.InstructorId,
         booking_date: toDate(data.StartTime),
         start_time: toTime(data.StartTime),
         end_time: toTime(data.EndTime),
-        title:data.Subject
+        title: data.Subject
       };
 
       await createBooking(body);
@@ -137,6 +168,7 @@ const Scheduler = ({ instructorId }) => {
 
       const formatted = refreshed.map((b) => {
         const dateOnly = b.booking_date.split('T')[0];
+        const status = b.status?.toLowerCase();
 
         return {
           Id: b._id,
@@ -145,6 +177,7 @@ const Scheduler = ({ instructorId }) => {
           EndTime: new Date(`${dateOnly}T${b.end_time}`),
           InstructorId: b.instructor_id,
           PupilId: b.pupil_id,
+          Status: status,
           IsAllDay: false
         };
       });
@@ -166,6 +199,7 @@ const Scheduler = ({ instructorId }) => {
         popupOpen={onPopupOpen}
         actionBegin={onActionBegin}
         dragStart={onDragStart}
+        eventRendered={onEventRendered}   // ✅ Added
       >
         <ViewsDirective>
           <ViewDirective option="Day" />

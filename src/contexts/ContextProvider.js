@@ -159,13 +159,14 @@ export const ContextProvider = ({ children }) => {
 
   const deleteBranch = useCallback(async (id) => {
     try {
-      await BranchService.remove(id);
-      setBranches(prev => prev.filter(branch => branch._id !== id));
+       const res=await BranchService.remove(id);
+       console.log('deleting branches',res)
+       fetchBranches()
       toast.success('Branch deleted successfully');
     } catch (err) {
       toast.error('Failed to delete branch');
     }
-  }, []);
+  }, [fetchBranches]);
 
   const fetchPackages = useCallback(async () => {
     setPackageLoading(true);
@@ -213,6 +214,7 @@ export const ContextProvider = ({ children }) => {
 
 
       const res = await PricingService.create(data);
+      console.log('response to add pricing',res)
       return res
     } catch (error) {
       return error;

@@ -126,7 +126,7 @@ const LearnerProfilePage = () => {
 
   const paymentChartData = [
     {
-      x: 'Paid',
+      x: 'Completed',
       y: PaidPaymentPercentage,
       text: PaidPaymentPercentage.toFixed(0) + '%',
     },
@@ -213,6 +213,7 @@ const LearnerProfilePage = () => {
               <Info label="Duration" value={learner?.package_id?.duration} />
               <Info label="Area Name" value={learner?.area_id?.name} />
               <Info label="Area Code" value={learner?.area_id?.code} />
+               <Info label="Package Price" value={learner?.package_price} />
               {/* <Info label="Test Date" value={learner?.TestDate} />
               <Info label="Zone" value={learner?.Zone} />
               <Info label="Postcode" value={learner?.Postcode} />
@@ -225,57 +226,59 @@ const LearnerProfilePage = () => {
           <div className="bg-white dark:bg-secondary-dark-bg rounded-2xl p-6 shadow-sm">
             <h3 className="font-semibold text-xl mb-6">Lessons</h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {AllBookings?.map((book) => {
-                const formattedDate = new Date(book.booking_date).toLocaleDateString(
-                  "en-IN",
-                  { day: "numeric", month: "short", year: "numeric" }
-                );
+            <div className="max-h-[300px] overflow-y-auto pr-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {AllBookings?.map((book) => {
+                  const formattedDate = new Date(book.booking_date).toLocaleDateString(
+                    "en-IN",
+                    { day: "numeric", month: "short", year: "numeric" }
+                  );
 
-                return (
-                  <div
-                    key={book._id}
-                    className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700"
-                  >
-                    {/* Header */}
-                    <div className="flex justify-between flex-wrap items-start mb-4">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                        {book.title}
-                      </h4>
+                  return (
+                    <div
+                      key={book._id}
+                      className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700"
+                    >
+                      {/* Header */}
+                      <div className="flex justify-between flex-wrap items-start mb-4">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                          {book.title}
+                        </h4>
 
-                      <span
-                        className={`text-xs font-medium px-3 py-1 rounded-full ${colorSet(
-                          book.status
-                        )}`}
-                      >
-                        {book.status.replace("_", " ").toUpperCase()}
-                      </span>
+                        <span
+                          className={`text-xs font-medium px-3 py-1 rounded-full ${colorSet(
+                            book.status
+                          )}`}
+                        >
+                          {book.status.replace("_", " ").toUpperCase()}
+                        </span>
+                      </div>
+
+                      {/* Details */}
+                      <div className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
+                        <p>
+                          <span className="font-medium">Instructor:</span>{" "}
+                          {book.instructor_id?.name}
+                        </p>
+
+                        <p>
+                          <span className="font-medium">Duration:</span>{" "}
+                          {book.credit_use} hrs
+                        </p>
+
+                        <p>
+                          <span className="font-medium">Date:</span> {formattedDate}
+                        </p>
+
+                        <p>
+                          <span className="font-medium">Time:</span>{" "}
+                          {book.start_time} - {book.end_time}
+                        </p>
+                      </div>
                     </div>
-
-                    {/* Details */}
-                    <div className="space-y-1 text-sm text-gray-600 dark:text-gray-300">
-                      <p>
-                        <span className="font-medium">Instructor:</span>{" "}
-                        {book.instructor_id?.name}
-                      </p>
-
-                      <p>
-                        <span className="font-medium">Duration:</span>{" "}
-                        {book.credit_use} hrs
-                      </p>
-
-                      <p>
-                        <span className="font-medium">Date:</span> {formattedDate}
-                      </p>
-
-                      <p>
-                        <span className="font-medium">Time:</span>{" "}
-                        {book.start_time} - {book.end_time}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
 
@@ -343,7 +346,7 @@ const LearnerProfilePage = () => {
 
           {/* PAYMENT */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-6 shadow text-sm">
-            <h3 className="font-semibold mb-3">Payment Summary</h3>
+            <h3 className="font-semibold mb-3">Credits Summary</h3>
             <p>Total Hours: <strong>{learner?.package_id?.duration}</strong></p>
             <p>Total Spent: {TotalCreditUsed}</p>
             <p>Remaining: {learner?.package_id?.duration - TotalCreditUsed}</p>
@@ -351,7 +354,7 @@ const LearnerProfilePage = () => {
 
           {/* PAYMENT CHART */}
           <div className="bg-white dark:bg-secondary-dark-bg rounded-xl p-4 shadow">
-            <h3 className="font-semibold text-center mb-2">Payment Status</h3>
+            <h3 className="font-semibold text-center mb-2">Lessions Status Overview</h3>
             <Doughnut
               id="payment-chart"
               data={paymentChartData}

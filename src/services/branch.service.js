@@ -18,6 +18,6 @@ export const BranchService = {
   },
 
   remove(id) {
-    return axios.get(`/ds/areas/delete/${id}`);
+    return axios.post(`/ds/areas/delete/${id}`);
   },
 };
