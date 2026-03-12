@@ -780,15 +780,7 @@ export const learnersGrid = [
     template: gridStatusTemplate,
   },
 
-  {
-    field: 'progress',
-    headerText: 'Progress',
-    width: '180',
-    textAlign: 'Center',
-    headerTextAlign: 'Center',
-    template: gridProgressBar,
-  },
-
+  
   {
     headerText: 'View',
     width: '120',
