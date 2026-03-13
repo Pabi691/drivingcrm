@@ -71,6 +71,7 @@ const LearnerProfilePage = () => {
   async function GetAllSell() {
     try {
       const res = await getPupilSell(id);
+      console.log('res',res)
       setSellHistory(res);
     } catch (error) {
       console.log(error);

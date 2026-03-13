@@ -120,7 +120,7 @@ export const ContextProvider = ({ children }) => {
     async (id, data) => {
       try {
         const res = await LearnerService.update(id, data);
-        console.log('response to update', res)
+        console.log('response to update pupil', res)
         toast.success('Learner updated successfully');
         fetchLearners();
       } catch (err) {
@@ -248,6 +248,7 @@ export const ContextProvider = ({ children }) => {
     try{
 
        const res= await PricingService.update(id, data);
+       console.log('response to update package',res)
        return res;
     }catch(error)
     {

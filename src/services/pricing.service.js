@@ -11,6 +11,7 @@ export const PricingService = {
   },
 
   update(id, data) {
+    console.log('data to upate',data)
     return axios.post(`/ds/price-masters/${id}`, data);
   },
 
