@@ -83,7 +83,7 @@ const LearnerForm = ({
         <option value="">Select Area</option>
         {branches.map((b) => (
           <option key={b._id} value={b._id}>
-            {b.name}
+            {`${b.name} (${b.code})`}
           </option>
         ))}
       </select>

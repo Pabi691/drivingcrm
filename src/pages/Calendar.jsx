@@ -18,12 +18,15 @@ import EditorTemplate from '../components/templates/EditorTemplate';
 
 /* ---------- UTIL ---------- */
 
-const toDate = (date) =>
-  date ? new Date(date).toISOString().slice(0, 10) : '';
+const toDate = (date) => {
+  const d = new Date(date);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
 
-const toTime = (date) =>
-  date ? new Date(date).toTimeString().slice(0, 5) : '';
-
+const toTime = (date) => {
+  const d = new Date(date);
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+};
 /* ---------- COMPONENT ---------- */
 
 const Scheduler = ({ instructorId }) => {
@@ -45,6 +48,7 @@ const Scheduler = ({ instructorId }) => {
 
         const formatted = res.map((b) => {
           const dateOnly = b.booking_date.split('T')[0];
+          const status = b.status?.toLowerCase(); // normalize
 
           return {
             Id: b._id,
@@ -53,6 +57,11 @@ const Scheduler = ({ instructorId }) => {
             EndTime: new Date(`${dateOnly}T${b.end_time}`),
             InstructorId: b.instructor_id?._id,
             PupilId: b.pupil_id?._id,
+<<<<<<< HEAD
+=======
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            Status: status,
+>>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
             IsAllDay: false
           };
         });
@@ -80,6 +89,7 @@ const Scheduler = ({ instructorId }) => {
   };
 
   /* ---------- POPUP OPEN ---------- */
+<<<<<<< HEAD
   const onPopupOpen = (args) => {
 
     if (args.type === 'Editor') {
@@ -95,6 +105,19 @@ const Scheduler = ({ instructorId }) => {
           const instructorField =
             args.element.querySelector('[name="InstructorId"]');
 
+=======
+
+  const onPopupOpen = (args) => {
+    if (args.type === 'Editor') {
+      if (!args.data.Id && instructorId) {
+        args.data.InstructorId = instructorId;
+        args.data.Subject = 'Booking';
+
+        setTimeout(() => {
+          const instructorField =
+            args.element.querySelector('[name="InstructorId"]');
+
+>>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
           if (instructorField) {
             instructorField.value = instructorId;
           }
@@ -102,10 +125,46 @@ const Scheduler = ({ instructorId }) => {
       }
     }
   };
+<<<<<<< HEAD
+=======
+
+>>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
   /* ---------- DRAG ---------- */
 
   const onDragStart = (args) => {
     args.navigation.enable = true;
+  };
+
+  /* ---------- COLOR RENDERING ---------- */
+
+  const onEventRendered = (args) => {
+    const status = args.data.Status;
+
+    if (status === "completed") {
+      args.element.style.setProperty(
+        "background-color",
+        "#16a34a",
+        "important"
+      );
+    }
+
+    if (status === "cancelled") {
+      args.element.style.setProperty(
+        "background-color",
+        "#dc2626",
+        "important"
+      );
+      args.element.style.opacity = "0.6";
+      args.element.style.textDecoration = "line-through";
+    }
+
+    if (!status || (status !== "completed" && status !== "cancelled")) {
+      args.element.style.setProperty(
+        "background-color",
+        "#2563eb",
+        "important"
+      );
+    }
   };
 
   /* ---------- CREATE / UPDATE ---------- */
@@ -121,11 +180,15 @@ const Scheduler = ({ instructorId }) => {
 
       const body = {
         pupil_id: data.PupilId,
-        instructor_id: data.InstructorId, // ⭐ allow edit
+        instructor_id: data.InstructorId,
         booking_date: toDate(data.StartTime),
         start_time: toTime(data.StartTime),
         end_time: toTime(data.EndTime),
+<<<<<<< HEAD
         title:data.Subject
+=======
+        title: data.Subject
+>>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
       };
 
       await createBooking(body);
@@ -137,6 +200,7 @@ const Scheduler = ({ instructorId }) => {
 
       const formatted = refreshed.map((b) => {
         const dateOnly = b.booking_date.split('T')[0];
+        const status = b.status?.toLowerCase();
 
         return {
           Id: b._id,
@@ -145,6 +209,7 @@ const Scheduler = ({ instructorId }) => {
           EndTime: new Date(`${dateOnly}T${b.end_time}`),
           InstructorId: b.instructor_id,
           PupilId: b.pupil_id,
+          Status: status,
           IsAllDay: false
         };
       });
@@ -166,6 +231,9 @@ const Scheduler = ({ instructorId }) => {
         popupOpen={onPopupOpen}
         actionBegin={onActionBegin}
         dragStart={onDragStart}
+        timezone={Intl.DateTimeFormat().resolvedOptions().timeZone}
+
+        eventRendered={onEventRendered}   // ✅ Added
       >
         <ViewsDirective>
           <ViewDirective option="Day" />

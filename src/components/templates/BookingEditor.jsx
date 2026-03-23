@@ -1,5 +1,24 @@
 import React, { useEffect, useState } from 'react';
 
+/* ===== FORMAT DATE IN LOCAL TIME (NOT UTC) ===== */
+
+const formatLocalDateTime = (date) => {
+  if (!date) return '';
+
+  const d = new Date(date);
+
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
+/* ===== COMPONENT ===== */
+
 const BookingEditor = ({
   Id,
   Subject,
@@ -11,23 +30,30 @@ const BookingEditor = ({
   learners = [],
   scheduleRef
 }) => {
+
   const [title, setTitle] = useState('');
   const [instructor, setInstructor] = useState('');
   const [learner, setLearner] = useState('');
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
 
+  /* ===== LOAD EVENT DATA INTO FORM ===== */
+
   useEffect(() => {
+
     setTitle(Subject || 'Booking');
     setInstructor(InstructorId || '');
     setLearner(LearnerId || '');
-    setStart(StartTime ? new Date(StartTime).toISOString().slice(0, 16) : '');
-    setEnd(EndTime ? new Date(EndTime).toISOString().slice(0, 16) : '');
+
+    setStart(formatLocalDateTime(StartTime));
+    setEnd(formatLocalDateTime(EndTime));
+
   }, [Id, Subject, InstructorId, LearnerId, StartTime, EndTime]);
+
+  /* ===== RENDER ===== */
 
   return (
     <div className="p-6 w-[420px] space-y-5">
-      
 
       {/* TITLE */}
       <div>
@@ -43,6 +69,7 @@ const BookingEditor = ({
       {/* INSTRUCTOR */}
       <div>
         <label className="block text-sm mb-1">Instructor</label>
+
         <select
           name="InstructorId"
           className="e-field w-full border rounded-lg px-3 py-2"
@@ -50,6 +77,7 @@ const BookingEditor = ({
           onChange={(e) => setInstructor(e.target.value)}
         >
           <option value="">Select Instructor</option>
+
           {instructors.map((i) => (
             <option key={i._id} value={i._id}>
               {i.name}
@@ -61,6 +89,7 @@ const BookingEditor = ({
       {/* LEARNER */}
       <div>
         <label className="block text-sm mb-1">Learner</label>
+
         <select
           name="LearnerId"
           className="e-field w-full border rounded-lg px-3 py-2"
@@ -68,6 +97,7 @@ const BookingEditor = ({
           onChange={(e) => setLearner(e.target.value)}
         >
           <option value="">Select Learner</option>
+
           {learners.map((l) => (
             <option key={l._id} value={l._id}>
               {l.full_name}
@@ -79,6 +109,7 @@ const BookingEditor = ({
       {/* START TIME */}
       <div>
         <label className="block text-sm mb-1">Start Time</label>
+
         <input
           type="datetime-local"
           name="StartTime"
@@ -91,6 +122,7 @@ const BookingEditor = ({
       {/* END TIME */}
       <div>
         <label className="block text-sm mb-1">End Time</label>
+
         <input
           type="datetime-local"
           name="EndTime"
@@ -99,6 +131,7 @@ const BookingEditor = ({
           onChange={(e) => setEnd(e.target.value)}
         />
       </div>
+
     </div>
   );
 };

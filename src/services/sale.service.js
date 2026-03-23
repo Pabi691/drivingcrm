@@ -1,8 +1,8 @@
 import axios from './axios';
 
-export const PricingService = {
-  getAll() {
-    return axios.get('/ds/price-masters');
+export const Sellservice = {
+  getPupilSell(id) {
+    return axios.get(`/ds/sales/pupil/${id}`);
   },
 
   create(data) {
@@ -11,7 +11,6 @@ export const PricingService = {
   },
 
   update(id, data) {
-    console.log('data to upate',data)
     return axios.post(`/ds/price-masters/${id}`, data);
   },
 

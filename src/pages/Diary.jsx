@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header, Stacked, Pie } from '../components';
 import { lessonsData } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
 import MasterBookingCalendar from './MasterBookingCalender';
 
 const Diary = () => {
-  const { currentColor } = useStateContext();
+  const { currentColor, GetAllBookings } = useStateContext();
+  const [Bookings, setBookings]=useState([])
 
-  const totalLessons = lessonsData.length;
-  const completed = lessonsData.filter(l => l.Status === 'Completed').length;
-  const cancelled = lessonsData.filter(l => l.Status === 'Cancelled').length;
-  const scheduled = lessonsData.filter(l => l.Status === 'Scheduled').length;
+  async function FetchBookings() {
+    try {
+
+      const res=await GetAllBookings();
+      console.log('response',res)
+      setBookings(res)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  const totalLessons = Bookings.length;
+  const completed = Bookings.filter(l => l.Status === 'completed').length;
+  console.log('completed',completed)
+  const cancelled = Bookings.filter(l => l.Status === 'cancelled').length;
+  const scheduled = Bookings.filter(l => l.Status === 'pending').length;
+
+  useEffect(() => {
+    FetchBookings()
+  }, [])
 
   return (
     <div className="mt-10 m-2 md:m-6">
@@ -21,7 +38,7 @@ const Diary = () => {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <StatCard title="Total Lessons" value={totalLessons} color={currentColor} />
+        <StatCard title="Total Bookings" value={totalLessons} color={currentColor} />
         <StatCard title="Scheduled" value={scheduled} color="#3b82f6" />
         <StatCard title="Completed" value={completed} color="#22c55e" />
         <StatCard title="Cancelled" value={cancelled} color="#ef4444" />
@@ -29,7 +46,7 @@ const Diary = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white rounded-2xl p-6">
-          <h3 className="font-semibold mb-4">Lesson Status Overview</h3>
+          <h3 className="font-semibold mb-4">Booking Status Overview</h3>
           <Pie
             id="lesson-status"
             data={[

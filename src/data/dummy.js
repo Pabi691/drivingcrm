@@ -776,6 +776,7 @@ export const learnersGrid = [
     field: 'active', // ✅ IMPORTANT
     headerText: 'Status',
     width: '140',
+<<<<<<< HEAD
     textAlign: 'Center',
     template: gridStatusTemplate,
   },
@@ -789,6 +790,13 @@ export const learnersGrid = [
     template: gridProgressBar,
   },
 
+=======
+    textAlign: 'Center',
+    template: gridStatusTemplate,
+  },
+
+  
+>>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
   {
     headerText: 'View',
     width: '120',

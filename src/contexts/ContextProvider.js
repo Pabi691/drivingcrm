@@ -8,6 +8,11 @@ import { InstructorService } from '../services/instructor.service';
 import { LearnerService } from '../services/Learner';
 import { bookingService } from '../services/booking.service';
 import { MoneyService } from '../services/money.service';
+<<<<<<< HEAD
+=======
+import { Sellservice } from '../services/sale.service';
+import { CreditLogs } from '../services/credit_logs';
+>>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
 
 const StateContext = createContext();
 
@@ -61,8 +66,29 @@ export const ContextProvider = ({ children }) => {
     );
   };
 
+  const getPupilSell=useCallback(async(id)=>{
+    try{
 
+       const res=await Sellservice.getPupilSell(id);
+       return res.data;
+    }catch(error)
+    {
+      console.log('error',error);
+      throw error;
+    }
+  },[])
 
+  const getPupilCreditsLog=useCallback(async(id)=>{
+    try{
+
+       const res=await CreditLogs.getPupilCreditsLogs(id);
+       return res.data;
+    }catch(error)
+    {
+      console.log('error',error);
+      throw error;
+    }
+  },[])
 
   // Fetch all learners
   const fetchLearners = useCallback(async () => {
@@ -97,7 +123,11 @@ export const ContextProvider = ({ children }) => {
     async (id, data) => {
       try {
         const res = await LearnerService.update(id, data);
+<<<<<<< HEAD
         console.log('response to update', res)
+=======
+        console.log('response to update pupil', res)
+>>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
         toast.success('Learner updated successfully');
         fetchLearners();
       } catch (err) {
@@ -159,13 +189,14 @@ export const ContextProvider = ({ children }) => {
 
   const deleteBranch = useCallback(async (id) => {
     try {
-      await BranchService.remove(id);
-      setBranches(prev => prev.filter(branch => branch._id !== id));
+       const res=await BranchService.remove(id);
+       console.log('deleting branches',res)
+       fetchBranches()
       toast.success('Branch deleted successfully');
     } catch (err) {
       toast.error('Failed to delete branch');
     }
-  }, []);
+  }, [fetchBranches]);
 
   const fetchPackages = useCallback(async () => {
     setPackageLoading(true);
@@ -213,6 +244,10 @@ export const ContextProvider = ({ children }) => {
 
 
       const res = await PricingService.create(data);
+<<<<<<< HEAD
+=======
+      console.log('response to add pricing',res)
+>>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
       return res
     } catch (error) {
       return error;
@@ -223,6 +258,10 @@ export const ContextProvider = ({ children }) => {
     try{
 
        const res= await PricingService.update(id, data);
+<<<<<<< HEAD
+=======
+       console.log('response to update package',res)
+>>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
        return res;
     }catch(error)
     {
@@ -449,7 +488,13 @@ export const ContextProvider = ({ children }) => {
     createBooking,
     GetAllBookings,
     fetchPupilsMoney,
+<<<<<<< HEAD
     getPupilBookings
+=======
+    getPupilBookings,
+    getPupilSell,
+    getPupilCreditsLog
+>>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
 
 
 
@@ -501,7 +546,13 @@ export const ContextProvider = ({ children }) => {
     createBooking,
     GetAllBookings,
     fetchPupilsMoney,
+<<<<<<< HEAD
     getPupilBookings
+=======
+    getPupilBookings,
+    getPupilSell,
+    getPupilCreditsLog
+>>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
   ]);
 
 
