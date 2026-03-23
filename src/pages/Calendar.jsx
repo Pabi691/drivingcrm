@@ -54,7 +54,6 @@ const Scheduler = ({ instructorId }) => {
             EndTime: new Date(`${dateOnly}T${b.end_time}`),
             InstructorId: b.instructor_id?._id,
             PupilId: b.pupil_id?._id,
-            Status: status,
             IsAllDay: false
           };
         });
@@ -82,13 +81,17 @@ const Scheduler = ({ instructorId }) => {
   };
 
   /* ---------- POPUP OPEN ---------- */
-
   const onPopupOpen = (args) => {
+
     if (args.type === 'Editor') {
+
+      // 👉 Create Mode
       if (!args.data.Id && instructorId) {
+
         args.data.InstructorId = instructorId;
         args.data.Subject = 'Booking';
 
+        // ⭐ THIS LINE IS THE MAGIC FIX
         setTimeout(() => {
           const instructorField =
             args.element.querySelector('[name="InstructorId"]');
@@ -100,7 +103,6 @@ const Scheduler = ({ instructorId }) => {
       }
     }
   };
-
   /* ---------- DRAG ---------- */
 
   const onDragStart = (args) => {
@@ -156,7 +158,7 @@ const Scheduler = ({ instructorId }) => {
         booking_date: toDate(data.StartTime),
         start_time: toTime(data.StartTime),
         end_time: toTime(data.EndTime),
-        title: data.Subject
+        title:data.Subject
       };
 
       await createBooking(body);

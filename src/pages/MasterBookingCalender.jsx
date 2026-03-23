@@ -45,16 +45,9 @@ const MasterBookingCalendar = () => {
           StartTime: new Date(`${dateOnly}T${b.start_time}`),
           EndTime: new Date(`${dateOnly}T${b.end_time}`),
           InstructorId: b.instructor_id?._id,
-          LearnerId: b.pupil_id?._id,
-          Status: status,
-          IsAllDay: false,
-
-          CategoryColor:
-            status === "completed"
-              ? "#16a34a"   // green
-              : status === "cancelled"
-              ? "#dc2626"   // red
-              : "#2563eb"   // default blue
+          LearnerId:b.pupil_id?._id,
+          
+          IsAllDay: false
         };
       });
 
