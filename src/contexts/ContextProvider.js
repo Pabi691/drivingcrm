@@ -8,6 +8,8 @@ import { InstructorService } from '../services/instructor.service';
 import { LearnerService } from '../services/Learner';
 import { bookingService } from '../services/booking.service';
 import { MoneyService } from '../services/money.service';
+import { Sellservice } from '../services/sale.service';
+import { CreditLogs } from '../services/credit_logs';
 
 const StateContext = createContext();
 
@@ -61,8 +63,29 @@ export const ContextProvider = ({ children }) => {
     );
   };
 
+  const getPupilSell=useCallback(async(id)=>{
+    try{
 
+       const res=await Sellservice.getPupilSell(id);
+       return res.data;
+    }catch(error)
+    {
+      console.log('error',error);
+      throw error;
+    }
+  },[])
 
+  const getPupilCreditsLog=useCallback(async(id)=>{
+    try{
+
+       const res=await CreditLogs.getPupilCreditsLogs(id);
+       return res.data;
+    }catch(error)
+    {
+      console.log('error',error);
+      throw error;
+    }
+  },[])
 
   // Fetch all learners
   const fetchLearners = useCallback(async () => {
@@ -97,7 +120,7 @@ export const ContextProvider = ({ children }) => {
     async (id, data) => {
       try {
         const res = await LearnerService.update(id, data);
-        console.log('response to update', res)
+        console.log('response to update pupil', res)
         toast.success('Learner updated successfully');
         fetchLearners();
       } catch (err) {
@@ -224,6 +247,7 @@ export const ContextProvider = ({ children }) => {
     try{
 
        const res= await PricingService.update(id, data);
+       console.log('response to update package',res)
        return res;
     }catch(error)
     {
@@ -450,7 +474,9 @@ export const ContextProvider = ({ children }) => {
     createBooking,
     GetAllBookings,
     fetchPupilsMoney,
-    getPupilBookings
+    getPupilBookings,
+    getPupilSell,
+    getPupilCreditsLog
 
 
 
@@ -502,7 +528,9 @@ export const ContextProvider = ({ children }) => {
     createBooking,
     GetAllBookings,
     fetchPupilsMoney,
-    getPupilBookings
+    getPupilBookings,
+    getPupilSell,
+    getPupilCreditsLog
   ]);
 
 

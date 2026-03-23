@@ -10,8 +10,28 @@ import {
   Agenda,
   Inject
 } from '@syncfusion/ej2-react-schedule';
+
 import { useStateContext } from '../contexts/ContextProvider';
 import BookingEditor from '../components/templates/BookingEditor';
+
+/* ================= TIME HELPERS ================= */
+
+const toDate = (date) => {
+  const d = new Date(date);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+    2,
+    '0'
+  )}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+const toTime = (date) => {
+  const d = new Date(date);
+  return `${String(d.getHours()).padStart(2, '0')}:${String(
+    d.getMinutes()
+  ).padStart(2, '0')}`;
+};
+
+/* ================= COMPONENT ================= */
 
 const MasterBookingCalendar = () => {
   const scheduleRef = useRef(null);
@@ -32,33 +52,38 @@ const MasterBookingCalendar = () => {
     let mounted = true;
 
     const loadBookings = async () => {
-      const res = await GetAllBookings();
-      if (!mounted) return;
+      try {
+        const res = await GetAllBookings();
+        if (!mounted) return;
 
-      const formatted = res.map((b) => {
-        const dateOnly = b.booking_date.split('T')[0];
-        const status = b.status?.toLowerCase(); // normalize
+        const formatted = res.map((b) => {
+          const dateOnly = b.booking_date.split('T')[0];
+          const status = b.status?.toLowerCase();
 
-        return {
-          Id: b._id,
-          Subject: 'Booking',
-          StartTime: new Date(`${dateOnly}T${b.start_time}`),
-          EndTime: new Date(`${dateOnly}T${b.end_time}`),
-          InstructorId: b.instructor_id?._id,
-          LearnerId:b.pupil_id?._id,
-          
-          IsAllDay: false
-        };
-      });
+          return {
+            Id: b._id,
+            Subject: 'Booking',
+            StartTime: new Date(`${dateOnly}T${b.start_time}`),
+            EndTime: new Date(`${dateOnly}T${b.end_time}`),
+            InstructorId: b.instructor_id?._id,
+            LearnerId: b.pupil_id?._id,
+            Status: status,
+            IsAllDay: false
+          };
+        });
 
-      setEvents(formatted);
+        setEvents(formatted);
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     loadBookings();
+
     return () => (mounted = false);
   }, [GetAllBookings]);
 
-  /* ================= SAVE TO API ================= */
+  /* ================= SAVE BOOKINGS ================= */
 
   const onActionBegin = async (args) => {
     if (
@@ -68,20 +93,18 @@ const MasterBookingCalendar = () => {
       return;
     }
 
-    const data = Array.isArray(args.data)
-      ? args.data[0]
-      : args.data;
+    const data = Array.isArray(args.data) ? args.data[0] : args.data;
 
     if (!data.StartTime || !data.EndTime) {
-      console.error('Missing time data', data);
+      console.error('Missing StartTime or EndTime', data);
       args.cancel = true;
       return;
     }
 
     const payload = {
-      booking_date: data.StartTime.toISOString().split('T')[0],
-      start_time: data.StartTime.toTimeString().slice(0, 5),
-      end_time: data.EndTime.toTimeString().slice(0, 5),
+      booking_date: toDate(data.StartTime),
+      start_time: toTime(data.StartTime),
+      end_time: toTime(data.EndTime),
       instructor_id: data.InstructorId,
       pupil_id: data.LearnerId
     };
@@ -109,34 +132,34 @@ const MasterBookingCalendar = () => {
     }
   };
 
-  /* ================= COLOR RENDERING ================= */
+  /* ================= COLOR BOOKINGS ================= */
 
   const onEventRendered = (args) => {
     const status = args.data.Status;
 
-    if (status === "completed") {
+    if (status === 'completed') {
       args.element.style.setProperty(
-        "background-color",
-        "#16a34a",
-        "important"
+        'background-color',
+        '#16a34a',
+        'important'
       );
     }
 
-    if (status === "cancelled") {
+    if (status === 'cancelled') {
       args.element.style.setProperty(
-        "background-color",
-        "#dc2626",
-        "important"
+        'background-color',
+        '#dc2626',
+        'important'
       );
-      args.element.style.opacity = "0.6";
-      args.element.style.textDecoration = "line-through";
+      args.element.style.opacity = '0.6';
+      args.element.style.textDecoration = 'line-through';
     }
 
-    if (!status || (status !== "completed" && status !== "cancelled")) {
+    if (!status || (status !== 'completed' && status !== 'cancelled')) {
       args.element.style.setProperty(
-        "background-color",
-        "#2563eb",
-        "important"
+        'background-color',
+        '#2563eb',
+        'important'
       );
     }
   };
@@ -148,6 +171,7 @@ const MasterBookingCalendar = () => {
       ref={scheduleRef}
       height="650px"
       selectedDate={new Date()}
+      timezone={Intl.DateTimeFormat().resolvedOptions().timeZone}
       eventSettings={{ dataSource: events }}
       editorTemplate={(props) => (
         <BookingEditor

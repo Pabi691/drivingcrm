@@ -18,12 +18,15 @@ import EditorTemplate from '../components/templates/EditorTemplate';
 
 /* ---------- UTIL ---------- */
 
-const toDate = (date) =>
-  date ? new Date(date).toISOString().slice(0, 10) : '';
+const toDate = (date) => {
+  const d = new Date(date);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
 
-const toTime = (date) =>
-  date ? new Date(date).toTimeString().slice(0, 5) : '';
-
+const toTime = (date) => {
+  const d = new Date(date);
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+};
 /* ---------- COMPONENT ---------- */
 
 const Scheduler = ({ instructorId }) => {
@@ -54,6 +57,8 @@ const Scheduler = ({ instructorId }) => {
             EndTime: new Date(`${dateOnly}T${b.end_time}`),
             InstructorId: b.instructor_id?._id,
             PupilId: b.pupil_id?._id,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            Status: status,
             IsAllDay: false
           };
         });
@@ -201,6 +206,8 @@ const Scheduler = ({ instructorId }) => {
         popupOpen={onPopupOpen}
         actionBegin={onActionBegin}
         dragStart={onDragStart}
+        timezone={Intl.DateTimeFormat().resolvedOptions().timeZone}
+
         eventRendered={onEventRendered}   // ✅ Added
       >
         <ViewsDirective>
