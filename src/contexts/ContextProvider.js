@@ -237,6 +237,7 @@ export const ContextProvider = ({ children }) => {
 
 
       const res = await PricingService.create(data);
+      console.log('response to add pricing',res)
       return res
     } catch (error) {
       return error;
