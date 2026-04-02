@@ -44,6 +44,7 @@ const LearnerProfilePage = () => {
       const res = await getPupilBookings(id);
 
       setBookings(res.data);
+      console.log('booking data',res.data)
 
       const cancelled = res.data.filter((b) => b.status === "cancelled");
       const completed = res.data.filter((b) => b.status === "completed");

@@ -54,6 +54,7 @@ const PricingForm = ({ pricingValues = {}, branches = [], packages = [] }) => {
           onChange={handleChange}
           className="e-input w-full"
           required
+          
         >
           <option value="">Select Package</option>
           {packages.map((p) => (

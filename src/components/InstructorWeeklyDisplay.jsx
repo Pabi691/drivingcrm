@@ -28,21 +28,20 @@ const WeeklyAvailabilityList = ({workingDays  = [] }) => {
   
           <div className="grid grid-cols-1 gap-4">
             {workingDays.map((day) => (
-              <div
+          day.is_working===1?
+            (<div
                 key={day._id}
                 className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700"
               >
                 {/* Header */}
                 <div className="flex justify-between items-center mb-3">
                   <p className="font-semibold text-gray-700 dark:text-gray-200">
-                    {DAY_MAP[day.day_of_week]}
+                    { DAY_MAP[day.day_of_week]}
                   </p>
 
                  {day.is_working===1 && day.start_time ? <span className="text-xs font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">
                     Working
-                  </span>:<span className="text-xs font-medium text-white  bg-red-400 px-3 py-1 rounded-full">
-                    Leave
-                  </span>}
+                  </span>:""}
                 </div>
 
                 {/* Work Time */}
@@ -65,7 +64,8 @@ const WeeklyAvailabilityList = ({workingDays  = [] }) => {
                   )}
                 </div>:<div></div>}
                
-              </div>
+              </div>):""
+                
             ))}
           </div>
   );

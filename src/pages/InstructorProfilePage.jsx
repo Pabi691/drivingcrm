@@ -212,7 +212,7 @@ const InstructorProfilePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {Object.entries(formData).map(([key, value]) => {
               if (EXCLUDED_FIELDS.includes(key)) return null;
-              if (['name', 'email', 'mobile', 'profile'].includes(key))
+              if (['name', 'email', 'mobile', 'profile','deleted_at','deleted_by','updatedAt','updated_by'].includes(key))
                 return null;
 
               /* ==== LICENCE IMAGE ==== */

@@ -13,7 +13,7 @@ const DAY_MAP = {
 };
 
 const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
-  const { instructorWorkingDaysCreateAndUpdate,fetchInstructorWorkingDays } = useStateContext()
+  const { instructorWorkingDaysCreateAndUpdate, fetchInstructorWorkingDays } = useStateContext()
   const [showSetup, setShowSetup] = useState(false);
   const [availability, setAvailability] = useState({});
 
@@ -30,8 +30,8 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
 
       mappedAvailability[dayNumber] = {
         enabled: day.enabled ?? false,
-       
-        is_working:day.is_working??1,
+
+        is_working: day.is_working ?? 1,
         workStart: day.start_time ?? "",
         workEnd: day.end_time ?? "",
         breakStart: day.break_start ?? "",
@@ -77,8 +77,8 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
 
       Object.entries(availability).forEach(([day, data]) => {
         workingDaysPayload[day] = {
-          is_working: 1,
-          
+          is_working: data?.workStart && data?.workEnd && data?.breakStart && data?.breakEnd ? 1 : 0,
+
           ...(data.workStart && { workStart: data.workStart }),
           ...(data.workEnd && { workEnd: data.workEnd }),
           ...(data.breakStart && { breakStart: data.breakStart }),
@@ -87,14 +87,14 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
       });
 
       const payload = {
-        instructor_id:instructor,
+        instructor_id: instructor,
         workingDays: workingDaysPayload,
       };
 
       console.log("FINAL PAYLOAD 👉", payload);
- const res=await instructorWorkingDaysCreateAndUpdate(payload);
+      const res = await instructorWorkingDaysCreateAndUpdate(payload);
 
-       console.log('res',res)
+      console.log('res', res)
       if (res) {
         toast.success("Availability saved");
       }
@@ -159,9 +159,11 @@ const WeeklyAvailability = ({ instructor, workingDays = [], onSave }) => {
                           ["Break End", "breakEnd"],
                         ].map(([label, key]) => (
                           <div key={key}>
+                            
                             <label className="block text-sm text-gray-500">
                               {label}
                             </label>
+                            {day[key]==="" || day[key]===null? <p className="text-red-500">Please Fill the fields</p>:""} 
                             <input
                               type="time"
                               value={day[key] || ""}
