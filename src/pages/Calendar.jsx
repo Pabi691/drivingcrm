@@ -57,11 +57,8 @@ const Scheduler = ({ instructorId }) => {
             EndTime: new Date(`${dateOnly}T${b.end_time}`),
             InstructorId: b.instructor_id?._id,
             PupilId: b.pupil_id?._id,
-<<<<<<< HEAD
-=======
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             Status: status,
->>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
             IsAllDay: false
           };
         });
@@ -89,23 +86,6 @@ const Scheduler = ({ instructorId }) => {
   };
 
   /* ---------- POPUP OPEN ---------- */
-<<<<<<< HEAD
-  const onPopupOpen = (args) => {
-
-    if (args.type === 'Editor') {
-
-      // 👉 Create Mode
-      if (!args.data.Id && instructorId) {
-
-        args.data.InstructorId = instructorId;
-        args.data.Subject = 'Booking';
-
-        // ⭐ THIS LINE IS THE MAGIC FIX
-        setTimeout(() => {
-          const instructorField =
-            args.element.querySelector('[name="InstructorId"]');
-
-=======
 
   const onPopupOpen = (args) => {
     if (args.type === 'Editor') {
@@ -117,7 +97,6 @@ const Scheduler = ({ instructorId }) => {
           const instructorField =
             args.element.querySelector('[name="InstructorId"]');
 
->>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
           if (instructorField) {
             instructorField.value = instructorId;
           }
@@ -125,10 +104,6 @@ const Scheduler = ({ instructorId }) => {
       }
     }
   };
-<<<<<<< HEAD
-=======
-
->>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
   /* ---------- DRAG ---------- */
 
   const onDragStart = (args) => {
@@ -184,11 +159,7 @@ const Scheduler = ({ instructorId }) => {
         booking_date: toDate(data.StartTime),
         start_time: toTime(data.StartTime),
         end_time: toTime(data.EndTime),
-<<<<<<< HEAD
-        title:data.Subject
-=======
         title: data.Subject
->>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
       };
 
       await createBooking(body);

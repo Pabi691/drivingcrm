@@ -60,19 +60,6 @@ const MasterBookingCalendar = () => {
           const dateOnly = b.booking_date.split('T')[0];
           const status = b.status?.toLowerCase();
 
-<<<<<<< HEAD
-        return {
-          Id: b._id,
-          Subject: 'Booking',
-          StartTime: new Date(`${dateOnly}T${b.start_time}`),
-          EndTime: new Date(`${dateOnly}T${b.end_time}`),
-          InstructorId: b.instructor_id?._id,
-          LearnerId:b.pupil_id?._id,
-          
-          IsAllDay: false
-        };
-      });
-=======
           return {
             Id: b._id,
             Subject: 'Booking',
@@ -84,7 +71,6 @@ const MasterBookingCalendar = () => {
             IsAllDay: false
           };
         });
->>>>>>> a3701af76df2e566162b0d15cd929984eef5dad4
 
         setEvents(formatted);
       } catch (err) {
