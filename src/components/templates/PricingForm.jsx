@@ -25,17 +25,21 @@ const PricingForm = ({ pricingValues = {}, branches = [], packages = [] }) => {
     }));
   };
 
+  const isEdit = !!pricingValues._id;
+
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
 
       {/* Branch */}
       <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Area</label>
         <select
           name="branch_id"
           value={formData.branch_id}
           onChange={handleChange}
-          className="e-input w-full"
+          className={`e-input w-full ${isEdit ? 'bg-gray-100 cursor-not-allowed' : ''}`}
           required
+          disabled={isEdit}
         >
           <option value="">Select Area</option>
           {branches.map((b) => (
@@ -48,13 +52,14 @@ const PricingForm = ({ pricingValues = {}, branches = [], packages = [] }) => {
 
       {/* Package */}
       <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Package</label>
         <select
           name="package_id"
           value={formData.package_id}
           onChange={handleChange}
-          className="e-input w-full"
+          className={`e-input w-full ${isEdit ? 'bg-gray-100 cursor-not-allowed' : ''}`}
           required
-          
+          disabled={isEdit}
         >
           <option value="">Select Package</option>
           {packages.map((p) => (
@@ -67,6 +72,7 @@ const PricingForm = ({ pricingValues = {}, branches = [], packages = [] }) => {
 
       {/* Price */}
       <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
         <input
           type="number"
           name="price"

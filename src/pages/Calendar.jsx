@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import toast from 'react-hot-toast';
 import {
   ScheduleComponent,
   ViewsDirective,
@@ -30,7 +31,7 @@ const toTime = (date) => {
 /* ---------- COMPONENT ---------- */
 
 const Scheduler = ({ instructorId }) => {
-  const { GetBooking, createBooking } = useStateContext();
+  const { GetBooking, createBooking, UpdateBooking } = useStateContext();
 
   const scheduleRef = useRef(null);
   const [events, setEvents] = useState([]);
@@ -38,40 +39,35 @@ const Scheduler = ({ instructorId }) => {
 
   /* ---------- FETCH BOOKINGS ---------- */
 
+  const fetchBookings = async () => {
+    try {
+      const res = await GetBooking(instructorId);
+
+      const formatted = res.map((b) => {
+        const dateOnly = b.booking_date.split('T')[0];
+        const status = b.status?.toLowerCase(); // normalize
+
+        return {
+          Id: b._id,
+          Subject: b.title,
+          StartTime: new Date(`${dateOnly}T${b.start_time}`),
+          EndTime: new Date(`${dateOnly}T${b.end_time}`),
+          InstructorId: b.instructor_id?._id,
+          PupilId: b.pupil_id?._id,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          Status: status,
+          IsAllDay: false
+        };
+      });
+
+      setEvents(formatted);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
-    let mounted = true;
-
-    const fetchBookings = async () => {
-      try {
-        const res = await GetBooking(instructorId);
-        if (!mounted) return;
-
-        const formatted = res.map((b) => {
-          const dateOnly = b.booking_date.split('T')[0];
-          const status = b.status?.toLowerCase(); // normalize
-
-          return {
-            Id: b._id,
-            Subject: b.title,
-            StartTime: new Date(`${dateOnly}T${b.start_time}`),
-            EndTime: new Date(`${dateOnly}T${b.end_time}`),
-            InstructorId: b.instructor_id?._id,
-            PupilId: b.pupil_id?._id,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            Status: status,
-            IsAllDay: false
-          };
-        });
-
-        setEvents(formatted);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
     if (instructorId) fetchBookings();
-
-    return () => (mounted = false);
   }, [instructorId, GetBooking]);
 
   /* ---------- DATE PICKER ---------- */
@@ -162,30 +158,26 @@ const Scheduler = ({ instructorId }) => {
         title: data.Subject
       };
 
-      await createBooking(body);
+      try {
+        if (args.requestType === 'eventCreate') {
+          await createBooking(body);
+          toast.success('Booking Added');
+        } else if (args.requestType === 'eventChange') {
+          await UpdateBooking(data.Id || data._id, body);
+          toast.success('Booking Updated');
+        }
 
-      args.cancel = true;
+        args.cancel = true;
+        if (scheduleRef.current) {
+          scheduleRef.current.closeEditor();
+        }
 
-      /* Reload */
-      const refreshed = await GetBooking(instructorId);
+        await fetchBookings();
 
-      const formatted = refreshed.map((b) => {
-        const dateOnly = b.booking_date.split('T')[0];
-        const status = b.status?.toLowerCase();
-
-        return {
-          Id: b._id,
-          Subject: b.title,
-          StartTime: new Date(`${dateOnly}T${b.start_time}`),
-          EndTime: new Date(`${dateOnly}T${b.end_time}`),
-          InstructorId: b.instructor_id,
-          PupilId: b.pupil_id,
-          Status: status,
-          IsAllDay: false
-        };
-      });
-
-      setEvents(formatted);
+      } catch (err) {
+        console.error(err);
+        args.cancel = true;
+      }
     }
   };
 

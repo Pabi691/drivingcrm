@@ -14,532 +14,493 @@ import { CreditLogs } from '../services/credit_logs';
 const StateContext = createContext();
 
 const initialState = {
-  chat: false,
-  cart: false,
-  userProfile: false,
-  notification: false,
+    chat: false,
+    cart: false,
+    userProfile: false,
+    notification: false,
 };
 
 export const ContextProvider = ({ children }) => {
-  const [screenSize, setScreenSize] = useState(undefined);
-  const [currentColor, setCurrentColor] = useState('#03C9D7');
-  const [currentMode, setCurrentMode] = useState('Light');
-  const [themeSettings, setThemeSettings] = useState(false);
-  const [activeMenu, setActiveMenu] = useState(true);
-  const [isClicked, setIsClicked] = useState(initialState);
-  const [enquiries, setEnquiries] = useState(initialEnquiries);
-  const [branches, setBranches] = useState([]);
-  const [branchLoading, setBranchLoading] = useState(false);
-  const [packages, setPackages] = useState([]);
-  const [packageLoading, setPackageLoading] = useState(false);
-  const [pricing, setPricing] = useState([]);
-  const [pricingLoading, setPricingLoading] = useState(false);
-  const [instructors, setInstructors] = useState([]);
-  const [instructorLoading, setInstructorLoading] = useState(false);
-  const [instructorWorkingDays, setInstructorWorkingDays] = useState([])
-  const [learners, setLearners] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [IsUpdate, setIsUpdate] = useState(false);
-  const [IsBooked, setIsBooked] = useState(false)
+    const [screenSize, setScreenSize] = useState(undefined);
+    const [currentColor, setCurrentColor] = useState('#03C9D7');
+    const [currentMode, setCurrentMode] = useState('Light');
+    const [themeSettings, setThemeSettings] = useState(false);
+    const [activeMenu, setActiveMenu] = useState(true);
+    const [isClicked, setIsClicked] = useState(initialState);
+    const [enquiries, setEnquiries] = useState(initialEnquiries);
+    const [branches, setBranches] = useState([]);
+    const [branchLoading, setBranchLoading] = useState(false);
+    const [packages, setPackages] = useState([]);
+    const [packageLoading, setPackageLoading] = useState(false);
+    const [pricing, setPricing] = useState([]);
+    const [pricingLoading, setPricingLoading] = useState(false);
+    const [instructors, setInstructors] = useState([]);
+    const [instructorLoading, setInstructorLoading] = useState(false);
+    const [instructorWorkingDays, setInstructorWorkingDays] = useState([])
+    const [learners, setLearners] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [IsUpdate, setIsUpdate] = useState(false);
+    const [IsBooked, setIsBooked] = useState(false)
 
 
-  const setMode = (e) => {
-    setCurrentMode(e.target.value);
-    localStorage.setItem('themeMode', e.target.value);
-  };
+    const setMode = (e) => {
+        setCurrentMode(e.target.value);
+        localStorage.setItem('themeMode', e.target.value);
+    };
 
-  const setColor = (color) => {
-    setCurrentColor(color);
-    localStorage.setItem('colorMode', color);
-  };
+    const setColor = (color) => {
+        setCurrentColor(color);
+        localStorage.setItem('colorMode', color);
+    };
 
-  const handleClick = (clicked) => setIsClicked({ ...initialState, [clicked]: true });
+    const handleClick = (clicked) => setIsClicked({ ...initialState, [clicked]: true });
 
-  const unreadEnquiriesCount = enquiries.filter(e => !e.isViewed).length;
+    const unreadEnquiriesCount = enquiries.filter(e => !e.isViewed).length;
 
-  const markAsViewed = (id) => {
-    setEnquiries(prev =>
-      prev.map(e => (e.EnquiryID === id ? { ...e, isViewed: true } : e))
+    const markAsViewed = (id) => {
+        setEnquiries(prev =>
+            prev.map(e => (e.EnquiryID === id ? { ...e, isViewed: true } : e))
+        );
+    };
+
+    const getPupilSell = useCallback(async (id) => {
+        try {
+
+            const res = await Sellservice.getPupilSell(id);
+            return res.data;
+        } catch (error) {
+            console.log('error', error);
+            throw error;
+        }
+    }, [])
+
+    const getPupilCreditsLog = useCallback(async (id) => {
+        try {
+
+            const res = await CreditLogs.getPupilCreditsLogs(id);
+            return res.data;
+        } catch (error) {
+            console.log('error', error);
+            throw error;
+        }
+    }, [])
+
+    // Fetch all learners
+    const fetchLearners = useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await LearnerService.getAll();
+            console.log('learner', res.data)
+            setLearners(res.data);
+        } catch (err) {
+            throw err;
+        }
+        setLoading(false);
+    }, []);
+
+    // Add a new learner
+    const addLearner = useCallback(
+        async (data) => {
+            try {
+                const res = await LearnerService.create(data);
+                console.log('response to add', res)
+                toast.success('Learner added successfully');
+                fetchLearners();
+            } catch (err) {
+                throw err;
+            }
+        },
+        [fetchLearners]
     );
-  };
 
-  const getPupilSell=useCallback(async(id)=>{
-    try{
+    // Update a learner
+    const updateLearner = useCallback(
+        async (id, data) => {
+            try {
+                const res = await LearnerService.update(id, data);
+                console.log('response to update pupil', res)
+                toast.success('Learner updated successfully');
+                fetchLearners();
+            } catch (err) {
+                toast.error('Failed to update learner');
+            }
+        },
+        [fetchLearners]
+    );
 
-       const res=await Sellservice.getPupilSell(id);
-       return res.data;
-    }catch(error)
-    {
-      console.log('error',error);
-      throw error;
-    }
-  },[])
+    // Delete a learner
+    const deleteLearner = useCallback(
+        async (id) => {
+            try {
+                const res = await LearnerService.remove(id);
+                console.log('learned deleted', res)
+                setLearners((prev) => prev.filter((l) => l._id !== id));
+                toast.success('Learner deleted successfully');
+            } catch (err) {
+                toast.error('Failed to delete learner');
+            }
+        },
+        []
+    );
 
-  const getPupilCreditsLog=useCallback(async(id)=>{
-    try{
+    const fetchBranches = useCallback(async () => {
+        setBranchLoading(true);
+        try {
+            const res = await BranchService.getAll();
+            // console.log('Fetched branches:', res.branches);
+            console.log('branches data', res)
+            setBranches(res.branches);
 
-       const res=await CreditLogs.getPupilCreditsLogs(id);
-       return res.data;
-    }catch(error)
-    {
-      console.log('error',error);
-      throw error;
-    }
-  },[])
+        } catch (err) {
+            throw err;
+        }
+        setBranchLoading(false);
+    }, []);
 
-  // Fetch all learners
-  const fetchLearners = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await LearnerService.getAll();
-      console.log('learner', res.data)
-      setLearners(res.data);
-    } catch (err) {
-      throw err;
-    }
-    setLoading(false);
-  }, []);
+    const addBranch = useCallback(async (data) => {
+        try {
+            const res = await BranchService.createBranch(data);
+            console.log('creating branch', res)
+            fetchBranches(); // Safe because fetchBranches is stable with useCallback
+            toast.success('Branch created successfully');
+        } catch (err) {
+            toast.error('Failed to add branch');
+        }
+    }, [fetchBranches]);
 
-  // Add a new learner
-  const addLearner = useCallback(
-    async (data) => {
-      try {
-        const res = await LearnerService.create(data);
-        console.log('response to add', res)
-        toast.success('Learner added successfully');
+    const updateBranch = useCallback(async (id, data) => {
+        try {
+            await BranchService.update(id, data);
+            fetchBranches(); // Safe
+            toast.success('Branch updated successfully');
+        } catch (err) {
+            toast.error('Failed to update branch');
+        }
+    }, [fetchBranches]);
+
+    const deleteBranch = useCallback(async (id) => {
+        try {
+            const res = await BranchService.remove(id);
+            console.log('deleting branches', res)
+            fetchBranches()
+            toast.success('Branch deleted successfully');
+        } catch (err) {
+            toast.error('Failed to delete branch');
+        }
+    }, [fetchBranches]);
+
+    const fetchPackages = useCallback(async () => {
+        setPackageLoading(true);
+        try {
+            const res = await PackageService.getAll();
+            setPackages(res.data);
+        } catch (err) {
+            throw err;
+        }
+        setPackageLoading(false);
+    }, []);
+
+    const addPackage = useCallback(async (data) => {
+        await PackageService.create(data);
+        fetchPackages();
+    }, [fetchPackages]);
+
+    const updatePackage = useCallback(async (id, data) => {
+        await PackageService.update(id, data);
+        fetchPackages();
+    }, [fetchPackages]);
+
+    const deletePackage = useCallback(async (id) => {
+        try {
+            await PackageService.remove(id);
+            setPackages(prev => prev.filter(pkg => pkg._id !== id));
+            toast.success('Package deleted successfully');
+        } catch (err) {
+            toast.error('Failed to delete package');
+        }
+    }, []);
+
+    const fetchPricing = useCallback(async () => {
+        try {
+            const res = await PricingService.getAll();
+            console.log('response', res)
+            setPricing(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }, []);
+
+    const addPricing = useCallback(async (data) => {
+        try {
+
+
+            const res = await PricingService.create(data);
+            console.log('response to add pricing', res)
+            return res
+        } catch (error) {
+            return error;
+        }
+    }, []);
+
+    const updatePricing = useCallback(async (id, data) => {
+        try {
+
+            const res = await PricingService.update(id, data);
+            console.log('response to update package', res)
+            return res;
+        } catch (error) {
+            throw error;
+        }
+
+    }, []);
+
+    const deletePricing = useCallback(async (id) => {
+        try {
+            const res = await PricingService.remove(id);
+            console.log('delete pricing', res)
+            return res;
+
+
+        } catch (error) {
+            throw error
+        }
+    }, []);
+
+    const fetchInstructors = useCallback(async () => {
+        setInstructorLoading(true);
+        try {
+            const res = await InstructorService.getAll();
+            setInstructors(res.data);
+        } catch (err) {
+            console.error('Error fetching instructors:', err);
+            throw err;
+        } finally {
+            setInstructorLoading(false);
+        }
+    }, []);
+
+    const fetchPupilsMoney = useCallback(async (id) => {
+        try {
+            const res = await MoneyService.getPupilSMoney(id);
+            return res;
+        } catch (error) {
+            console.error('Error fetching pupil money:', error);
+            return null;
+        }
+    }, []);
+
+    const addInstructor = useCallback(async (data) => {
+        const res = await InstructorService.create(data);
+        fetchInstructors();
+    }, [fetchInstructors]);
+
+    const updateInstructor = useCallback(async (id, data) => {
+        const res = await InstructorService.update(id, data);
+        fetchInstructors();
+    }, [fetchInstructors]);
+
+    // approve instructor 
+    const approvedInstructor = useCallback(async (id) => {
+        try {
+            const res = await InstructorService.approveInstructor(id);
+            return res;
+        } catch (err) {
+            toast.error('Could not approved');
+            return null;
+        }
+    }, []);
+
+    const deleteInstructor = useCallback(async (id) => {
+        await InstructorService.remove(id);
+        setInstructors(prev => prev.filter(instructor => instructor._id !== id));
+        toast.success('Instructor deleted successfully');
+    }, []);
+
+    const fetchInstructorWorkingDays = useCallback(async (instructorId) => {
+        try {
+            const res = await InstructorService.instructorWorkingDays(instructorId);
+            return res.data;
+        } catch (err) {
+            console.error('Error fetching working days:', err);
+            return [];
+        }
+    }, []);
+
+    const instructorWorkingDaysCreateAndUpdate = useCallback(async (data) => {
+        try {
+            const res = await InstructorService.instructorWorkingDayCreateAndUpdate(data);
+            setIsUpdate(Prev => !Prev);
+            return res.data;
+        } catch (err) {
+            toast.error('failed to update workings days');
+            return null;
+        }
+    }, []);
+
+    const GetBooking = useCallback(async (instructorId) => {
+        const res = await bookingService.getAll(instructorId);
+        return res.data;
+    }, []);
+
+    const getPupilBookings = useCallback(async (id) => {
+        const res = await bookingService.getPupilBooking(id);
+        return res;
+    }, []);
+
+    const createBooking = useCallback(async (data) => {
+        try {
+            const res = await bookingService.create(data);
+            return res.data;
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Failed to create booking');
+            throw err;
+        }
+    }, []);
+
+    const updateBooking = useCallback(async (id, data) => {
+        try {
+            const res = await bookingService.update(id, data);
+            return res.data;
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Failed to update booking');
+            throw err;
+        }
+    }, []);
+
+    const GetAllBookings = useCallback(async () => {
+        const res = await bookingService.getAllOFAllInstructos();
+        return res;
+    }, []);
+
+    useEffect(() => {
+        fetchBranches();
+        fetchInstructors();
+        fetchPackages();
         fetchLearners();
-      } catch (err) {
-        throw err;
-      }
-    },
-    [fetchLearners]
-  );
+    }, [fetchBranches, fetchInstructors, fetchPackages, fetchLearners]);
 
-  // Update a learner
-  const updateLearner = useCallback(
-    async (id, data) => {
-      try {
-        const res = await LearnerService.update(id, data);
-        console.log('response to update pupil', res)
-        toast.success('Learner updated successfully');
-        fetchLearners();
-      } catch (err) {
-        toast.error('Failed to update learner');
-      }
-    },
-    [fetchLearners]
-  );
+    // ✅ Memoize the context value to prevent unnecessary re-renders
+    const contextValue = useMemo(() => ({
+        currentColor,
+        currentMode,
+        activeMenu,
+        screenSize,
+        setScreenSize,
+        handleClick,
+        isClicked,
+        initialState,
+        setIsClicked,
+        setActiveMenu,
+        setCurrentColor,
+        setCurrentMode,
+        setMode,
+        setColor,
+        themeSettings,
+        setThemeSettings,
+        enquiries,
+        setEnquiries,
+        unreadEnquiriesCount,
+        markAsViewed,
+        branches,
+        fetchBranches,
+        addBranch,
+        updateBranch,
+        deleteBranch,
+        branchLoading,
+        packages,
+        fetchPackages,
+        addPackage,
+        updatePackage,
+        deletePackage,
+        packageLoading,
+        pricing,
+        fetchPricing,
+        addPricing,
+        updatePricing,
+        deletePricing,
+        pricingLoading,
+        instructors,
+        fetchInstructors,
+        addInstructor,
+        updateInstructor,
+        approvedInstructor,
+        deleteInstructor,
+        instructorLoading,
+        fetchInstructorWorkingDays,
+        instructorWorkingDaysCreateAndUpdate,
+        learners,
+        fetchLearners,
+        addLearner,
+        updateLearner,
+        deleteLearner,
+        IsUpdate,
+        GetBooking,
+        createBooking,
+        CreateBooking: createBooking,
+        updateBooking,
+        UpdateBooking: updateBooking,
+        GetAllBookings,
+        fetchPupilsMoney,
+        getPupilBookings,
+        getPupilSell,
+        getPupilCreditsLog
+    }), [
+        currentColor,
+        currentMode,
+        activeMenu,
+        screenSize,
+        isClicked,
+        themeSettings,
+        enquiries,
+        branches,
+        branchLoading,
+        unreadEnquiriesCount,
+        fetchBranches,
+        addBranch,
+        updateBranch,
+        deleteBranch,
+        packages,
+        packageLoading,
+        fetchPackages,
+        addPackage,
+        updatePackage,
+        deletePackage,
+        pricing,
+        pricingLoading,
+        fetchPricing,
+        addPricing,
+        updatePricing,
+        deletePricing,
+        instructors,
+        instructorLoading,
+        fetchInstructors,
+        addInstructor,
+        updateInstructor,
+        deleteInstructor,
+        approvedInstructor,
+        fetchInstructorWorkingDays,
+        instructorWorkingDaysCreateAndUpdate,
+        learners,
+        fetchLearners,
+        addLearner,
+        updateLearner,
+        deleteLearner,
+        IsUpdate,
+        GetBooking,
+        createBooking,
+        updateBooking,
+        GetAllBookings,
+        fetchPupilsMoney,
+        getPupilBookings,
+        getPupilSell,
+        getPupilCreditsLog
+    ]);
 
-  // Delete a learner
-  const deleteLearner = useCallback(
-    async (id) => {
-      try {
-        const res = await LearnerService.remove(id);
-        console.log('learned deleted', res)
-        setLearners((prev) => prev.filter((l) => l._id !== id));
-        toast.success('Learner deleted successfully');
-      } catch (err) {
-        toast.error('Failed to delete learner');
-      }
-    },
-    []
-  );
-
-  const fetchBranches = useCallback(async () => {
-    setBranchLoading(true);
-    try {
-      const res = await BranchService.getAll();
-      // console.log('Fetched branches:', res.branches);
-      console.log('branches data', res)
-      setBranches(res.branches);
-
-    } catch (err) {
-      throw err;
-    }
-    setBranchLoading(false);
-  }, []);
-
-  const addBranch = useCallback(async (data) => {
-    try {
-      const res = await BranchService.createBranch(data);
-      console.log('creating branch', res)
-      fetchBranches(); // Safe because fetchBranches is stable with useCallback
-      toast.success('Branch created successfully');
-    } catch (err) {
-      toast.error('Failed to add branch');
-    }
-  }, [fetchBranches]);
-
-  const updateBranch = useCallback(async (id, data) => {
-    try {
-      await BranchService.update(id, data);
-      fetchBranches(); // Safe
-      toast.success('Branch updated successfully');
-    } catch (err) {
-      toast.error('Failed to update branch');
-    }
-  }, [fetchBranches]);
-
-  const deleteBranch = useCallback(async (id) => {
-    try {
-       const res=await BranchService.remove(id);
-       console.log('deleting branches',res)
-       fetchBranches()
-      toast.success('Branch deleted successfully');
-    } catch (err) {
-      toast.error('Failed to delete branch');
-    }
-  }, [fetchBranches]);
-
-  const fetchPackages = useCallback(async () => {
-    setPackageLoading(true);
-    try {
-      const res = await PackageService.getAll();
-      setPackages(res.data);
-    } catch (err) {
-      throw err;
-    }
-    setPackageLoading(false);
-  }, []);
-
-  const addPackage = useCallback(async (data) => {
-    await PackageService.create(data);
-    fetchPackages();
-  }, [fetchPackages]);
-
-  const updatePackage = useCallback(async (id, data) => {
-    await PackageService.update(id, data);
-    fetchPackages();
-  }, [fetchPackages]);
-
-  const deletePackage = useCallback(async (id) => {
-    try {
-      await PackageService.remove(id);
-      setPackages(prev => prev.filter(pkg => pkg._id !== id));
-      toast.success('Package deleted successfully');
-    } catch (err) {
-      toast.error('Failed to delete package');
-    }
-  }, []);
-
-  const fetchPricing = useCallback(async () => {
-    try {
-      const res = await PricingService.getAll();
-      console.log('response',res)
-      setPricing(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
-
-  const addPricing = useCallback(async (data) => {
-    try {
-
-
-      const res = await PricingService.create(data);
-      console.log('response to add pricing',res)
-      return res
-    } catch (error) {
-      return error;
-    }
-  }, []);
-
-  const updatePricing = useCallback(async (id, data) => {
-    try{
-
-       const res= await PricingService.update(id, data);
-       console.log('response to update package',res)
-       return res;
-    }catch(error)
-    {
-      throw error;
-    }
-    
-  }, []);
-
-  const deletePricing = useCallback(async (id) => {
-    try{
-      const res=await PricingService.remove(id);
-      console.log('delete pricing',res)
-      return res;
-
-
-    }catch(error)
-    {
-      throw error
-    }
-  }, []);
-
-  const fetchInstructors = useCallback(async () => {
-    setInstructorLoading(true);
-    try {
-      const res = await InstructorService.getAll();
-      console.log('Fetched instructors:', res.data);
-      setInstructors(res.data);
-    } catch (err) {
-      throw err;
-    }
-    setInstructorLoading(false);
-  }, []);
-
-  const fetchPupilsMoney = useCallback(async (id) => {
-    try {
-      const res = await MoneyService.getPupilSMoney(id);
-      console.log('getting pupils money', res.data);
-      return res;
-
-
-    } catch (error) {
-      console.log('error', error)
-    }
-  }, [])
-
-
-
-  const addInstructor = useCallback(async (data) => {
-    const res = await InstructorService.create(data);
-    console.log('instructor created', res)
-    fetchInstructors();
-  }, [fetchInstructors]);
-
-  const updateInstructor = useCallback(async (id, data) => {
-    const res = await InstructorService.update(id, data);
-    console.log('response', res)
-    fetchInstructors();
-  }, [fetchInstructors]);
-
-
-  // approve instructor 
-  const approvedInstructor = useCallback(async (id) => {
-    try {
-      const res = await InstructorService.approveInstructor(id);
-      console.log('approve', res)
-      return res;
-    } catch (err) {
-      toast.error('Could not approved ')
-    }
-  }, []);
-
-
-  const deleteInstructor = useCallback(async (id) => {
-    try {
-      await InstructorService.remove(id);
-      setInstructors(prev => prev.filter(instructor => instructor._id !== id));
-      toast.success('Instructor deleted successfully');
-    } catch (err) {
-      toast.error('Failed to delete instructor');
-    }
-  }, []);
-
-
-  const fetchInstructorWorkingDays = useCallback(async (instructorId) => {
-    try {
-      const res = await InstructorService.instructorWorkingDays(instructorId);
-      console.log('instructor working days ', res)
-      return res.data
-
-    } catch (err) {
-      // toast.error('Failed to delete instructor');
-    }
-  }, []);
-
-
-  const instructorWorkingDaysCreateAndUpdate = useCallback(async (data) => {
-    try {
-      const res = await InstructorService.instructorWorkingDayCreateAndUpdate(data);
-      console.log('instructor working hours', res)
-      setIsUpdate(Prev => !Prev)
-
-      return res.data;
-
-    } catch (err) {
-      console.log('error to get working hours', err)
-      toast.error('failed to update workings days ');
-    }
-  }, [fetchInstructorWorkingDays]);
-
-  const GetBooking = useCallback(async (instructorId) => {
-    try {
-      const res = await bookingService.getAll(instructorId);
-      console.log('get bookings', res)
-
-
-      return res.data;
-
-    } catch (err) {
-      throw err;
-    }
-  })
-
-  const getPupilBookings = useCallback(async (id) => {
-    try {
-      const res = await bookingService.getPupilBooking(id);
-      return res;
-
-    } catch (error) {
-      throw error;
-    }
-  })
-
-  const createBooking = useCallback(async (data) => {
-    try {
-      const res = await bookingService.create(data);
-      console.log('creating ', res)
-
-
-      return res.data;
-
-    } catch (err) {
-      console.log('error is ', err)
-      toast.error(err.response.data.message)
-      throw err;
-    }
-  }, [GetBooking])
-  const GetAllBookings = useCallback(async () => {
-    try {
-      const res = await bookingService.getAllOFAllInstructos();
-      console.log('response to get all data', res);
-      return res
-
-    } catch (error) {
-      throw error
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchBranches();
-    fetchInstructors();
-    fetchPackages();
-    fetchLearners()
-  }, []);
-
-  // ✅ Memoize the context value to prevent unnecessary re-renders
-  const contextValue = useMemo(() => ({
-    currentColor,
-    currentMode,
-    activeMenu,
-    screenSize,
-    setScreenSize,
-    handleClick,
-    isClicked,
-    initialState,
-    setIsClicked,
-    setActiveMenu,
-    setCurrentColor,
-    setCurrentMode,
-    setMode,
-    setColor,
-    themeSettings,
-    setThemeSettings,
-    enquiries,
-    setEnquiries,
-    unreadEnquiriesCount,
-    markAsViewed,
-    branches,
-    fetchBranches,
-    addBranch,
-    updateBranch,
-    deleteBranch,
-    branchLoading,
-    packages,
-    fetchPackages,
-    addPackage,
-    updatePackage,
-    deletePackage,
-    packageLoading,
-    pricing,
-    fetchPricing,
-    addPricing,
-    updatePricing,
-    deletePricing,
-    pricingLoading,
-    instructors,
-    fetchInstructors,
-    addInstructor,
-    updateInstructor,
-    approvedInstructor,
-    deleteInstructor,
-    instructorLoading,
-    fetchInstructorWorkingDays,
-    instructorWorkingDaysCreateAndUpdate,
-
-    // === ADD LEARNERS ===
-    learners,
-
-    fetchLearners,
-    addLearner,
-    updateLearner,
-    deleteLearner,
-    IsUpdate,
-    GetBooking,
-    createBooking,
-    GetAllBookings,
-    fetchPupilsMoney,
-    getPupilBookings,
-    getPupilSell,
-    getPupilCreditsLog
-
-
-
-  }), [
-    currentColor,
-    currentMode,
-    activeMenu,
-    screenSize,
-    isClicked,
-    themeSettings,
-    enquiries,
-    branches,
-    branchLoading,
-    unreadEnquiriesCount,
-    fetchBranches,
-    addBranch,
-    updateBranch,
-    deleteBranch,
-    packages,
-    packageLoading,
-    fetchPackages,
-    addPackage,
-    updatePackage,
-    deletePackage,
-    pricing,
-    pricingLoading,
-    fetchPricing,
-    addPricing,
-    updatePricing,
-    deletePricing,
-    instructors,
-    instructorLoading,
-    fetchInstructors,
-    addInstructor,
-    updateInstructor,
-    deleteInstructor,
-    approvedInstructor,
-    fetchInstructorWorkingDays,
-
-    // === ADD LEARNERS DEPENDENCIES ===
-    learners,
-    fetchLearners,
-    addLearner,
-    updateLearner,
-    deleteLearner,
-    IsUpdate,
-    GetBooking,
-    IsBooked,
-    createBooking,
-    GetAllBookings,
-    fetchPupilsMoney,
-    getPupilBookings,
-    getPupilSell,
-    getPupilCreditsLog
-  ]);
-
-
-  return (
-    <StateContext.Provider value={contextValue}>
-      {children}
-    </StateContext.Provider>
-  );
+    return (
+        <StateContext.Provider value={contextValue}>
+            {children}
+        </StateContext.Provider>
+    );
 };
 
 export const useStateContext = () => useContext(StateContext);
