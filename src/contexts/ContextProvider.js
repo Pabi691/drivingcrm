@@ -149,12 +149,16 @@ export const ContextProvider = ({ children }) => {
     setBranchLoading(true);
     try {
       const res = await BranchService.getAll();
-      // console.log('Fetched branches:', res.branches);
       console.log('branches data', res)
-      setBranches(res.branches);
-
+      if (res && res.status !== false && Array.isArray(res.branches)) {
+        setBranches(res.branches);
+      } else if (res && Array.isArray(res.data)) {
+        setBranches(res.data);
+      } else {
+        setBranches([]);
+      }
     } catch (err) {
-      throw err;
+      setBranches([]);
     }
     setBranchLoading(false);
   }, []);
