@@ -403,10 +403,11 @@ export const ContextProvider = ({ children }) => {
     try {
       const res = await bookingService.getAllOFAllInstructos();
       console.log('response to get all data', res);
-      return res
-
+      if (Array.isArray(res)) return res;
+      if (res && Array.isArray(res.data)) return res.data;
+      return [];
     } catch (error) {
-      throw error
+      return [];
     }
   }, [])
 

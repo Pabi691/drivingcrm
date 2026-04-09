@@ -38,8 +38,7 @@ const MasterBookingCalendar = () => {
 
   const {
     GetAllBookings,
-    CreateBooking,
-    UpdateBooking,
+    createBooking,
     instructors,
     learners
   } = useStateContext();
@@ -56,7 +55,8 @@ const MasterBookingCalendar = () => {
         const res = await GetAllBookings();
         if (!mounted) return;
 
-        const formatted = res.map((b) => {
+        const list = Array.isArray(res) ? res : (res?.data ?? []);
+        const formatted = list.map((b) => {
           const dateOnly = b.booking_date.split('T')[0];
           const status = b.status?.toLowerCase();
 
@@ -111,12 +111,12 @@ const MasterBookingCalendar = () => {
 
     try {
       if (args.requestType === 'eventCreate') {
-        const created = await CreateBooking(payload);
+        const created = await createBooking(payload);
         data.Id = created._id;
       }
 
       if (args.requestType === 'eventChange') {
-        await UpdateBooking(data.Id, payload);
+        await createBooking({ ...payload, _id: data.Id });
       }
     } catch (err) {
       console.error(err);
